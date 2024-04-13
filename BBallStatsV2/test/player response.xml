@@ -1,0 +1,78 @@
+<player xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <name>EVANS, KEENAN</name>
+  <height>1.91</height>
+  <birthdate>23 August, 1996</birthdate>
+  <country>United States of America</country>
+  <clubcode>ZAL</clubcode>
+  <clubname>Zalgiris Kaunas</clubname>
+  <dorsal>2</dorsal>
+  <position>Guard</position>
+  <score>17.1</score>
+  <timeplayed>27:24</timeplayed>
+  <valuation>18.5</valuation>
+  <totalrebounds>2.7</totalrebounds>
+  <offensiverebounds>0.5</offensiverebounds>
+  <defensiverebounds>2.3</defensiverebounds>
+  <assistances>3.9</assistances>
+  <steals>1.4</steals>
+  <turnovers>2.4</turnovers>
+  <blocksagainst>0.5</blocksagainst>
+  <blocksfavour>0.1</blocksfavour>
+  <fieldgoals2percent>51.9%</fieldgoals2percent>
+  <fieldgoals3percent>45.3%</fieldgoals3percent>
+  <freethrowspercent>87.9%</freethrowspercent>
+  <foulscommited>2.4</foulscommited>
+  <foulsreceived>4.9</foulsreceived>
+  <career />
+  <misc />
+  <stats>
+    <accumulated>
+      <season code="E2023">
+        <gamesplayed>27</gamesplayed>
+        <timeplayed>740:07</timeplayed>
+        <score>463</score>
+        <fieldgoalsmade2>80</fieldgoalsmade2>
+        <fieldgoalsmade3>67</fieldgoalsmade3>
+        <freethrowsmade>102</freethrowsmade>
+        <fieldgoalsattempted2>154</fieldgoalsattempted2>
+        <fieldgoalsattempted3>148</fieldgoalsattempted3>
+        <freethrowsattempted>116</freethrowsattempted>
+        <offensiverebounds>13</offensiverebounds>
+        <defensiverebounds>61</defensiverebounds>
+        <totalrebounds>74</totalrebounds>
+        <assistances>104</assistances>
+        <steals>38</steals>
+        <turnovers>65</turnovers>
+        <blocksagainst>13</blocksagainst>
+        <blocksfavour>2</blocksfavour>
+        <foulscommited>66</foulscommited>
+        <foulsreceived>131</foulsreceived>
+        <valuation>499</valuation>
+      </season>
+      <phases>
+        <phase code="RS">
+          <gamesplayed>27</gamesplayed>
+          <timeplayed>740:07</timeplayed>
+          <score>463</score>
+          <fieldgoalsmade2>80</fieldgoalsmade2>
+          <fieldgoalsmade3>67</fieldgoalsmade3>
+          <freethrowsmade>102</freethrowsmade>
+          <fieldgoalsattempted2>154</fieldgoalsattempted2>
+          <fieldgoalsattempted3>148</fieldgoalsattempted3>
+          <freethrowsattempted>116</freethrowsattempted>
+          <offensiverebounds>13</offensiverebounds>
+          <defensiverebounds>61</defensiverebounds>
+          <totalrebounds>74</totalrebounds>
+          <assistances>104</assistances>
+          <steals>38</steals>
+          <turnovers>65</turnovers>
+          <blocksagainst>13</blocksagainst>
+          <blocksfavour>2</blocksfavour>
+          <foulscommited>66</foulscommited>
+          <foulsreceived>131</foulsreceived>
+          <valuation>499</valuation>
+        </phase>
+      </phases>
+    </accumulated>
+  </stats>
+</player>

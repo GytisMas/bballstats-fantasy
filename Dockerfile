@@ -8,7 +8,7 @@ COPY . .
 RUN dotnet build "src/BBallStatsV2/BBallStatsV2.csproj" -c Release -o /app/build
 
 FROM build as publish
-RUN dotnet publish "src/BBallStatsV2/BBallStatsV2.csproj" -c Release -o /app/publish --self-contained true --no-restore /p:PublishReadyToRun=true /p:PublishSingleFile=true
+RUN dotnet publish "BBallStatsV2/BBallStatsV2.csproj" -c Release -o /app/publish --self-contained true --no-restore /p:PublishReadyToRun=true /p:PublishSingleFile=true
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/runtime-deps:8.0-alpine-amd64

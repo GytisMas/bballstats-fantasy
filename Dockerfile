@@ -14,7 +14,7 @@ RUN dotnet publish "src/BBallStatsV2/BBallStatsV2.csproj" -c Release -o /app/pub
 FROM mcr.microsoft.com/dotnet/runtime-deps:8.0-alpine-amd64
 WORKDIR /app
 COPY --from=build /app .
-ENTRYPOINT ["./BBallStatsV2"]
+ENTRYPOINT ["./src/BBallStatsV2"]
 
 # See: https://github.com/dotnet/announcements/issues/20
 # Uncomment to enable globalization APIs (or delete)

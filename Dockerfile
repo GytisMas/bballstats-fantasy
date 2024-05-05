@@ -2,10 +2,10 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 WORKDIR /src
 COPY . .
 
-RUN dotnet restore "src/BBallStatsV2/BBallStatsV2.csproj"
+RUN dotnet restore "BBallStatsV2/BBallStatsV2.csproj"
 WORKDIR "/src/."
 COPY . .
-RUN dotnet build "src/BBallStatsV2/BBallStatsV2.csproj" -c Release -o /app/build
+RUN dotnet build "BBallStatsV2/BBallStatsV2.csproj" -c Release -o /app/build
 
 FROM build as publish
 RUN dotnet publish "BBallStatsV2/BBallStatsV2.csproj" -c Release -o /app/publish --self-contained true --no-restore /p:PublishReadyToRun=true /p:PublishSingleFile=true

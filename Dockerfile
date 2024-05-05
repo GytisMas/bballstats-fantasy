@@ -4,8 +4,8 @@ COPY . .
 
 # copy csproj and restore as distinct layers
 COPY src/BBallStatsV2/*.csproj .
-COPY src/BBallStats.Shared/*.csproj .
-RUN dotnet restore -r linux-musl-x64 /p:PublishReadyToRun=true
+COPY src/BBallStats.Shared/. .
+RUN dotnet restore "src/BBallStatsV2/BBallStatsV2.csproj" -r linux-musl-x64 /p:PublishReadyToRun=true
 
 # copy everything else and build app
 COPY src/. .

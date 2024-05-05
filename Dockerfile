@@ -1,13 +1,14 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:8.0-alpine AS build
 WORKDIR /src
+COPY . .
 
-# copy csproj and restore as distinct layers
-COPY src/BBallStatsV2/*.csproj .
-RUN dotnet restore -r linux-musl-x64 /p:PublishReadyToRun=true
+RUN dotnet restore "bballstats-fantasy/BBallStatsV2.Web.csproj"
+WORKDIR "/src/."
+COPY . .
+RUN dotnet build "bballstats-fantasy/BBallStatsV2.Web.csproj" -c Release -o /app/build
 
-# copy everything else and build app
-COPY src/. .
-RUN dotnet publish -c Release -o /app -r linux-musl-x64 --self-contained true --no-restore /p:PublishReadyToRun=true /p:PublishSingleFile=true
+FROM build as publish
+RUN dotnet publish "bballstats-fantasy/BBallStatsV2.Web.csproj" -c Release -o /app/publish
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/runtime-deps:8.0-alpine-amd64

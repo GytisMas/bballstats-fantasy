@@ -3,13 +3,13 @@ WORKDIR /src
 COPY . .
 
 # copy csproj and restore as distinct layers
-COPY BBallStatsV2/*.csproj .
-COPY BBallStats.Shared/. .
-RUN dotnet restore "BBallStatsV2/BBallStatsV2.csproj" -r linux-musl-x64 /p:PublishReadyToRun=true
+COPY src/BBallStatsV2/*.csproj .
+COPY src/BBallStats.Shared/. .
+RUN dotnet restore "src/BBallStatsV2/BBallStatsV2.csproj" -r linux-musl-x64 /p:PublishReadyToRun=true
 
 # copy everything else and build app
 COPY src/. .
-RUN dotnet publish "BBallStatsV2/BBallStatsV2.csproj" -c Release -o /app -r linux-musl-x64 --self-contained true --no-restore /p:PublishReadyToRun=true /p:PublishSingleFile=true
+RUN dotnet publish "src/BBallStatsV2/BBallStatsV2.csproj" -c Release -o /app -r linux-musl-x64 --self-contained true --no-restore /p:PublishReadyToRun=true /p:PublishSingleFile=true
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/runtime-deps:8.0-alpine-amd64

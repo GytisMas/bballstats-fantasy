@@ -1,5 +1,5 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
-WORKDIR /BBallStatsV2
+WORKDIR /src
 
 # copy csproj and restore as distinct layers
 COPY BBallStatsV2/*.csproj .

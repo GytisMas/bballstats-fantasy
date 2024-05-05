@@ -2,13 +2,13 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 WORKDIR /src
 COPY . .
 
-RUN dotnet restore "src/BBallStatsV2.Web.csproj"
+RUN dotnet restore "src/BBallStatsV2.csproj"
 WORKDIR "/src/."
 COPY . .
-RUN dotnet build "src/BBallStatsV2.Web.csproj" -c Release -o /app/build
+RUN dotnet build "src/BBallStatsV2.csproj" -c Release -o /app/build
 
 FROM build as publish
-RUN dotnet publish "src/BBallStatsV2.Web.csproj" -c Release -o /app/publish
+RUN dotnet publish "src/BBallStatsV2.csproj" -c Release -o /app/publish
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/runtime-deps:8.0-alpine-amd64

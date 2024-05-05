@@ -1,10 +1,8 @@
-﻿using Azure;
-using BBallStats.Data.Entities;
+﻿using BBallStats.Data.Entities;
 using BBallStats2.Auth.Model;
 using BBallStatsV2.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 
 namespace BBallStats.Data
 {
@@ -117,7 +115,7 @@ namespace BBallStats.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_configuration.GetConnectionString("DefaultConnection"));
+            optionsBuilder.UseNpgsql(_configuration.GetConnectionString("PostgreServerConnection"));
         }
     }
 }

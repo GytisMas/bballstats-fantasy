@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -15,10 +16,10 @@ namespace BBallStatsV2.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -29,23 +30,23 @@ namespace BBallStatsV2.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ForceRelogin = table.Column<bool>(type: "bit", nullable: false),
-                    Currency = table.Column<int>(type: "int", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    ForceRelogin = table.Column<bool>(type: "boolean", nullable: false),
+                    Currency = table.Column<int>(type: "integer", nullable: false),
+                    UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    PasswordHash = table.Column<string>(type: "text", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "text", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,9 +57,12 @@ namespace BBallStatsV2.Migrations
                 name: "LeagueTemplates",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    BenchMultiplier = table.Column<double>(type: "double precision", nullable: true),
+                    TeamWinPoints = table.Column<double>(type: "double precision", nullable: false),
+                    TeamLosePoints = table.Column<double>(type: "double precision", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -69,8 +73,9 @@ namespace BBallStatsV2.Migrations
                 name: "Teams",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    LogoLink = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -81,11 +86,11 @@ namespace BBallStatsV2.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RoleId = table.Column<string>(type: "text", nullable: false),
+                    ClaimType = table.Column<string>(type: "text", nullable: true),
+                    ClaimValue = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -102,11 +107,11 @@ namespace BBallStatsV2.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ClaimType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ClaimValue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    ClaimType = table.Column<string>(type: "text", nullable: true),
+                    ClaimValue = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -123,10 +128,10 @@ namespace BBallStatsV2.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderKey = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    LoginProvider = table.Column<string>(type: "text", nullable: false),
+                    ProviderKey = table.Column<string>(type: "text", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "text", nullable: true),
+                    UserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -143,8 +148,8 @@ namespace BBallStatsV2.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    RoleId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -167,10 +172,10 @@ namespace BBallStatsV2.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    LoginProvider = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Value = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -187,15 +192,16 @@ namespace BBallStatsV2.Migrations
                 name: "Statistics",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Discriminator = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false),
-                    Formula = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    CustomStatisticId = table.Column<int>(type: "int", nullable: true)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    DisplayName = table.Column<string>(type: "text", nullable: true),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    DefaultLeaguePointsPerStat = table.Column<double>(type: "double precision", nullable: false, defaultValue: 1.0),
+                    DefaultIsChecked = table.Column<bool>(type: "boolean", nullable: false),
+                    Discriminator = table.Column<string>(type: "character varying(21)", maxLength: 21, nullable: false),
+                    Formula = table.Column<string>(type: "text", nullable: true),
+                    UserId = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -206,27 +212,56 @@ namespace BBallStatsV2.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Transactions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    TransactionType = table.Column<int>(type: "integer", nullable: false),
+                    Amount = table.Column<int>(type: "integer", nullable: false),
+                    SenderId = table.Column<string>(type: "text", nullable: true),
+                    RecipientId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Transactions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Statistics_Statistics_CustomStatisticId",
-                        column: x => x.CustomStatisticId,
-                        principalTable: "Statistics",
+                        name: "FK_Transactions_AspNetUsers_RecipientId",
+                        column: x => x.RecipientId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Transactions_AspNetUsers_SenderId",
+                        column: x => x.SenderId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "LeaguePlayerRole",
+                name: "LeaguePlayerRoles",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LeagueTemplateId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    LeagueTemplateId = table.Column<int>(type: "integer", nullable: false),
+                    RoleToReplaceId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LeaguePlayerRole", x => x.Id);
+                    table.PrimaryKey("PK_LeaguePlayerRoles", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LeaguePlayerRole_LeagueTemplates_LeagueTemplateId",
+                        name: "FK_LeaguePlayerRoles_LeaguePlayerRoles_RoleToReplaceId",
+                        column: x => x.RoleToReplaceId,
+                        principalTable: "LeaguePlayerRoles",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_LeaguePlayerRoles_LeagueTemplates_LeagueTemplateId",
                         column: x => x.LeagueTemplateId,
                         principalTable: "LeagueTemplates",
                         principalColumn: "Id",
@@ -237,16 +272,17 @@ namespace BBallStatsV2.Migrations
                 name: "Leagues",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EntryFee = table.Column<int>(type: "int", nullable: false),
-                    CollectedCurrency = table.Column<int>(type: "int", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LeagueTemplateId = table.Column<int>(type: "int", nullable: false),
-                    LeagueHostId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Password = table.Column<string>(type: "text", nullable: true),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    EntryFee = table.Column<int>(type: "integer", nullable: false),
+                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LeagueTemplateId = table.Column<int>(type: "integer", nullable: false),
+                    LeagueHostId = table.Column<string>(type: "text", nullable: false),
+                    IsOver = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -266,14 +302,44 @@ namespace BBallStatsV2.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Matches",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UsedInFantasy = table.Column<bool>(type: "boolean", nullable: false),
+                    SeasonId = table.Column<int>(type: "integer", nullable: false),
+                    GameId = table.Column<int>(type: "integer", nullable: false),
+                    HomeTeamId = table.Column<string>(type: "text", nullable: false),
+                    AwayTeamId = table.Column<string>(type: "text", nullable: false),
+                    MatchDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Matches", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Matches_Teams_AwayTeamId",
+                        column: x => x.AwayTeamId,
+                        principalTable: "Teams",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Matches_Teams_HomeTeamId",
+                        column: x => x.HomeTeamId,
+                        principalTable: "Teams",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Players",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Role = table.Column<int>(type: "int", nullable: false),
-                    CurrentTeamId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Price = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<string>(type: "text", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Role = table.Column<int>(type: "integer", nullable: false),
+                    CurrentTeamId = table.Column<string>(type: "text", nullable: false),
+                    SkippedLastGame = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -282,18 +348,19 @@ namespace BBallStatsV2.Migrations
                         name: "FK_Players_Teams_CurrentTeamId",
                         column: x => x.CurrentTeamId,
                         principalTable: "Teams",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "AlgorithmImpressions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Positive = table.Column<bool>(type: "bit", nullable: false),
-                    CustomStatisticId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Positive = table.Column<bool>(type: "boolean", nullable: false),
+                    CustomStatisticId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -313,15 +380,41 @@ namespace BBallStatsV2.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CustomStatisticRegularStatistic",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    CustomStatisticId = table.Column<int>(type: "integer", nullable: false),
+                    RegularStatisticId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomStatisticRegularStatistic", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CustomStatisticRegularStatistic_Statistics_CustomStatisticId",
+                        column: x => x.CustomStatisticId,
+                        principalTable: "Statistics",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CustomStatisticRegularStatistic_Statistics_RegularStatistic~",
+                        column: x => x.RegularStatisticId,
+                        principalTable: "Statistics",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TeamStatistics",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Value = table.Column<float>(type: "real", nullable: false),
                     AttemptValue = table.Column<float>(type: "real", nullable: false),
-                    StatisticId = table.Column<int>(type: "int", nullable: false),
-                    TeamId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    StatisticId = table.Column<int>(type: "integer", nullable: false),
+                    TeamId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -344,19 +437,19 @@ namespace BBallStatsV2.Migrations
                 name: "LeagueStatisticsToCount",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PointsPerStat = table.Column<double>(type: "float", nullable: false),
-                    LeaguePlayerRoleId = table.Column<int>(type: "int", nullable: false),
-                    StatisticId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PointsPerStat = table.Column<double>(type: "double precision", nullable: false),
+                    LeaguePlayerRoleId = table.Column<int>(type: "integer", nullable: false),
+                    StatisticId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LeagueStatisticsToCount", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_LeagueStatisticsToCount_LeaguePlayerRole_LeaguePlayerRoleId",
+                        name: "FK_LeagueStatisticsToCount_LeaguePlayerRoles_LeaguePlayerRoleId",
                         column: x => x.LeaguePlayerRoleId,
-                        principalTable: "LeaguePlayerRole",
+                        principalTable: "LeaguePlayerRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -371,11 +464,13 @@ namespace BBallStatsV2.Migrations
                 name: "LeagueParticipants",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Points = table.Column<double>(type: "float", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    LeagueId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    EntryDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    Points = table.Column<double>(type: "double precision", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    LeagueId = table.Column<int>(type: "integer", nullable: false),
+                    TeamName = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -395,14 +490,33 @@ namespace BBallStatsV2.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LeaguePayment",
+                columns: table => new
+                {
+                    LeagueId = table.Column<int>(type: "integer", nullable: false),
+                    Placing = table.Column<int>(type: "integer", nullable: false),
+                    Amount = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LeaguePayment", x => new { x.LeagueId, x.Placing });
+                    table.ForeignKey(
+                        name: "FK_LeaguePayment_Leagues_LeagueId",
+                        column: x => x.LeagueId,
+                        principalTable: "Leagues",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "LeagueAvailablePlayers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Price = table.Column<int>(type: "int", nullable: false),
-                    LeagueId = table.Column<int>(type: "int", nullable: false),
-                    PlayerId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Price = table.Column<int>(type: "integer", nullable: false),
+                    LeagueId = table.Column<int>(type: "integer", nullable: false),
+                    PlayerId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -425,13 +539,13 @@ namespace BBallStatsV2.Migrations
                 name: "PlayerStatistics",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Value = table.Column<float>(type: "real", nullable: false),
                     AttemptValue = table.Column<float>(type: "real", nullable: false),
-                    GameCount = table.Column<int>(type: "int", nullable: false),
-                    StatisticId = table.Column<int>(type: "int", nullable: false),
-                    PlayerId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    GameCount = table.Column<int>(type: "integer", nullable: false),
+                    StatisticId = table.Column<int>(type: "integer", nullable: false),
+                    PlayerId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -454,31 +568,33 @@ namespace BBallStatsV2.Migrations
                 name: "ParticipantsRosterPlayers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    LeaguePlayerRoleId = table.Column<int>(type: "int", nullable: false),
-                    LeagueParticipantId = table.Column<int>(type: "int", nullable: false),
-                    LeagueAvailablePlayerId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Points = table.Column<double>(type: "double precision", nullable: false),
+                    PointsLastGame = table.Column<double>(type: "double precision", nullable: false),
+                    LeaguePlayerRoleId = table.Column<int>(type: "integer", nullable: false),
+                    LeagueParticipantId = table.Column<int>(type: "integer", nullable: false),
+                    LeagueAvailablePlayerId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ParticipantsRosterPlayers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ParticipantsRosterPlayers_LeagueAvailablePlayers_LeagueAvailablePlayerId",
+                        name: "FK_ParticipantsRosterPlayers_LeagueAvailablePlayers_LeagueAvai~",
                         column: x => x.LeagueAvailablePlayerId,
                         principalTable: "LeagueAvailablePlayers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ParticipantsRosterPlayers_LeagueParticipants_LeagueParticipantId",
+                        name: "FK_ParticipantsRosterPlayers_LeagueParticipants_LeagueParticip~",
                         column: x => x.LeagueParticipantId,
                         principalTable: "LeagueParticipants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ParticipantsRosterPlayers_LeaguePlayerRole_LeaguePlayerRoleId",
+                        name: "FK_ParticipantsRosterPlayers_LeaguePlayerRoles_LeaguePlayerRol~",
                         column: x => x.LeaguePlayerRoleId,
-                        principalTable: "LeaguePlayerRole",
+                        principalTable: "LeaguePlayerRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -502,8 +618,7 @@ namespace BBallStatsV2.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -529,8 +644,17 @@ namespace BBallStatsV2.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomStatisticRegularStatistic_CustomStatisticId",
+                table: "CustomStatisticRegularStatistic",
+                column: "CustomStatisticId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomStatisticRegularStatistic_RegularStatisticId",
+                table: "CustomStatisticRegularStatistic",
+                column: "RegularStatisticId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LeagueAvailablePlayers_LeagueId",
@@ -550,19 +674,22 @@ namespace BBallStatsV2.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_LeagueParticipants_UserId",
                 table: "LeagueParticipants",
-                column: "UserId",
-                unique: true);
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LeaguePlayerRole_LeagueTemplateId",
-                table: "LeaguePlayerRole",
+                name: "IX_LeaguePlayerRoles_LeagueTemplateId",
+                table: "LeaguePlayerRoles",
                 column: "LeagueTemplateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LeaguePlayerRoles_RoleToReplaceId",
+                table: "LeaguePlayerRoles",
+                column: "RoleToReplaceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Leagues_LeagueHostId",
                 table: "Leagues",
-                column: "LeagueHostId",
-                unique: true);
+                column: "LeagueHostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Leagues_LeagueTemplateId",
@@ -577,8 +704,17 @@ namespace BBallStatsV2.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_LeagueStatisticsToCount_StatisticId",
                 table: "LeagueStatisticsToCount",
-                column: "StatisticId",
-                unique: true);
+                column: "StatisticId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Matches_AwayTeamId",
+                table: "Matches",
+                column: "AwayTeamId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Matches_HomeTeamId",
+                table: "Matches",
+                column: "HomeTeamId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ParticipantsRosterPlayers_LeagueAvailablePlayerId",
@@ -611,11 +747,6 @@ namespace BBallStatsV2.Migrations
                 column: "StatisticId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Statistics_CustomStatisticId",
-                table: "Statistics",
-                column: "CustomStatisticId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Statistics_UserId",
                 table: "Statistics",
                 column: "UserId");
@@ -629,6 +760,16 @@ namespace BBallStatsV2.Migrations
                 name: "IX_TeamStatistics_TeamId",
                 table: "TeamStatistics",
                 column: "TeamId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_RecipientId",
+                table: "Transactions",
+                column: "RecipientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_SenderId",
+                table: "Transactions",
+                column: "SenderId");
         }
 
         /// <inheritdoc />
@@ -653,7 +794,16 @@ namespace BBallStatsV2.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "CustomStatisticRegularStatistic");
+
+            migrationBuilder.DropTable(
+                name: "LeaguePayment");
+
+            migrationBuilder.DropTable(
                 name: "LeagueStatisticsToCount");
+
+            migrationBuilder.DropTable(
+                name: "Matches");
 
             migrationBuilder.DropTable(
                 name: "ParticipantsRosterPlayers");
@@ -665,6 +815,9 @@ namespace BBallStatsV2.Migrations
                 name: "TeamStatistics");
 
             migrationBuilder.DropTable(
+                name: "Transactions");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -674,7 +827,7 @@ namespace BBallStatsV2.Migrations
                 name: "LeagueParticipants");
 
             migrationBuilder.DropTable(
-                name: "LeaguePlayerRole");
+                name: "LeaguePlayerRoles");
 
             migrationBuilder.DropTable(
                 name: "Statistics");

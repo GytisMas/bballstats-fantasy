@@ -2,18 +2,18 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 WORKDIR /src
 COPY . .
 
-RUN dotnet restore "BBallStatsV2/BBallStatsV2.csproj"
-WORKDIR "/src/."
-COPY . .
-RUN dotnet build "BBallStatsV2/BBallStatsV2.csproj" -c Release -o /app/build
+# copy csproj and restore as distinct layers
+COPY src/BBallStatsV2/*.csproj .
+RUN dotnet restore -r linux-musl-x64 /p:PublishReadyToRun=true
 
-FROM build as publish
-RUN dotnet publish "BBallStatsV2/BBallStatsV2.csproj" -c Release -o /app/publish --self-contained true --no-restore /p:PublishReadyToRun=true /p:PublishSingleFile=true
+# copy everything else and build app
+COPY src/. .
+RUN dotnet publish -c Release -o /app -r linux-musl-x64 --self-contained true --no-restore /p:PublishReadyToRun=true /p:PublishSingleFile=true
 
 # final stage/image
-FROM mcr.microsoft.com/dotnet/runtime-deps:8.0-alpine-amd64
+FROM mcr.microsoft.com/dotnet/runtime-deps:7.0-alpine-amd64
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=build /app .
 ENTRYPOINT ["./BBallStatsV2"]
 
 # See: https://github.com/dotnet/announcements/issues/20

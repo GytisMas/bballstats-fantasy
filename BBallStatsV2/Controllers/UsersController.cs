@@ -44,6 +44,20 @@ namespace BBallStatsV2.Controllers
             return Ok(new UserDto(user.Id, user.UserName, user.Email, roles));
         }
 
+        [HttpGet("{userId}/balance")]
+        public async Task<ActionResult<int>> GetUserBalance(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return NotFound();
+
+            var userBalance = await _context.Transactions
+                .Where(t => t.SenderId == userId || t.RecipientId == userId)
+                .SumAsync(t => t.RecipientId == userId ? t.Amount : -t.Amount);
+
+            return Ok(userBalance);
+        }
+
         [HttpPost]
         [Authorize(Roles = ForumRoles.Admin)]
         public async Task<ActionResult<UserWithoutRolesDto>> CreateUser([FromBody] CreateUserDto createUserDto)

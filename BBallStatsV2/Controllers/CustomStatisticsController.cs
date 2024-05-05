@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Authorization;
 using System.Threading;
 using System.Net.Http;
 using System.Collections.Immutable;
+using BBallStatsV2.DTOs;
+using BBallStatsV2.Data.Entities;
 
 namespace BBallStatsV2.Controllers
 {
@@ -32,13 +34,21 @@ namespace BBallStatsV2.Controllers
         }
 
         [HttpGet("~/api/customStatistics")]
-        public async Task<ActionResult<IEnumerable<CustomStatisticDto>>> GetCustomStatistics()
+        public async Task<ActionResult<PagedListDto<CustomStatisticDto>>> GetCustomStatistics(int pageIndex = 1, int pageSize = 15)
         {
             var customStatistics = await _context.CustomStatistics
+                .OrderByDescending(s => s.Id)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
                 .Select(o => new CustomStatisticDto(o.Id, o.Name, o.Formula, o.Status, o.UserId))
                 .ToListAsync();
 
-            return Ok(customStatistics);
+            var totalCount = await _context.CustomStatistics.CountAsync();
+            int pageCount = totalCount / pageSize;
+            if (totalCount % pageSize != 0)
+                pageCount++;
+
+            return Ok(new PagedListDto<CustomStatisticDto>(customStatistics, pageIndex, pageCount));
         }
 
         [HttpGet]

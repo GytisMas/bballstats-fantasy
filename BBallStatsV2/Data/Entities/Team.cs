@@ -6,5 +6,4 @@ namespace BBallStats.Data.Entities
 		public required string Name { get; set; }
 		public string? LogoLink { get; set; }
     }
-    public record TeamDto(string Id, string Name);
 }

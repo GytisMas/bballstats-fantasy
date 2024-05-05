@@ -71,6 +71,8 @@ namespace BBallStats.Shared
         public string RoadClubId { get; set; } = null!;
         public string LocalClubName { get; set; } = null!;
         public string RoadClubName { get; set; } = null!;
+        public int SeasonId { get; set; }
+        public int GameId { get; set; }
         //public string PlayerCode { get; set; }
         //public string PlayerName { get; set; }
         //public string JerseyNumber { get; set; }
@@ -520,6 +522,7 @@ namespace BBallStats.Shared
     [XmlRoot(ElementName = "game")]
     public class Game
     {
+        public bool ExistsInDB { get; set; }
 
         [XmlAttribute(AttributeName = "year")]
         public int Year { get; set; }

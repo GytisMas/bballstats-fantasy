@@ -19,7 +19,6 @@ namespace BBallStats.Data.Entities
 		public PlayerRole Role { get; set; }
 		public string CurrentTeamId { get; set; }
 		public Team CurrentTeam { get; set; }
-        public int Price { get; set; }
         public bool SkippedLastGame { get; set; }
         public ICollection<LeagueAvailablePlayer> LeagueAvailablePlayers { get; set; } = new List<LeagueAvailablePlayer>();
         public ICollection<PlayerStatistic> PlayerStatistics { get; set; } = new List<PlayerStatistic>();

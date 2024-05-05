@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BBallStats.Data;
 using BBallStats.Data.Entities;
+using static BBallStats.Shared.Utils.DTOs;
 
 namespace BBallStatsV2.Controllers
 {
@@ -66,57 +67,41 @@ namespace BBallStatsV2.Controllers
         // PUT: api/Teams/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTeam(string id, Team team)
+        public async Task<IActionResult> PutTeam(string id, TeamNameDto dto)
         {
-            if (id != team.Id)
-            {
-                return BadRequest();
-            }
+            var team = await _context.Teams.FindAsync(id);
+            if (team == null)
+                return NotFound();
 
-            _context.Entry(team).State = EntityState.Modified;
+            team.Name = dto.Name;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TeamExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
+            _context.Update(team);
+            await _context.SaveChangesAsync();
             return NoContent();
         }
 
         // POST: api/Teams
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Team>> PostTeam(Team team)
+        public async Task<ActionResult<Team>> CreateTeams(TeamDto[] newTeams)
         {
-            _context.Teams.Add(team);
-            try
+            var teams = await _context.Teams.ToListAsync();
+
+            foreach (var newTeam in newTeams)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (TeamExists(team.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
+                var existingTeam = teams.FirstOrDefault(t => t.Id == newTeam.Id);
+                if (existingTeam == null)
+                    _context.Teams.Add(
+                        new Team()
+                        {
+                            Id = newTeam.Id,
+                            Name = newTeam.Name,
+                        }
+                    );
             }
 
-            return CreatedAtAction("GetTeam", new { id = team.Id }, team);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
         // DELETE: api/Teams/5
@@ -133,11 +118,6 @@ namespace BBallStatsV2.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool TeamExists(string id)
-        {
-            return _context.Teams.Any(e => e.Id == id);
         }
     }
 }

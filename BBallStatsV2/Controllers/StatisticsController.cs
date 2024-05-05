@@ -129,10 +129,6 @@ namespace BBallStatsV2.Controllers
 
 
             List<string> playerCodes = playerStatData.PlayerInfo.Select(x => x.PlayerCode).Distinct().ToList();
-            foreach (var code in playerCodes)
-            {
-                await Console.Out.WriteLineAsync(code);
-            }
             var relevantPlayers = await _context.Players
                 .Include(x => x.PlayerStatistics)
                 .ThenInclude(x => x.Statistic)
@@ -150,7 +146,6 @@ namespace BBallStatsV2.Controllers
             int i = 1;
             foreach (var code in playerCodes)            
             {
-                await Console.Out.WriteLineAsync($"2-{i++}");
                 bool addPlayer = false;
                 var currentPlayer = relevantPlayers.Find(x => x.Id.Equals(code));
 
@@ -168,8 +163,7 @@ namespace BBallStatsV2.Controllers
                     };
                 }
 
-                // TODO: padaryt su emptyStats checka kad zaidejas turi bent viena is pagr statu
-                bool emptyStats = false;
+                bool emptyStats = !currentPlayer.PlayerStatistics.Any(ps => ps.Statistic.Name == "StartFive");
                 if (addPlayer || emptyStats)
                 {
                     currentPlayer = CreateUnusedPlayerStatistics(currentPlayer, statistics, PlayerStatEntries);

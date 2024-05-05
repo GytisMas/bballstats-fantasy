@@ -19,7 +19,6 @@ namespace BBallStatsV2.Data.Entities
         public string? Password { get; set; }
         public string Name { get; set; } = null!;
         public int EntryFee { get; set; }
-        public int CollectedCurrency { get; set; }
         public DateTime CreationDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -42,7 +41,17 @@ namespace BBallStatsV2.Data.Entities
                 return DateTime.UtcNow >= StartDate;
             }
         }
-        public bool IsInPreparation { get { return DateTime.Now < StartDate; } }
+
+        public int ParticipantPlacement(int participantId)
+        {
+            var participant = Participants.FirstOrDefault(p => p.Id == participantId);
+            if (participant == null)
+                return -1;
+
+            return Participants.OrderByDescending(p => p.Points).ThenBy(p => p.EntryDate).ToList()
+                .IndexOf(participant) + 1;
+        }
+
         public IList<LeagueAvailablePlayer> LeagueAvailablePlayers { get; set; } = new List<LeagueAvailablePlayer>();
     }
 

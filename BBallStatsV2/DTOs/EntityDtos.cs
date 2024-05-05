@@ -1,5 +1,6 @@
 ﻿using BBallStats.Data.Entities;
 using BBallStatsV2.Data.Entities;
+using static BBallStats.Shared.Utils.DTOs;
 
 namespace BBallStatsV2.DTOs
 {
@@ -12,12 +13,13 @@ namespace BBallStatsV2.DTOs
     public record LeagueStatDto(double PointsPerStat, int StatisticId);
     public record LeagueRoleDto(string Name, LeagueStatDto[] LeagueStats);
     public record LeagueRoleWithIdDto(int Id, string Name, int? RoleToReplaceIndex, LeagueStatDto[] LeagueStats);
-    public record LeagueTemplateDto(string Name, double? BenchMultiplier, LeagueRoleWithIdDto[] LeagueRoles);
+    public record LeagueTemplateDto(string Name, double? BenchMultiplier, double TeamWinPoints, double TeamLosePoints, LeagueRoleWithIdDto[] LeagueRoles);
     public record LeaguePlayersDto(string Name, bool IsActive, int EntryFee, int LeagueTemplateId, bool IsPrivate, List<PlayerInLeagueDto> Players);
     public record PlayerGameStatsDto(string TeamId, List<PlayerGameStatDto> Stats);
     public record PlayerGameStatDto(int StatisticId, double value);
     public record ParticipantDto(int Id, string TeamName, string UserName, double Points);
-    public record ParticipantWithTeamDto(bool LeagueIsActive, bool AllowRosterChanges, int Id, string TeamName, string UserName, double Points, ParticipantPlayerInfoDto[] Team);
+    public record LeagueParticipationDto(int Id, int LeagueId, string TeamName, string LeagueName, int Placement);
+    public record ParticipantWithTeamDto(bool LeagueIsActive, bool AllowRosterChanges, int Id, bool ParticipantIsUser, string TeamName, string UserName, double Points, ParticipantPlayerInfoDto[] Team);
     public record ParticipantPlayerInfoDto(int Id, double Points, double PointsLastGame, string PlayerId, string PlayerName, string TeamName, int Price, int RoleId, string RoleName, int? RoleToReplaceId);
     public record ParticipantRoleChangeDto(string TeamName, ParticipantPlayerRoleDto[] PlayerRolePairs);
     public record ParticipantPlayerRoleDto(int Id, int RoleId);
@@ -29,7 +31,5 @@ namespace BBallStatsV2.DTOs
     public record UserWithoutRolesDto(string Id, string Username, string Email);
     public record CreateUserDto(string Username, string Password, string Email, int Role);
     public record UpdateUserDto(string OldPassword, string NewPassword, string Email, int Role);
-
     public record MatchPlayerDto(MatchDto Match, List<string> PlayerIds);
-    public record MatchDto(int gameCode, int seasonCode, string HomeTeamId, string AwayTeamId, DateTime MatchDate);
 }

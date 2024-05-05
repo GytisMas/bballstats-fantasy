@@ -30,10 +30,15 @@ namespace BBallStatsV2.Controllers
         {
             pageSize = PagedListData.FilteredPageSize(pageSize);
             pageIndex = PagedListData.FilteredPageIndex(pageIndex);
-            int pageCount = (await _context.Leagues
+            int totalCount = (await _context.Leagues
                 .Where(l => l.Password == null && (nameFilter == null || nameFilter == "" || l.Name.Contains(nameFilter))
                     && (!activeOnly || DateTime.UtcNow >= l.StartDate && DateTime.UtcNow <= l.EndDate && !l.IsOver))
-                .CountAsync()) / pageSize + 1;
+                .CountAsync());
+            int pageCount = totalCount / pageSize;
+            if (totalCount % pageSize != 0)
+                pageCount++;
+
+
             var leagues = _context.Leagues
                 .Include(l => l.LeagueTemplate)
                 .Include(l => l.LeagueHost)
@@ -78,21 +83,7 @@ namespace BBallStatsV2.Controllers
                     l.LeagueAvailablePlayers.Select(lp => lp.Player.CurrentTeam.Name).Distinct().ToArray()))
                 .ToListAsync(), pageIndex, pageCount);
         }
-
-        [HttpGet("byUser/{userId}")]
-        public async Task<IEnumerable<ListedLeagueDto>> GetLeaguesByUser(string userId)
-        {
-            var leagues = await _context.Leagues
-                .Where(l => l.Participants.Select(p => p.UserId).Contains(userId))
-                .OrderByDescending(l => l.IsOver)
-                    .ThenByDescending(l => DateTime.UtcNow >= l.StartDate && DateTime.UtcNow <= l.EndDate)
-                .ToListAsync();
-
-            return leagues.Select(l => new ListedLeagueDto(l.Id, l.Name, l.EntryFee, l.IsActive, l.StartDate, l.EndDate,
-                    l.LeagueTemplate.Name, l.LeagueHost.UserName,
-                    l.LeagueAvailablePlayers.Select(lp => lp.Player.CurrentTeam.Name).Distinct().ToArray()));
-        }
-
+                
         [HttpGet("{leagueId}")]
         public async Task<ActionResult<LeagueWithParticipantsDto>> GetLeague(int leagueId)
         {
@@ -115,6 +106,9 @@ namespace BBallStatsV2.Controllers
                 if (userParticipantId != null)
                     participantId = userParticipantId;
             }
+
+            league.Participants = league.Participants.OrderByDescending(p => p.Points).ThenBy(p => p.EntryDate).ToList();
+
 
             return new LeagueWithParticipantsDto(league.Id, league.Name, !league.HasStarted, participantId, league.EntryFee, league.CreationDate, league.StartDate, 
                 league.EndDate, league.Participants.Select(p => new ParticipantDto(p.Id, p.TeamName, p.User.UserName, p.Points)).ToArray());
@@ -209,11 +203,21 @@ namespace BBallStatsV2.Controllers
                 return NotFound();
             }
 
+            bool participantIsUser = false;
+            if (HttpContext.User.Identity?.IsAuthenticated ?? false)
+            {
+                var userId = HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+                var userParticipantId = league.Participants
+                    .FirstOrDefault(p => p.UserId.Equals(userId))?.Id ?? null;
+                if (userParticipantId != null)
+                    participantIsUser = true;
+            }
+
             bool allowRosterChanges = league.IsActive && DateTime.UtcNow.Hour < 12;
 
-            return Ok(new ParticipantWithTeamDto(league.IsActive, allowRosterChanges, participant.Id, participant.TeamName, participant.User.UserName, participant.Points, 
+            return Ok(new ParticipantWithTeamDto(league.IsActive, allowRosterChanges, participant.Id, participantIsUser, participant.TeamName, participant.User.UserName, participant.Points, 
                 participant.Team.Select(t => new ParticipantPlayerInfoDto(t.Id, t.Points, t.PointsLastGame, t.LeagueAvailablePlayer.Player.Id, t.LeagueAvailablePlayer.Player.Name, 
-                t.LeagueAvailablePlayer.Player.CurrentTeam.Name, t.LeagueAvailablePlayer.Player.Price, t.LeaguePlayerRoleId, t.LeaguePlayerRole.Name, t.LeaguePlayerRole.RoleToReplaceId)).ToArray()
+                t.LeagueAvailablePlayer.Player.CurrentTeam.Name, t.LeagueAvailablePlayer.Price, t.LeaguePlayerRoleId, t.LeaguePlayerRole.Name, t.LeaguePlayerRole.RoleToReplaceId)).ToArray()
                 ));
         }
 
@@ -274,7 +278,7 @@ namespace BBallStatsV2.Controllers
 
         [HttpPost("{leagueId}/participants/")]
         [Authorize]
-        public async Task<ActionResult<LeagueParticipant>> CreateParticipant(int leagueId, CreateParticipantDto createParticipantDto)
+        public async Task<ActionResult<int>> CreateParticipant(int leagueId, CreateParticipantDto createParticipantDto)
         {
             var userId = HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
             var user = await _context.Users
@@ -361,7 +365,7 @@ namespace BBallStatsV2.Controllers
             _context.Transactions.AddRange(newTransactions);
             _context.LeagueParticipants.Add(participant);
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(participant.Id);
         }
 
         [HttpPut("{leagueId}/participants/{participantId}")]
@@ -618,7 +622,6 @@ namespace BBallStatsV2.Controllers
             }
             _context.Players.UpdateRange(Players);
 
-            // pazet ar gerai viskas
             var statistics = await _context.RegularStatistics
             .ToListAsync();
 
@@ -641,13 +644,16 @@ namespace BBallStatsV2.Controllers
                 );
             }
 
-            // for scaling tiesiog wrapping for'e ir pridet skip / take
             var usedPlayers = await _context.ParticipantsRosterPlayers
                 .Include(prp => prp.LeaguePlayerRole.Statistics)
                 .Include(prp => prp.LeagueParticipant.League.LeagueTemplate)
                 .Include(prp => prp.LeagueAvailablePlayer)
-                .Where(prp => (DateTime.UtcNow >= prp.LeagueParticipant.League.StartDate && DateTime.UtcNow <= prp.LeagueParticipant.League.EndDate)
-                    && (prp.LeagueAvailablePlayer.Player.CurrentTeamId.Equals(playerStatData.LocalClubId)
+                .Where(prp => 
+                    !prp.LeagueParticipant.League.IsOver 
+                    && DateTime.UtcNow >= prp.LeagueParticipant.League.StartDate 
+                    && DateTime.UtcNow <= prp.LeagueParticipant.League.EndDate
+                    && 
+                    (prp.LeagueAvailablePlayer.Player.CurrentTeamId.Equals(playerStatData.LocalClubId)
                     || prp.LeagueAvailablePlayer.Player.CurrentTeamId.Equals(playerStatData.RoadClubId)))
                 .ToListAsync();
 
@@ -697,12 +703,20 @@ namespace BBallStatsV2.Controllers
             _context.ParticipantsRosterPlayers.UpdateRange(usedPlayers);
             // ^^ for scaling tiesiog wrapping for'e ir pridet skip / take
 
+            var match = await _context.Matches
+                .FirstOrDefaultAsync(m => m.GameId == playerStatData.GameId && m.SeasonId == playerStatData.SeasonId);
+
+            if (match != null)
+            {
+                match.UsedInFantasy = true;
+                _context.Matches.Update(match);
+            }
+
             await _context.SaveChangesAsync();
 
-            // league baigima cia kviest
+            // league baigima cia gal kviest
 
             return NoContent();
-
 
             #region old method
             //List<string> PlayerIds = playerStatData.PlayerInfo.Select(x => x.PlayerCode).Distinct().ToList();
@@ -926,6 +940,21 @@ namespace BBallStatsV2.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpGet("~/api/participants/byUser/{userId}")]
+        public async Task<IEnumerable<LeagueParticipationDto>> GetActiveUserParticipations(string userId)
+        {
+            var participations = await _context.LeagueParticipants
+                .Include(p => p.League)
+                    .ThenInclude(l => l.Participants)
+                .Where(p => p.UserId.Equals(userId)
+                    && !p.League.IsOver
+                )
+                .ToListAsync();
+
+            return participations.Select(p => new LeagueParticipationDto(p.Id, p.LeagueId, p.TeamName, p.League.Name,
+                p.League.StartDate < DateTime.UtcNow ? p.League.ParticipantPlacement(p.Id) : -1));
         }
 
         private async Task<int> PlayerDefaultPrice(string playerId, List<Statistic> StatList)

@@ -3,6 +3,8 @@ using BBallStatsV2.Data.Entities;
 using BBallStatsV2.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using static BBallStats.Shared.Utils.DTOs;
 
 namespace BBallStatsV2.Controllers
 {
@@ -32,6 +34,62 @@ namespace BBallStatsV2.Controllers
             }
 
             return new MatchDto(match.GameId, match.SeasonId, match.HomeTeamId, match.AwayTeamId, match.MatchDate);
+        }
+
+        [HttpGet("unused/{seasonCode}")]
+        public async Task<ActionResult<int>> GetOldestUnusedMatchId(int seasonCode, bool ignoreExisting)
+        {
+            var matches = await _context.Matches
+                .Where(m => m.SeasonId == seasonCode)
+                .Where(m => ignoreExisting || m.UsedInFantasy)
+                .OrderBy(m => m.GameId)
+                .ToListAsync();
+
+            if (matches == null || matches.Count == 0)
+            {
+                return Ok(1);
+            }
+
+            int maxId = matches.Last().GameId;
+            int unusedGameId = maxId + 1;
+
+            for (int i = 1; i <= matches.Count(); i++)
+            {
+                if (matches[i-1].GameId != i) {
+                    unusedGameId = i;
+                    break;
+                }
+            }
+
+            return Ok(unusedGameId);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<MatchDto>> CreateOrGetMatch(MatchDto dto)
+        {
+            var matches = await _context.Matches
+                .Where(m => m.GameId == dto.gameCode)
+                .Where(m => m.SeasonId == dto.seasonCode)
+                .FirstOrDefaultAsync();
+
+            if (matches != null)
+            {
+                return Ok(dto);
+            }
+
+            var match = new Match()
+            {
+                GameId = dto.gameCode,
+                SeasonId = dto.seasonCode,
+                MatchDate = dto.MatchDate,
+                HomeTeamId = dto.HomeTeamId,
+                AwayTeamId = dto.AwayTeamId
+            };
+
+            _context.Matches.Add(match);
+            await _context.SaveChangesAsync();
+
+            return Created("/api/matches", dto);
         }
 
         [HttpGet("~/api/Participants/{participantId}/[controller]")]

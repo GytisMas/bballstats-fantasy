@@ -1,0 +1,77 @@
+"filename", "language", "JavaScript", "JSON", "Markdown", "HTML", "XML", "CSS", "JavaScript JSX", "comment", "blank", "total"
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\README.md", "Markdown", 0, 0, 0, 0, 0, 0, 0, 0, 2, 2
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\package-lock.json", "JSON", 0, 18261, 0, 0, 0, 0, 0, 0, 1, 18262
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\package.json", "JSON", 0, 47, 0, 0, 0, 0, 0, 0, 1, 48
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\public\icons\down-chevron.svg", "XML", 0, 0, 0, 0, 4, 0, 0, 0, 0, 4
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\public\icons\home.svg", "XML", 0, 0, 0, 0, 6, 0, 0, 1, 5, 12
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\public\icons\thumbs-down.svg", "XML", 0, 0, 0, 0, 4, 0, 0, 0, 0, 4
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\public\icons\thumbs-up.svg", "XML", 0, 0, 0, 0, 9, 0, 0, 1, 8, 18
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\public\icons\up-chevron.svg", "XML", 0, 0, 0, 0, 4, 0, 0, 0, 0, 4
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\public\icons\user-avatar-svgrepo-com.svg", "XML", 0, 0, 0, 0, 25, 0, 0, 1, 0, 26
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\public\index.html", "HTML", 0, 0, 0, 20, 0, 0, 0, 23, 1, 44
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\public\manifest.json", "JSON", 0, 25, 0, 0, 0, 0, 0, 0, 1, 26
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\App backup.js", "JavaScript", 23, 0, 0, 0, 0, 0, 0, 0, 4, 27
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\App.css", "CSS", 0, 0, 0, 0, 0, 56, 0, 9, 10, 75
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\App.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 12, 0, 2, 14
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\App.test.js", "JavaScript", 7, 0, 0, 0, 0, 0, 0, 0, 2, 9
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\Sidebar.css", "CSS", 0, 0, 0, 0, 0, 53, 0, 15, 13, 81
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\components\Dashboard.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 32, 0, 5, 37
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\components\Footer.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 7, 0, 2, 9
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\components\Header.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 7, 0, 2, 9
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\components\HeaderFields.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 46, 0, 4, 50
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\components\Helpers.js", "JavaScript", 72, 0, 0, 0, 0, 0, 0, 1, 9, 82
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\components\Modal.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 16, 0, 3, 19
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\components\NotFound.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 7, 0, 0, 7
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\components\PlayerRoles.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 7, 0, 0, 7
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\components\SideBar.js", "JavaScript", 50, 0, 0, 0, 0, 0, 0, 0, 6, 56
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\components\modal.css", "CSS", 0, 0, 0, 0, 0, 24, 0, 0, 3, 27
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\index.css", "CSS", 0, 0, 0, 0, 0, 15, 0, 0, 2, 17
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\index.js", "JavaScript", 10, 0, 0, 0, 0, 0, 0, 5, 3, 18
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\logo.svg", "XML", 0, 0, 0, 0, 1, 0, 0, 0, 0, 1
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\Home.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 5, 0, 0, 5
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\auth\ChangePassword.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 61, 2, 7, 70
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\auth\Login.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 78, 3, 7, 88
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\auth\Logout.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 23, 3, 8, 34
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\auth\Register.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 65, 3, 8, 76
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\fantasy\FantasyTemplateCreate.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 194, 26, 21, 241
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\fantasy\FantasyTemplateView.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 115, 2, 12, 129
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\fantasy\LeagueCreate.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 176, 6, 21, 203
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\fantasy\LeagueGet.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 69, 0, 6, 75
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\fantasy\LeagueParticipantGet.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 77, 0, 7, 84
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\fantasy\LeagueParticipate.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 437, 19, 41, 497
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\fantasy\Leagues.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 142, 8, 17, 167
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\fantasy\LeaguesList.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 186, 8, 22, 216
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\playerStats\PlayerStats.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 11, 0, 1, 12
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\playerStats\PlayerStatsCreate.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 89, 4, 11, 104
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\playerStats\PlayerStatsDelete.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 45, 0, 5, 50
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\playerStats\PlayerStatsGet.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 65, 0, 7, 72
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\playerStats\PlayerStatsUpdate.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 104, 4, 9, 117
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\players\PlayerCreate.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 114, 3, 11, 128
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\players\PlayerDelete.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 45, 0, 5, 50
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\players\PlayerUpdate.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 82, 3, 9, 94
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\players\PlayersList.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 133, 6, 13, 152
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\players\TeamPlayersGet.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 69, 1, 9, 79
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\players\TeamsList.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\ratingAlgorithms\AlgorithmCreate.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 122, 4, 16, 142
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\ratingAlgorithms\AlgorithmDelete.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 45, 0, 5, 50
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\ratingAlgorithms\AlgorithmFullPage.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 143, 0, 11, 154
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\ratingAlgorithms\AlgorithmUpdate.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 132, 7, 15, 154
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\ratingAlgorithms\AlgorithmsList.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 71, 0, 8, 79
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\statistics\StatisticCreate.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 80, 3, 9, 92
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\statistics\StatisticDelete.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 44, 0, 5, 49
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\statistics\StatisticUpdate.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 97, 3, 10, 110
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\statistics\Stats.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 235, 5, 22, 262
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\users\AlgorithmGet.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 205, 1, 17, 223
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\users\UserCreate.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 78, 3, 8, 89
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\users\UserDelete.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 40, 0, 5, 45
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\users\UserGet.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 125, 0, 8, 133
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\users\UserUpdate.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 114, 3, 11, 128
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\pages\users\UsersList.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 64, 0, 6, 70
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\provider\Authentication.js", "JavaScript", 51, 0, 0, 0, 0, 0, 0, 4, 8, 63
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\reportWebVitals.js", "JavaScript", 12, 0, 0, 0, 0, 0, 0, 0, 2, 14
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\routes\ProtectedRoute.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 82, 2, 9, 93
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\routes\RegularRoute.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 37, 2, 3, 42
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\routes\index.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 244, 5, 7, 256
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\src\setupTests.js", "JavaScript", 1, 0, 0, 0, 0, 0, 0, 4, 1, 6
+"c:\Users\sikau\Documents\Uni\Bakalaurinis\bballstats-fantasy\bballstats-app\tailwind.config.js", "JavaScript", 9, 0, 0, 0, 0, 0, 0, 1, 2, 12
+"Total", "-", 235, 18333, 0, 20, 53, 148, 4477, 204, 535, 24005

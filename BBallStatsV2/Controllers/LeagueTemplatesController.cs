@@ -43,7 +43,7 @@ namespace BBallStatsV2.Controllers
                 return NotFound();
             }
 
-            return new LeagueTemplateDto(leagueTemplate.Name, leagueTemplate.BenchMultiplier,
+            return new LeagueTemplateDto(leagueTemplate.Name, leagueTemplate.BenchMultiplier, leagueTemplate.TeamWinPoints, leagueTemplate.TeamLosePoints,
                 leagueTemplate.Roles.Select(r => new LeagueRoleWithIdDto(r.Id, r.Name, r.RoleToReplaceId,
                     r.Statistics.Select(s => new LeagueStatDto(s.PointsPerStat, s.StatisticId)).ToArray()
                 )).ToArray());
@@ -104,6 +104,8 @@ namespace BBallStatsV2.Controllers
             {
                 Name = leagueTemplateDto.Name,
                 BenchMultiplier = leagueTemplateDto.BenchMultiplier / (double)100,
+                TeamWinPoints = leagueTemplateDto.TeamWinPoints,
+                TeamLosePoints = leagueTemplateDto.TeamLosePoints,
                 Roles = leagueTemplateDto.LeagueRoles.Select(x => new LeaguePlayerRole()
                 {
                     Name = x.Name,
@@ -125,7 +127,7 @@ namespace BBallStatsV2.Controllers
             _context.LeagueTemplates.Add(leagueTemplate);
             await _context.SaveChangesAsync();
 
-            return Ok(new LeagueTemplateDto(leagueTemplate.Name, leagueTemplate.BenchMultiplier,
+            return Ok(new LeagueTemplateDto(leagueTemplate.Name, leagueTemplate.BenchMultiplier, leagueTemplate.TeamWinPoints, leagueTemplate.TeamLosePoints,
                 leagueTemplate.Roles.Select(role => new LeagueRoleWithIdDto(role.Id, role.Name, role.RoleToReplaceId,
                     role.Statistics.Select(stat => new LeagueStatDto(stat.PointsPerStat, stat.StatisticId)).ToArray()
                 )).ToArray()

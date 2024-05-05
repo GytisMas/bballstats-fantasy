@@ -11,7 +11,7 @@ using static BBallStats.Data.Entities.PlayerStatistic;
 
 namespace BBallStatsV2.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/teams/{teamId}/players/{playerId}/[controller]")]
     [ApiController]
     public class PlayerStatisticsController : ControllerBase
     {
@@ -22,64 +22,48 @@ namespace BBallStatsV2.Controllers
             _context = context;
         }
 
-        // GET: api/PlayerStatistics
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PlayerStatistic>>> GetPlayerStatistics()
-        {
-            return await _context.PlayerStatistics
-                .ToListAsync();
-        }
-
-        [HttpGet("~/api/Teams/{teamId}/Players/{playerId}/[controller]")]
-        public async Task<ActionResult<IEnumerable<PlayerStatisticDto>>> GetPlayers(string teamId, string playerId)
+        public async Task<ActionResult<IEnumerable<PlayerStatisticDto>>> GetPlayersStatistics(string teamId, string playerId)
         {
             return await _context.PlayerStatistics
                 .Where(p => p.PlayerId.Equals(playerId))
-                .Select(s => new PlayerStatisticDto(s.Id, s.Value, s.StatisticId, s.PlayerId))
+                .Select(s => new PlayerStatisticDto(s.Id, s.Value, s.AttemptValue, s.GameCount, s.StatisticId, s.PlayerId))
                 .ToListAsync();
         }
 
         // GET: api/PlayerStatistics/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<PlayerStatistic>> GetPlayerStatistic(int id)
+        [HttpGet("{statId}")]
+        public async Task<ActionResult<PlayerStatisticDto>> GetPlayerStatistic(int statId)
         {
-            var playerStatistic = await _context.PlayerStatistics.FindAsync(id);
+            var playerStatistic = await _context.PlayerStatistics.FindAsync(statId);
 
             if (playerStatistic == null)
             {
                 return NotFound();
             }
 
-            return playerStatistic;
+            return Ok(new PlayerStatisticDto(playerStatistic.Id, playerStatistic.Value, playerStatistic.AttemptValue, 
+                playerStatistic.GameCount, playerStatistic.StatisticId, playerStatistic.PlayerId));
         }
 
         // PUT: api/PlayerStatistics/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlayerStatistic(int id, PlayerStatistic playerStatistic)
+        [HttpPut("{statId}")]
+        public async Task<IActionResult> PutPlayerStatistic(int statId, UpdatePlayerStatisticDto dto)
         {
-            if (id != playerStatistic.Id)
+            var playerStatistic = await _context.PlayerStatistics.FindAsync(statId);
+            if (playerStatistic == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(playerStatistic).State = EntityState.Modified;
+            playerStatistic.AttemptValue = dto.AttemptValue;
+            playerStatistic.Value = dto.Value;
+            playerStatistic.GameCount = dto.GameCount;
+            playerStatistic.StatisticId = dto.StatType;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PlayerStatisticExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _context.Update(playerStatistic);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }

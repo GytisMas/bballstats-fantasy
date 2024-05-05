@@ -1,61 +1,96 @@
 ﻿using BBallStats.Shared;
+using BBallStats.Shared.Entities;
 using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Xml;
 using System.Xml.Serialization;
+using static BBallStats.Shared.Utils.DTOs;
 
 namespace BballStatsFetcher
 {
     internal class Program
     {
-        static int intervalInMs = 7000;
+        const int shortIntervalInMs = 10;
+        const int longIntervalInMs = 15000;
         static HttpClient client = new HttpClient();
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var stat = new Stat();
             string seasonCode;
             int gameCode;
-            //Thread.Sleep(intervalInMs);
+            bool ignoreExisting = false;
             while (true)
             {
-                //Console.WriteLine("Enter season year");
-                //season = "E" + Console.ReadLine();
-                
                 // fetcherio reikalavimai:
                 // rasti API neapdorotus matchus
                 // siusti pasibaigusius matchus i API
                 // rasti nezaistus matchus
 
-                seasonCode = "E2023";
-                Console.WriteLine("Enter game code");
 
-                //gameCode = int.Parse(Console.ReadLine());
-                gameCode = 239;
+                seasonCode = "E" + (DateTime.UtcNow.Month < 8 ? DateTime.UtcNow.Year - 1 : DateTime.UtcNow.Year);
+                await CheckTeams(seasonCode);
+                
+                //Console.WriteLine($"\nGet oldest unused game (season {seasonCode})");
+                gameCode = await GetOldestUnusedGame(seasonCode, ignoreExisting);
+                ignoreExisting = !ignoreExisting;
 
-                Console.WriteLine($"\nSending request (season {seasonCode} | game {gameCode})");
-                Console.WriteLine("Request result:");
-                var game = FetchGameData(seasonCode, gameCode).Result;
-                Console.WriteLine(game);
-                Console.WriteLine("------");
-                var sendResult = SendGameData(game).Result;
+                Console.WriteLine($"\nFetching game stats (season {seasonCode} | game {gameCode})");
+                var game = await FetchGameData(seasonCode, gameCode);
 
+                if (game.Played)
+                {
+                    //Console.WriteLine($"\n Sending game stats (season {seasonCode} | game {gameCode})");
+                    var sendResult = await SendGameData(game);
+                }
+
+                if (game.ExistsInDB && !game.Played)
+                    Thread.Sleep(longIntervalInMs);
             }
-            // https://localhost:7140/api/Statistics
-
-            //while (true)
-            //{
-            //    Console.WriteLine($"{DateTime.Now:H:mm:ss} | {GetGames().Result.Substring(0, 10)}");
-            //    Thread.Sleep(intervalInMs);
-            //}
         }
 
+        private static async Task<int> GetOldestUnusedGame(string seasonCode, bool ignoreExisting)
+        {
+            var getGameResponse = await client.GetAsync($"https://localhost:7140/api/Matches/unused/{seasonCode.Substring(1)}?ignoreExisting={ignoreExisting}");
+            if (!getGameResponse.IsSuccessStatusCode)
+            {
+                throw new Exception($"{getGameResponse.StatusCode} - failed to fetch game");
+            }
+            return int.Parse(await getGameResponse.Content.ReadAsStringAsync());
+        }
 
+        private static async Task CheckTeams(string seasonCode)
+        {
+            var url = $"https://api-live.euroleague.net/v1/teams?seasonCode={seasonCode}";
+            var readResponse = await client.GetAsync(url);
+            if (!readResponse.IsSuccessStatusCode)
+            {
+                throw new Exception($"{readResponse.StatusCode} - failed to fetch teams");
+            }
+
+            string readContent = await readResponse.Content.ReadAsStringAsync();
+            var xdoc = new XmlDocument();
+            xdoc.LoadXml(readContent);
+            xdoc.Save("teams.xml");
+
+            XmlSerializer serializer = new XmlSerializer(typeof(Clubs));
+            Clubs teamData;
+            using (Stream reader = new FileStream("teams.xml", FileMode.Open))
+            {
+                teamData = (Clubs)serializer.Deserialize(reader);
+            }
+
+            var teamsContent = JsonContent.Create(
+                teamData.ClubsList.Select(c => new TeamDto(c.Code, c.Clubname))
+                );
+
+            var createTeamsResponse = await client.PostAsync($"https://localhost:7140/api/Teams/", teamsContent);
+            createTeamsResponse.EnsureSuccessStatusCode();
+        }
 
         private static async Task<Game?> FetchGameData(string seasonCode, int gameCode)
         {
             try
             {
-                // TODO: db saugomi atloadinti games
                 var readResponse = await client.GetAsync($"https://api-live.euroleague.net/v1/games?seasonCode={seasonCode}&gameCode={gameCode}");
                 if (!readResponse.IsSuccessStatusCode)
                 {
@@ -73,8 +108,23 @@ namespace BballStatsFetcher
                 {
                     gameData = (Game)serializer.Deserialize(reader);
                 }
-                if (gameData == null || !gameData.Played)
-                    throw new Exception(message: "Game data of not played game was fetched");
+
+                if (gameData == null)
+                    throw new Exception(message: $"Game {seasonCode}-{gameCode} not found");
+
+                gameData.Date = gameData.Cetdate.AddHours(-2);
+
+                var matchContent = JsonContent.Create(
+                        new CreateMatchDto(gameData.Code,
+                        int.Parse(seasonCode.Substring(1)),
+                        gameData.Localclub.Code,
+                        gameData.Roadclub.Code,
+                        gameData.Date)
+                        );
+
+                var getGameResponse = await client.PostAsync($"https://localhost:7140/api/Matches/", matchContent);
+                getGameResponse.EnsureSuccessStatusCode();
+                gameData.ExistsInDB = getGameResponse.StatusCode == System.Net.HttpStatusCode.OK;
 
                 return gameData;
             }
@@ -84,16 +134,15 @@ namespace BballStatsFetcher
                 return null;
             }
         }
+        
         private static async Task<bool> SendGameData(Game gameData)
         {
             try
             {
                 var dataStatSheet = MakeStatSheet(gameData);
 
-                //await Console.Out.WriteLineAsync("Sending to update stats.");
-                //await UpdateStats(client, dataStatSheet);
+                await UpdateStats(client, dataStatSheet);
 
-                await Console.Out.WriteLineAsync("Sending to update FL.");
                 await UpdateFantasy(client, dataStatSheet);
             } catch (Exception e)
             {
@@ -107,25 +156,26 @@ namespace BballStatsFetcher
         {
             var updateStatsContent = JsonContent.Create(dataStatSheet);
             var updateStatsResponse = await client.PostAsync("https://localhost:7140/api/Statistics/UpdateStats", updateStatsContent);
-            Console.WriteLine(updateStatsResponse);
         }
 
         private static async Task UpdateFantasy(HttpClient client, StatSheet dataStatSheet)
         {
             var updateStatsContent = JsonContent.Create(dataStatSheet);
             var updateStatsResponse = await client.PostAsync("https://localhost:7140/api/fantasy/leagues/results", updateStatsContent);
-            Console.WriteLine(updateStatsResponse);
         }
 
         private static StatSheet MakeStatSheet(Game game) 
         { 
             StatSheet statSheet = new StatSheet();
 
-            statSheet.LocalClubId = game.Localclub.Totals.Total.ClubCode;
-            statSheet.LocalClubName = game.Localclub.Totals.Total.ClubName;
+            statSheet.GameId = game.Code;
+            statSheet.SeasonId = int.Parse(game.Seasoncode.Substring(1));
 
-            statSheet.RoadClubId = game.Roadclub.Totals.Total.ClubCode;
-            statSheet.RoadClubName = game.Roadclub.Totals.Total.ClubName;
+            statSheet.LocalClubId = game.Localclub.Code;
+            statSheet.LocalClubName = game.Localclub.Name;
+
+            statSheet.RoadClubId = game.Roadclub.Code;
+            statSheet.RoadClubName = game.Roadclub.Name;
             statSheet.WinnerClubId = game.Localclub.Score > game.Roadclub.Score ? statSheet.LocalClubId : statSheet.RoadClubId;
 
             foreach (var stat in game.Localclub.Playerstats.Stat)

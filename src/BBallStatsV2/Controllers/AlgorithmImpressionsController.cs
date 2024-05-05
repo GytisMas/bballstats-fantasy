@@ -12,6 +12,7 @@ using System.Threading;
 using BBallStats2.Auth.Model;
 using System.Net.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BBallStatsV2.Controllers
 {
@@ -27,6 +28,7 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/AlgorithmImpressions
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AlgorithmImpressionDto>>> GetAlgorithmImpressions(int customStatisticId)
         {
@@ -47,6 +49,7 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/AlgorithmImpressions/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<AlgorithmImpressionDto>> GetAlgorithmImpression(int impressionId)
         {
@@ -62,6 +65,7 @@ namespace BBallStatsV2.Controllers
 
         // PUT: api/AlgorithmImpressions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAlgorithmImpression(string userId, int impressionId, UpdateAlgorithmImpressionDto updateImpressionDto)
         {
@@ -92,6 +96,7 @@ namespace BBallStatsV2.Controllers
         // POST: api/AlgorithmImpressions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         // TODO: update with dto
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<AlgorithmImpression>> PostAlgorithmImpression(AlgorithmImpression algorithmImpression)
         {
@@ -102,6 +107,7 @@ namespace BBallStatsV2.Controllers
         }
 
         // DELETE: api/AlgorithmImpressions/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAlgorithmImpression(int id)
         {

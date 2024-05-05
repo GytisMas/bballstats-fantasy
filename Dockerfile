@@ -8,13 +8,13 @@ COPY . .
 RUN dotnet build "src/BBallStatsV2/BBallStatsV2.csproj" -c Release -o /app/build
 
 FROM build as publish
-RUN dotnet publish "src/BBallStatsV2/BBallStatsV2.csproj" -c Release -o /app/publish
+RUN dotnet publish "src/BBallStatsV2/BBallStatsV2.csproj" -c Release -o /app/publish -r linux-musl-x64 --self-contained true --no-restore /p:PublishReadyToRun=true /p:PublishSingleFile=true
 
 # final stage/image
 FROM mcr.microsoft.com/dotnet/runtime-deps:8.0-alpine-amd64
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Api.dll"]
+ENTRYPOINT ["./BBallStatsV2"]
 
 # See: https://github.com/dotnet/announcements/issues/20
 # Uncomment to enable globalization APIs (or delete)

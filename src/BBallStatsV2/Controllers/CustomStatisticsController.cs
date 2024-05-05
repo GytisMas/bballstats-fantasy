@@ -33,6 +33,7 @@ namespace BBallStatsV2.Controllers
             _userManager = userManager;
         }
 
+        [Authorize]
         [HttpGet("~/api/customStatistics")]
         public async Task<ActionResult<PagedListDto<CustomStatisticDto>>> GetCustomStatistics(int pageIndex = 1, int pageSize = 15)
         {
@@ -51,6 +52,7 @@ namespace BBallStatsV2.Controllers
             return Ok(new PagedListDto<CustomStatisticDto>(customStatistics, pageIndex, pageCount));
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CustomStatisticDto>>> GetUserCustomStatistics(string userId)
         {
@@ -66,6 +68,7 @@ namespace BBallStatsV2.Controllers
             return Ok(customStatistics);
         }
 
+        [Authorize]
         [HttpGet("{customStatisticId}")]
         public async Task<ActionResult<CustomStatisticDto>> GetCustomStatistic(string userId, int customStatisticId)
         {
@@ -95,6 +98,7 @@ namespace BBallStatsV2.Controllers
                 customStatistic.Statistics.Select(s => s.Id).ToArray()));
         }
 
+        [Authorize]
         [HttpPut("{customStatisticId}")]
         public async Task<IActionResult> UpdateCustomStatistic(int customStatisticId, string userId, UpdateCustomStatisticDto dto)
         {
@@ -219,6 +223,7 @@ namespace BBallStatsV2.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpGet("{customStatisticId}/algorithmImpressions")]
         public async Task<ActionResult<IEnumerable<AlgorithmImpressionDto>>> GetCustomStatisticImpressions(string userId, int customStatisticId)
         {
@@ -242,6 +247,7 @@ namespace BBallStatsV2.Controllers
             return Ok(algorithmImpressions);
         }
 
+        [Authorize]
         [HttpGet("{customStatisticId}/algorithmImpressions/{impressionId}")]
         public async Task<ActionResult<AlgorithmImpressionDto>> GetCustomStatisticImpression(string userId, int customStatisticId, int impressionId)
         {
@@ -261,6 +267,7 @@ namespace BBallStatsV2.Controllers
             return Ok(new AlgorithmImpressionDto(algorithmImpression.Id, algorithmImpression.Positive, customStatisticId, algorithmImpression.UserId));
         }
 
+        [Authorize]
         [HttpPost("{customStatisticId}/algorithmImpressions")]
         public async Task<ActionResult<AlgorithmImpressionDto>> CreateCustomStatisticImpression(string userId, int customStatisticId, CreateAlgorithmImpressionDto dto)
         {
@@ -299,6 +306,7 @@ namespace BBallStatsV2.Controllers
                 new AlgorithmImpressionDto(algorithmImpression.Id, algorithmImpression.Positive, customStatisticId, algorithmImpression.UserId));
         }
 
+        [Authorize]
         [HttpPut("{customStatisticId}/algorithmImpressions/{impressionId}")]
         public async Task<ActionResult<AlgorithmImpressionDto>> UpdateCustomStatisticImpression(string userId, int customStatisticId, int impressionId, UpdateAlgorithmImpressionDto dto)
         {
@@ -330,6 +338,7 @@ namespace BBallStatsV2.Controllers
             return Ok(new AlgorithmImpressionDto(algorithmImpression.Id, algorithmImpression.Positive, customStatisticId, algorithmImpression.UserId));
         }
 
+        [Authorize]
         [HttpDelete("{customStatisticId}/algorithmImpressions/{impressionId}")]
         public async Task<ActionResult<AlgorithmImpressionDto>> DeleteCustomStatisticImpression(string userId, int customStatisticId, int impressionId)
         {

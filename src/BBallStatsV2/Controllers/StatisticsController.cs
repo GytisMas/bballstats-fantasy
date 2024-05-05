@@ -24,6 +24,7 @@ namespace BBallStatsV2.Controllers
             _context = context;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RegularStatisticDto>>> GetStatistics()
         {
@@ -32,6 +33,7 @@ namespace BBallStatsV2.Controllers
                 .ToListAsync();
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<IEnumerable<RegularStatisticDto>>> GetStatistic(int id)
         {
@@ -107,6 +109,7 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/Leagues
+        [Authorize]
         [HttpPost("UpdateStats")]
         public async Task<IActionResult> UpdateStats(StatSheet playerStatData)
         {

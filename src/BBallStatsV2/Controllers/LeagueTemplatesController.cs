@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BBallStats.Data;
 using BBallStatsV2.Data.Entities;
 using BBallStatsV2.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BBallStatsV2.Controllers
 {
@@ -23,6 +24,7 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/LeagueTemplates
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<LeagueTemplate>>> GetLeagueTemplates()
         {
@@ -30,6 +32,7 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/LeagueTemplates/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<LeagueTemplateDto>> GetLeagueTemplate(int id)
         {
@@ -51,6 +54,7 @@ namespace BBallStatsV2.Controllers
 
         // PUT: api/LeagueTemplates/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLeagueTemplate(int id, LeagueTemplate leagueTemplate)
         {
@@ -82,6 +86,7 @@ namespace BBallStatsV2.Controllers
 
         // POST: api/LeagueTemplates
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<LeagueTemplate>> PostLeagueTemplate(LeagueTemplateDto leagueTemplateDto)
         {
@@ -135,6 +140,7 @@ namespace BBallStatsV2.Controllers
         }
 
         // DELETE: api/LeagueTemplates/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLeagueTemplate(int id)
         {

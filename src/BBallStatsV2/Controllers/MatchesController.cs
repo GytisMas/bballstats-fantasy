@@ -1,6 +1,7 @@
 ﻿using BBallStats.Data;
 using BBallStatsV2.Data.Entities;
 using BBallStatsV2.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
@@ -20,6 +21,7 @@ namespace BBallStatsV2.Controllers
         }
 
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<MatchDto>> GetLatestSeasonMatch(int seasonCode)
         {
@@ -36,6 +38,7 @@ namespace BBallStatsV2.Controllers
             return new MatchDto(match.GameId, match.SeasonId, match.HomeTeamId, match.AwayTeamId, match.MatchDate);
         }
 
+        [Authorize]
         [HttpGet("unused/{seasonCode}")]
         public async Task<ActionResult<int>> GetOldestUnusedMatchId(int seasonCode, bool ignoreExisting)
         {
@@ -64,6 +67,7 @@ namespace BBallStatsV2.Controllers
             return Ok(unusedGameId);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<MatchDto>> CreateOrGetMatch(MatchDto dto)
         {
@@ -92,6 +96,7 @@ namespace BBallStatsV2.Controllers
             return Created("/api/matches", dto);
         }
 
+        [Authorize]
         [HttpGet("~/api/Participants/{participantId}/[controller]")]
         public async Task<ActionResult<IEnumerable<MatchPlayerDto>>> GetParticipantNextMatches(int participantId)
         {

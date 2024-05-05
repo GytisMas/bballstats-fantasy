@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BBallStats.Data;
 using BBallStats.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BBallStatsV2.Controllers
 {
@@ -22,12 +23,14 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/Players
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Player>>> GetPlayers()
         {
             return await _context.Players.ToListAsync();
         }
 
+        [Authorize]
         [HttpGet("~/api/Teams/{teamId}/[controller]")]
         public async Task<ActionResult<IEnumerable<Player>>> GetPlayers(string teamId)
         {
@@ -35,6 +38,7 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/Players/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Player>> GetPlayer(string id)
         {
@@ -50,6 +54,7 @@ namespace BBallStatsV2.Controllers
 
         // PUT: api/Players/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPlayer(string id, Player player)
         {
@@ -81,6 +86,7 @@ namespace BBallStatsV2.Controllers
 
         // POST: api/Players
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<Player>> PostPlayer(Player player)
         {
@@ -105,6 +111,7 @@ namespace BBallStatsV2.Controllers
         }
 
         // DELETE: api/Players/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlayer(string id)
         {

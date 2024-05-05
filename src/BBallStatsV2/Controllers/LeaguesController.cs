@@ -24,6 +24,7 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/Leagues
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<PagedListDto<ListedLeagueDto>>> GetPublicLeagues(string? nameFilter, bool activeOnly = false, 
             LeagueSortParameter sortBy = LeagueSortParameter.StartDateD, int pageIndex = 1, int pageSize = 10)
@@ -84,6 +85,7 @@ namespace BBallStatsV2.Controllers
                 .ToListAsync(), pageIndex, pageCount);
         }
                 
+        [Authorize]
         [HttpGet("{leagueId}")]
         public async Task<ActionResult<LeagueWithParticipantsDto>> GetLeague(int leagueId)
         {
@@ -114,6 +116,7 @@ namespace BBallStatsV2.Controllers
                 league.EndDate, league.Participants.Select(p => new ParticipantDto(p.Id, p.TeamName, p.User.UserName, p.Points)).ToArray());
         }
 
+        [Authorize]
         [HttpGet("{leagueId}/Players")]
         public async Task<ActionResult<LeaguePlayersDto>> GetLeagueWithPlayers(int leagueId)
         {
@@ -134,6 +137,7 @@ namespace BBallStatsV2.Controllers
             return new LeaguePlayersDto(league.Name, league.IsActive, league.EntryFee, league.LeagueTemplateId, league.Password != null, players);
         }
 
+        [Authorize]
         [HttpPost("{leagueId}/Password")]
         public async Task<ActionResult<bool>> CheckLeaguePassword(int leagueId, string Password)
         {
@@ -179,6 +183,7 @@ namespace BBallStatsV2.Controllers
             return Ok(participantId);
         }
 
+        [Authorize]
         [HttpGet("{leagueId}/participants/{participantId}")]
         public async Task<ActionResult<LeagueParticipant>> GetParticipant(int leagueId, int participantId)
         {
@@ -221,6 +226,7 @@ namespace BBallStatsV2.Controllers
                 ));
         }
 
+        [Authorize]
         [HttpPut("{leagueId}/participants/{participantId}/roles")]
         public async Task<ActionResult<bool>> UpdateParticipantRoles(int leagueId, int participantId, ParticipantRoleChangeDto participantRoleChangeDto)
         {
@@ -264,6 +270,7 @@ namespace BBallStatsV2.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpGet("{leagueId}/participants")]
         public async Task<ActionResult<LeagueParticipant>> GetParticipants(int leagueId)
         {
@@ -276,8 +283,8 @@ namespace BBallStatsV2.Controllers
             return Ok(participants);
         }
 
-        [HttpPost("{leagueId}/participants/")]
         [Authorize]
+        [HttpPost("{leagueId}/participants/")]
         public async Task<ActionResult<int>> CreateParticipant(int leagueId, CreateParticipantDto createParticipantDto)
         {
             var userId = HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
@@ -368,6 +375,7 @@ namespace BBallStatsV2.Controllers
             return Ok(participant.Id);
         }
 
+        [Authorize]
         [HttpPut("{leagueId}/participants/{participantId}")]
         public async Task<ActionResult<LeagueParticipant>> UpdateParticipant(int leagueId, int participantId, CreateParticipantDto createParticipantDto)
         {
@@ -420,8 +428,8 @@ namespace BBallStatsV2.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{leagueId}/participants/{participantId}")]
         [Authorize]
+        [HttpDelete("{leagueId}/participants/{participantId}")]
         public async Task<IActionResult> DeleteParticipant(int leagueId, int participantId)
         {
             var league = await _context.Leagues.FindAsync(leagueId);
@@ -454,6 +462,7 @@ namespace BBallStatsV2.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpPatch("{leagueId}")]
         public async Task<IActionResult> PatchLeague(int leagueId, PatchLeagueDto patchLeagueDto)
         {
@@ -516,6 +525,7 @@ namespace BBallStatsV2.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<League>> CreateLeague(PostLeagueDto postLeagueDto)
         {
@@ -594,6 +604,7 @@ namespace BBallStatsV2.Controllers
             return Ok(new LeagueDto(league.Id, league.EntryFee, league.CreationDate, league.StartDate, league.EndDate, league.LeagueTemplateId, league.LeagueHostId));
         }
 
+        [Authorize]
         [HttpPost("results")]
         public async Task<IActionResult> UpdateLeaguePoints(StatSheet playerStatData)
         {
@@ -848,6 +859,7 @@ namespace BBallStatsV2.Controllers
             return InactivePlayers.Contains(potentialReplacementPlayerId);
         }
 
+        [Authorize]
         [HttpPost("endleague")]
         public async Task<IActionResult> EndInactiveLeagues()
         {
@@ -872,6 +884,7 @@ namespace BBallStatsV2.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpPost("endleague/{leagueId}")]
         public async Task<IActionResult> EndLeague(int leagueId)
         {
@@ -927,6 +940,7 @@ namespace BBallStatsV2.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("{leagueId}")]
         public async Task<IActionResult> DeleteLeague(int leagueId)
         {
@@ -942,6 +956,7 @@ namespace BBallStatsV2.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpGet("~/api/participants/byUser/{userId}")]
         public async Task<IEnumerable<LeagueParticipationDto>> GetActiveUserParticipations(string userId)
         {

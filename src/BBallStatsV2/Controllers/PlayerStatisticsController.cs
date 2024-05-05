@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using BBallStats.Data;
 using BBallStats.Data.Entities;
 using static BBallStats.Data.Entities.PlayerStatistic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BBallStatsV2.Controllers
 {
@@ -22,6 +23,7 @@ namespace BBallStatsV2.Controllers
             _context = context;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PlayerStatisticDto>>> GetPlayersStatistics(string teamId, string playerId)
         {
@@ -32,6 +34,7 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/PlayerStatistics/5
+        [Authorize]
         [HttpGet("{statId}")]
         public async Task<ActionResult<PlayerStatisticDto>> GetPlayerStatistic(int statId)
         {
@@ -48,6 +51,7 @@ namespace BBallStatsV2.Controllers
 
         // PUT: api/PlayerStatistics/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPut("{statId}")]
         public async Task<IActionResult> PutPlayerStatistic(int statId, UpdatePlayerStatisticDto dto)
         {
@@ -70,6 +74,7 @@ namespace BBallStatsV2.Controllers
 
         // POST: api/PlayerStatistics
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<PlayerStatistic>> PostPlayerStatistic(PlayerStatistic playerStatistic)
         {
@@ -80,6 +85,7 @@ namespace BBallStatsV2.Controllers
         }
 
         // DELETE: api/PlayerStatistics/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlayerStatistic(int id)
         {

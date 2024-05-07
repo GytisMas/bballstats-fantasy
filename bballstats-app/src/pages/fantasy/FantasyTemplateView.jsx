@@ -1,5 +1,5 @@
 import { useAuth } from "../../provider/Authentication";
-import {BearerAuth, Form2XLContainerStyle, FormMaxWidthContainerStyle, FormMemberStyle, FormWiderContainerStyle, RoleMemberStyle} from '../../components/Helpers';
+import {BearerAuth, DisabledFormMemberStyle, Form2XLContainerStyle, FormMaxWidthContainerStyle, FormMemberHalfStyle, FormWiderContainerStyle, RoleMemberStyle} from '../../components/Helpers';
 import {FormContainerStyle, FormSumbitStyle, FormHelperStyle} from '../../components/Helpers';
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
@@ -29,9 +29,9 @@ function FantasyTemplateView() {
       const statsResponse = (await axios.get(APIEndpoint + '/Statistics'));
       setStatTypes(statsResponse.data);
       const templateResponse = (await axios.get(APIEndpoint + '/LeagueTemplates/' + params.templateId));
-      console.log(templateResponse.data);
       setTemplate(templateResponse.data);
-      setLeagueRoles(templateResponse.data.leagueRoles);
+      setLeagueRoles(templateResponse.data.leagueRoles
+        .sort((a, b) => a.id > b.id ? 1 : -1));
     }
     loadStatTypes().then(() => setIsLoading(false));
   }, []);
@@ -56,7 +56,7 @@ function FantasyTemplateView() {
       <tr key={i}>
         <td className='p-2 border-2 text-left'>{name}</td>
         <td>
-          <input className={FormMemberStyle} type="number" defaultValue={statEntry.pointsPerStat} disabled step="0.01" name={"statvalue-"+role.id+"-"+i} required />
+          <input className={DisabledFormMemberStyle} type="number" defaultValue={statEntry.pointsPerStat} disabled step="0.01" name={"statvalue-"+role.id+"-"+i} required />
         </td>
       </tr>
     );
@@ -72,20 +72,24 @@ function FantasyTemplateView() {
   const renderForm = (
     <div className={FormMaxWidthContainerStyle}>
       <div className="input-container max-w-sm mx-auto">
-        <label>Template name</label>
-        <input className={FormMemberStyle} type="text" name="templateName" value={template.name} required disabled />
-        {renderErrorMessage("templateName")}
-        <label>Use active / start five rosters</label><br/>
-        <input type="checkbox" name="startFiveMode" checked={template.benchMultiplier != null} disabled /><br/>
-        {template.benchMultiplier != null && 
-        <>
-          <label>Bench player points, 1-100% (active players are 100%)</label><br/>
-          <input type="number" min={0} max={100} step={1} disabled value={template.benchMultiplier * 100} name="benchMultiplier" /> %
-        </>
+        <div className="input-container max-w-sm mx-auto bg-white shadow-md rounded px-4 py-4 mb-4">
+          <label>Template name</label>
+          <input className={DisabledFormMemberStyle} type="text" name="templateName" value={template.name} required disabled />
+          <p className="text-center py-1">Player gained points per game for team win / loss</p>
+          <input className={FormMemberHalfStyle} type="number" step={1} name="teamWinPts" disabled value={template.teamWinPoints}/>
+          <input className={FormMemberHalfStyle} type="number" step={1} name="teamLosePts" disabled value={template.teamLosePoints}/>
+        </div>
+        <div className="max-w-sm mx-auto bg-white shadow-md rounded px-4 py-4 mb-4">
+          <label>Use active / start five rosters</label><br/>
+          <input type="checkbox" name="startFiveMode" checked={template.benchMultiplier != null} disabled /><br/>
+          {template.benchMultiplier != null && 
+          <>
+            <label>Bench player points, 1-100% (active players are 100%)</label><br/>
+            <input type="number" min={0} max={100} step={1} disabled value={template.benchMultiplier * 100} name="benchMultiplier" /> %
+          </>
         }
-        <label>Player gained points per game for team win / loss</label><br/>
-        <input type="number" step={1} name="teamWinPts" disabled value={template.teamWinPoints}/>
-        <input type="number" step={1} name="teamLosePts" disabled value={template.teamLosePoints}/>
+      </div>
+        
         
 
       </div>
@@ -98,8 +102,14 @@ function FantasyTemplateView() {
         {leagueRoles.map((role, roleIndex) => (
           <div key={role.id} className={RoleMemberStyle} >
             <label>Role name</label>
-            <input className={FormMemberStyle} type="text" name={"rolename"+roleIndex} disabled defaultValue={role.name} required />
-              <table className={FormMemberStyle}>
+            <input className={DisabledFormMemberStyle} type="text" name={"rolename"+roleIndex} disabled defaultValue={role.name} required />
+            {role.roleToReplaceIndex != null && 
+              <>
+                <p className="py-1">Is replacement for role</p>
+                <input className={DisabledFormMemberStyle} type="text" name={"rolename"+roleIndex} disabled defaultValue={leagueRoles.find(x => x.id == role.roleToReplaceIndex).name} required />
+              </>
+            }
+              <table className={DisabledFormMemberStyle}>
                 <thead>
                   <tr>
                     <th className='p-2 border-2 text-left'>Statistic name</th>

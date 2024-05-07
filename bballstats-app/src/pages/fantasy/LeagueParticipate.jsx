@@ -277,8 +277,7 @@ function LeagueParticipate(props) {
             navigate("/players");
         } catch (error) {
             console.log(error);
-            console.log(error.response.data);
-            if (error.response.data.includes("exists"))
+            if (error.response.data && error.response.data.includes("exists"))
               setErrorMessages({ name: "templateName", message: "League template with name already exists" });
         }
       }
@@ -425,7 +424,7 @@ function LeagueParticipate(props) {
                       <p className="px-1 text-slate-600 w-full text-sm text-left">Fantasy role</p>
                       <select className={FormSelectStyle} onChange={changeAvailableRoles(player.leaguePlayerId, player.price)} defaultValue={defaultSelectedPlayerRole(player)} name={"roleof-"+player.leaguePlayerId}>
                         <option key={-1} value={-1}>Not Selected</option>
-                        {leagueRoles.map((role, index) => (
+                        {leagueRoles.map((role, index) => ( 
                           <option key={role.id} value={role.id} disabled={leagueRolesUnavailable.find((e) => e.id == role.id) != null ? true : false}>{role.name} {role.roleToReplaceIndex && "(substitute for " + leagueRoles.find((e) => e.id == role.roleToReplaceIndex).name + ")"}</option>
                           ))
                         }

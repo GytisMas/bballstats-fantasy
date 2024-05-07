@@ -64,7 +64,7 @@ function LeagueParticipantGet(props) {
             <div className='w-64 flex border-x-2 border-slate-400  flex-col p-1 py-5 items-center bg-slate-100'>
               <div className=" w-full flex flex-row justify-between">
                 <label className="px-1 text-left">Points earned</label>
-                <label className="px-1 text-right">{player.points} {player.pointsLastGame != 0 && "("+(player.pointsLastGame > 0 ? "+"+player.pointsLastGame : player.pointsLastGame)+")"}</label>
+                <label className="px-1 text-right">{player.points} {player.pointsLastGame != 0 && "("+(player.pointsLastGame > 0 ? "+"+player.pointsLastGame.toFixed(1) : player.pointsLastGame.toFixed(1))+")"}</label>
               </div>
               <div className=" w-full flex flex-row justify-between">
                 <label className="px-1 text-left">Next game date</label>

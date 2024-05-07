@@ -664,7 +664,7 @@ namespace BBallStatsV2.Controllers
                 PlayerGameStats.Add(playerInfo.Id,
                     new PlayerGameStatsDto(playerInfo.TeamId,
                         playerStatData.GameStats
-                            .Where(x => x.PlayerCode.Equals(playerInfo))
+                            .Where(x => x.PlayerCode.Equals(playerInfo.Id))
                             .Select(x => new PlayerGameStatDto(
                                 statistics.First(y => y.Name.Equals(x.StatName)).Id,
                                 x.IntVal != null ? (int)x.IntVal :
@@ -693,12 +693,15 @@ namespace BBallStatsV2.Controllers
             Dictionary<string, double> PlayerRolePoints = new Dictionary<string, double>();
             foreach (var usedPlayer in usedPlayers)
             {
+                if (usedPlayer.LeagueAvailablePlayer.PlayerId == "006436")
+                {
+                    Console.WriteLine("A");
+                }
                 double teamWinOrLosePoints =
                     PlayerGameStats[usedPlayer.LeagueAvailablePlayer.PlayerId].TeamId.Equals(playerStatData.WinnerClubId)
                     ? usedPlayer.LeagueParticipant.League.LeagueTemplate.TeamWinPoints
                     : usedPlayer.LeagueParticipant.League.LeagueTemplate.TeamLosePoints;
 
-                usedPlayer.PointsLastGame = usedPlayer.Points;
                 double? benchMultiplier = usedPlayer.LeagueParticipant.League.LeagueTemplate.BenchMultiplier;
                 string currentDictKey = $"{usedPlayer.LeagueAvailablePlayer.PlayerId}_{usedPlayer.LeaguePlayerRoleId}";
 
@@ -712,6 +715,7 @@ namespace BBallStatsV2.Controllers
                 if (!PlayerRolePoints.ContainsKey(currentDictKey))
                 {
                     double currentDictValue = 0;
+                    var a = PlayerGameStats[usedPlayer.LeagueAvailablePlayer.PlayerId];
                     foreach (var stat in PlayerGameStats[usedPlayer.LeagueAvailablePlayer.PlayerId].Stats)
                     {
                         // pakeist stat leagueId i name, pridet metoda custom stat evaluation
@@ -731,6 +735,7 @@ namespace BBallStatsV2.Controllers
 
                 pointsToGive = Math.Round(pointsToGive, 2);
                 usedPlayer.Points += pointsToGive;
+                usedPlayer.PointsLastGame = pointsToGive;
                 usedPlayer.LeagueParticipant.Points += pointsToGive;
             }
             _context.ParticipantsRosterPlayers.UpdateRange(usedPlayers);

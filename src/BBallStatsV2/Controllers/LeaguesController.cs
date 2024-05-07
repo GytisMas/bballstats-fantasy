@@ -599,7 +599,6 @@ namespace BBallStatsV2.Controllers
             return Ok(new LeagueDto(league.Id, league.EntryFee, league.CreationDate, league.StartDate, league.EndDate, league.LeagueTemplateId, league.LeagueHostId));
         }
 
-        [Authorize]
         [HttpPost("results")]
         public async Task<IActionResult> UpdateLeaguePoints(StatSheet playerStatData)
         {

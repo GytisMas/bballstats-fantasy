@@ -107,7 +107,6 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/Leagues
-        [Authorize]
         [HttpPost("UpdateStats")]
         public async Task<IActionResult> UpdateStats(StatSheet playerStatData)
         {

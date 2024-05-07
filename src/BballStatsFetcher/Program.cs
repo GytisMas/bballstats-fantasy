@@ -12,6 +12,8 @@ namespace BballStatsFetcher
     {
         const int shortIntervalInMs = 10;
         const int longIntervalInMs = 15000;
+        const string baseUrl = "https://urchin-app-97ttl.ondigitalocean.app/api";
+        //const string baseUrl = "https://localhost:7140/api";
         static HttpClient client = new HttpClient();
         static async Task Main(string[] args)
         {
@@ -19,6 +21,7 @@ namespace BballStatsFetcher
             string seasonCode;
             int gameCode;
             bool ignoreExisting = false;
+                    Thread.Sleep(longIntervalInMs);
             while (true)
             {
                 // fetcherio reikalavimai:
@@ -50,7 +53,7 @@ namespace BballStatsFetcher
 
         private static async Task<int> GetOldestUnusedGame(string seasonCode, bool ignoreExisting)
         {
-            var getGameResponse = await client.GetAsync($"https://localhost:7140/api/Matches/unused/{seasonCode.Substring(1)}?ignoreExisting={ignoreExisting}");
+            var getGameResponse = await client.GetAsync($"{baseUrl}/Matches/unused/{seasonCode.Substring(1)}?ignoreExisting={ignoreExisting}");
             if (!getGameResponse.IsSuccessStatusCode)
             {
                 throw new Exception($"{getGameResponse.StatusCode} - failed to fetch game");
@@ -83,7 +86,7 @@ namespace BballStatsFetcher
                 teamData.ClubsList.Select(c => new TeamDto(c.Code, c.Clubname))
                 );
 
-            var createTeamsResponse = await client.PostAsync($"https://localhost:7140/api/Teams/", teamsContent);
+            var createTeamsResponse = await client.PostAsync($"{baseUrl}/Teams/", teamsContent);
             createTeamsResponse.EnsureSuccessStatusCode();
         }
 
@@ -122,7 +125,7 @@ namespace BballStatsFetcher
                         gameData.Date)
                         );
 
-                var getGameResponse = await client.PostAsync($"https://localhost:7140/api/Matches/", matchContent);
+                var getGameResponse = await client.PostAsync($"{baseUrl}/Matches/", matchContent);
                 getGameResponse.EnsureSuccessStatusCode();
                 gameData.ExistsInDB = getGameResponse.StatusCode == System.Net.HttpStatusCode.OK;
 
@@ -155,14 +158,16 @@ namespace BballStatsFetcher
         private static async Task UpdateStats(HttpClient client, StatSheet dataStatSheet)
         {
             var updateStatsContent = JsonContent.Create(dataStatSheet);
-            var updateStatsResponse = await client.PostAsync("https://localhost:7140/api/Statistics/UpdateStats", updateStatsContent);
+            var updateStatsResponse = await client.PostAsync($"{baseUrl}/Statistics/UpdateStats", updateStatsContent);
         }
 
         private static async Task UpdateFantasy(HttpClient client, StatSheet dataStatSheet)
         {
             var updateStatsContent = JsonContent.Create(dataStatSheet);
-            var updateStatsResponse = await client.PostAsync("https://localhost:7140/api/fantasy/leagues/results", updateStatsContent);
+            var updateStatsResponse = await client.PostAsync($"{baseUrl}/fantasy/leagues/results", updateStatsContent);
         }
+
+
 
         private static StatSheet MakeStatSheet(Game game) 
         { 
@@ -184,7 +189,7 @@ namespace BballStatsFetcher
                     continue;
 
                 statSheet.PlayerInfo = AddPlayerStat(statSheet.PlayerInfo, stat.PlayerCode, "TeamCode", statSheet.LocalClubId);
-                statSheet.PlayerInfo = AddPlayerStat(statSheet.PlayerInfo, stat.PlayerCode, nameof(stat.PlayerName), stat.PlayerName);
+                statSheet.PlayerInfo = AddPlayerStat(statSheet.PlayerInfo, stat.PlayerCode, nameof(stat.PlayerName), MakePlayerName(stat.PlayerName));
                 statSheet.PlayerInfo = AddPlayerStat(statSheet.PlayerInfo, stat.PlayerCode, nameof(stat.Dorsal), stat.Dorsal);
 
                 statSheet.GameStats = AddPlayerStat(statSheet.GameStats, stat.PlayerCode, nameof(stat.TimePlayedSeconds), stat.TimePlayedSeconds);
@@ -279,6 +284,12 @@ namespace BballStatsFetcher
                 IntArrVal = Values
             });
             return StatsOrInfo;
+        }
+
+        private static string MakePlayerName(string name)
+        {
+            string[] arr = name.Split(", ");
+            return arr[1] + " " + arr[0];
         }
     }
 }

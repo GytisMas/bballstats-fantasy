@@ -65,7 +65,6 @@ namespace BBallStatsV2.Controllers
             return Ok(unusedGameId);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<ActionResult<MatchDto>> CreateOrGetMatch(MatchDto dto)
         {

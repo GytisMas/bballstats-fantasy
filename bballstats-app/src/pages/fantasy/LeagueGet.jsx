@@ -1,7 +1,7 @@
 import { useAuth } from "../../provider/Authentication";
-import {BearerAuth, ButtonStyle, FormMdContainerStyle, FormMemberStyle, FormWiderContainerStyle} from '../../components/Helpers';
+import {BearerAuth, ButtonStyle, FormMdContainerStyle, FormMemberStyle, FormWiderContainerStyle, LinkStyle} from '../../components/Helpers';
 import {FormContainerStyle, FormSumbitStyle, FormHelperStyle} from '../../components/Helpers';
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { roles } from "../../components/PlayerRoles";
 import axios from 'axios';
@@ -36,11 +36,16 @@ function LeagueGet(props) {
       <>
         <div className='mt-5 max-w-xl mx-auto px-2 flex flex-col items-center bg-white border-2 rounded-3xl'>
           <p className='py-2 font-bold text-xl text-center'>{league.name}</p>
+          <p>Created by: {league.leagueHostName}</p>
+          <p>Entry fee: {league.entryfee}</p>
+          <p>Start date: {new Date(league.startDate+'z').toISOString().substring(0,10)}</p>
+          <p>End date: {new Date(league.endDate+'z').toISOString().substring(0,10)}</p>
           {league.userParticipantId != null ?
             <button className={ButtonStyle + " w-1/4 mb-2"} type="button" onClick={() => navigate('/fantasy/leagues/'+params.leagueId+'/participants/'+league.userParticipantId)}>View Current Team</button>
             : league.notStarted &&
             <button className={ButtonStyle + " w-1/4 mb-2"} type="button" onClick={() => navigate('/fantasy/leagues/'+league.id+'/participate')}>Join League</button>
           }
+          <Link to={'/fantasy/templates/'+2} target="_blank" rel="noopener noreferrer" ><button type="button" className={ButtonStyle + ' mb-2'}>View Template</button></Link>
         </div>
         <div className='flex flex-col flex-wrap justify-center items-center mt-5 max-w-6xl mx-auto px-2 py-10 bg-white border-2 rounded-3xl'>
           {participants == null || participants.length == 0 ? <div>There are no participants in this league</div>

@@ -28,6 +28,7 @@ function LeagueParticipantGet(props) {
       setParticipant(participantResponse.data);
       setTeam(participantResponse.data.team);
       const matchesResponse = (await axios.get(APIEndpoint + '/Participants/' + params.participantId +'/Matches/'));
+      console.log(participantResponse.data)
       setNextMatches(matchesResponse.data)
     }
 
@@ -46,33 +47,35 @@ function LeagueParticipantGet(props) {
     <>
       <div className='mt-5 max-w-xl mx-auto px-2 flex flex-col items-center bg-white border-2 rounded-3xl'>
         <p className='py-2 font-bold text-xl text-center'>{participant.teamName}</p> 
+        <p>Created by: {participant.userName}</p>
+        <p>Points in League: {participant.points}</p>
         {participant.participantIsUser &&
-          <button className={ButtonStyle + " w-1/4 mb-2"} type="button" onClick={() => navigate('/fantasy/leagues/'+params.leagueId+'/participate/'+participant.id)}>Edit Team</button>
+          <button className={ButtonStyle + " w-1/4 mb-2"} type="button" onClick={() => navigate('/fantasy/leagues/'+params.leagueId+'/participate/'+participant.id)}>Manage Team</button>
         }
       </div>
-      <div className='flex flex-col flex-wrap justify-center items-center mt-5 max-w-max mx-auto px-2 pb-10 bg-white border-2 rounded-3xl'>
-        <p>User: {participant.userName}</p>
-        <p>Points in League: {participant.points}</p>
+      <div className='flex flex-row flex-wrap justify-center items-stretch mt-5 max-w-6xl mx-auto px-2 pb-10 bg-white border-2 rounded-3xl'>
         {team.map((player) => (
-          <div key={player.id} className='w-72 mt-10 flex flex-col items-center bg-slate-200'>
-            <p className="text-xl">{player.playerName}</p>
-            <div className=" w-full flex flex-row justify-between">
-              <label className="px-1 text-left">Role</label>
-              <label className="px-1 text-right">{player.roleName}</label>
+          <div key={player.id} className='w-64 mt-10 mx-1 pt-1 pb-2 rounded-xl flex flex-col justify-start items-center bg-gradient-to-b bg-white'>
+            {/* <p className="rounded-t-xl text-xl text-white text-center w-64 py-2 bg-gradient-to-b from-slate-500 to-black">{player.roleName}</p> */}
+            <div className='w-64 h-24 flex border-2 border-slate-400 rounded-t-xl flex-col p-1 items-center justify-center bg-gradient-to-b from-slate-300 to-slate-100'>
+              <p className="px-1 text-lg w-full text-left">{player.playerName}</p>
+              <p className="px-1 text-slate-600 w-full text-sm text-left">{player.teamName}</p>
             </div>
-            <div className=" w-full flex flex-row justify-between">
-              <label className="px-1 text-left">Team</label>
-              <label className="px-1 text-right">{player.teamName}</label>
+            <div className='w-64 flex border-x-2 border-slate-400  flex-col p-1 py-5 items-center bg-slate-100'>
+              <div className=" w-full flex flex-row justify-between">
+                <label className="px-1 text-left">Points earned</label>
+                <label className="px-1 text-right">{player.points} {player.pointsLastGame != 0 && "("+(player.pointsLastGame > 0 ? "+"+player.pointsLastGame : "-"+player.pointsLastGame)+")"}</label>
+              </div>
+              <div className=" w-full flex flex-row justify-between">
+                <label className="px-1 text-left">Next game date</label>
+                {
+                  nextGameInfo(player.playerId)
+                }
+              </div>
             </div>
-            <div className=" w-full flex flex-row justify-between">
-              <label className="px-1 text-left">Points</label>
-              <label className="px-1 text-right">{player.points} {player.pointsLastGame != 0 && "("+(player.pointsLastGame > 0 ? "+"+player.pointsLastGame : "-"+player.pointsLastGame)+")"}</label>
-            </div>
-            <div className=" w-full flex flex-row justify-between">
-              <label className="px-1 text-left">Next game</label>
-              {
-                nextGameInfo(player.playerId)
-              }
+            <div className='w-64 flex border-2 border-slate-400  flex-col rounded-b-xl p-1 items-center bg-slate-200 bg-gradient-to-b from-slate-100 to-slate-300'>
+              <p className="px-1 w-full text-sm text-left">Fantasy role</p>
+              <p className="px-1 w-full text-lg text-left">{player.roleName}</p>
             </div>
           </div>
         ))}

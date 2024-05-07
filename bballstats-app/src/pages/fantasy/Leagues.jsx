@@ -131,8 +131,8 @@ function Leagues(props) {
                     <td className='p-2 border-2 text-left'>
                       {league.name}
                     </td>
-                    <td className='p-2 border-2 text-left'>{new Date(league.startDate).toISOString().substring(0,10)}</td>
-                    <td className='p-2 border-2 text-left'>{new Date(league.endDate).toISOString().substring(0,10)}</td>
+                    <td className='p-2 border-2 text-left'>{new Date(league.startDate+'z').toISOString().substring(0,10)}</td>
+                    <td className='p-2 border-2 text-left'>{new Date(league.endDate+'z').toISOString().substring(0,10)}</td>
                     <td className='p-2 border-2 text-left'>{JoinViewButton(league.id)}</td>
                   </tr>
                 ))}

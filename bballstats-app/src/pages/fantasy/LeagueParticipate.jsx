@@ -1,5 +1,5 @@
 import { useAuth } from "../../provider/Authentication";
-import {BearerAuth, Form2XLContainerStyle, Form4XLContainerStyle, FormMemberStyle, FormSumbitStyleCancel, FormSumbitStyleCancel2, FormWiderContainerStyle} from '../../components/Helpers';
+import {BearerAuth, Form2XLContainerStyle, Form4XLContainerStyle, FormMemberStyle, FormSelectStyle, FormSumbitStyleCancel, FormSumbitStyleCancel2, FormWiderContainerStyle} from '../../components/Helpers';
 import {FormContainerStyle, FormSumbitStyle, FormHelperStyle} from '../../components/Helpers';
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
@@ -413,20 +413,30 @@ function LeagueParticipate(props) {
         <div className="input-container">
           {!isActiveLeague ?
             isLoading ? <div>Loading...</div> :
-              <table>
-                <tbody>
-                  {players.map((player, index) => (
-                    index % 5 == 0 &&
-                    <tr key={index}>
-                      {MakePlayerItem(players[index])}
-                      {index + 1 < players.length && MakePlayerItem(players[index+1])}
-                      {index + 2 < players.length && MakePlayerItem(players[index+2])}
-                      {index + 3 < players.length && MakePlayerItem(players[index+3])}
-                      {index + 4 < players.length && MakePlayerItem(players[index+4])}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <div className='flex flex-row flex-wrap justify-center items-stretch mt-5 max-w-6xl mx-auto px-2 pb-10 bg-white border-2 rounded-3xl'>
+                {players.map((player, index) => (
+                  <div key={index} className='w-64 mt-10 mx-1 pt-1 pb-2 rounded-xl flex flex-col justify-start items-center bg-gradient-to-b bg-white'>
+                    {/* <p className="rounded-t-xl text-xl text-white text-center w-64 py-2 bg-gradient-to-b from-slate-500 to-black">{player.roleName}</p> */}
+                    <div className='w-64 h-24 flex border-2 border-slate-400 rounded-t-xl flex-col p-1 items-center justify-center bg-gradient-to-b from-slate-300 to-slate-100'>
+                      <p className="px-1 text-lg w-full text-left">{player.name}</p>
+                      <p className="px-1 text-slate-600 w-full text-sm text-left">{player.teamId}</p>
+                    </div>                      
+                    <div className='w-64 flex border-x-2 border-slate-400  flex-col p-1 items-center bg-slate-100'>
+                      <p className="px-1 text-slate-600 w-full text-sm text-left">Fantasy role</p>
+                      <select className={FormSelectStyle} onChange={changeAvailableRoles(player.leaguePlayerId, player.price)} defaultValue={defaultSelectedPlayerRole(player)} name={"roleof-"+player.leaguePlayerId}>
+                        <option key={-1} value={-1}>Not Selected</option>
+                        {leagueRoles.map((role, index) => (
+                          <option key={role.id} value={role.id} disabled={leagueRolesUnavailable.find((e) => e.id == role.id) != null ? true : false}>{role.name} {role.roleToReplaceIndex && "(substitute for " + leagueRoles.find((e) => e.id == role.roleToReplaceIndex).name + ")"}</option>
+                          ))
+                        }
+                      </select>
+                    </div>
+                    <div className='w-64 flex border-2 border-slate-400  flex-col rounded-b-xl p-1 items-center bg-slate-200 bg-gradient-to-b from-slate-100 to-slate-300'>
+                      <p className="px-1 w-full text-sm text-left">Price: {player.price}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             : 
             isLoading ? <div>Loading...</div> : isEditMode &&
               !rosterChangesAllowed ? <div>Roster changes not allowed in active league after 12 (midday) UTC</div> :

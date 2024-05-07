@@ -66,6 +66,7 @@ export const FormSelectStyle = "shadow border rounded w-full py-2 px-2 text-gray
 export const FormSelectNotFullStyle = "shadow border rounded py-2 px-2 text-gray-700 leading-tight duration-75 hover:border-blue-400 focus:outline-none focus:shadow-outline";
 export const FormMemberNotFullStyle = "shadow appearance-none border rounded py-2 px-2 text-gray-700 leading-tight duration-75 hover:border-blue-400 focus:outline-none focus:shadow-outline";
 export const FormMemberStyle = "shadow appearance-none border rounded w-full py-2 px-2 text-gray-700 leading-tight duration-75 hover:border-blue-400 focus:outline-none focus:shadow-outline";
+export const FormMemberHalfStyle = "shadow appearance-none border rounded w-1/2 py-2 px-2 text-gray-700 leading-tight duration-75 hover:border-blue-400 focus:outline-none focus:shadow-outline";
 export const FormTableStyle = "shadow appearance-none border-2 bg-white border-black rounded w-full py-2 px-2 text-gray-700 leading-tight ";
 export const FormHelperStyle = "shadow bg-slate-200 mt-2 border rounded py-2 px-3 text-gray-700 transition duration-75 hover:bg-blue-200 hover:border-blue-200 leading-tight focus:outline-none focus:shadow-outline";
 export const ButtonStyle = "shadow bg-blue-400 mt-2 border rounded py-2 px-3 text-gray-700 transition duration-75 hover:bg-blue-600 leading-tight focus:outline-none focus:shadow-outline";

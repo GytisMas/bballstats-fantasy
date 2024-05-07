@@ -1,5 +1,5 @@
 import { useAuth } from "../../provider/Authentication";
-import {BearerAuth, Form2XLContainerStyle, FormMaxWidthContainerStyle, FormMemberStyle, FormWiderContainerStyle, RoleMemberStyle} from '../../components/Helpers';
+import {BearerAuth, Form2XLContainerStyle, FormMaxWidthContainerStyle, FormMemberHalfStyle, FormMemberStyle, FormWiderContainerStyle, RoleMemberStyle} from '../../components/Helpers';
 import {FormContainerStyle, FormSumbitStyle, FormHelperStyle} from '../../components/Helpers';
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
@@ -152,29 +152,32 @@ function FantasyTemplateCreate() {
   const renderForm = (
     <div className={FormMaxWidthContainerStyle}>
       <form onSubmit={handleSubmit}>
-        <div className="input-container max-w-sm mx-auto">
+        <div className="input-container max-w-sm mx-auto bg-white shadow-md rounded px-4 py-4 mb-4">
+          <div className="text-xl text-center p-1 ">General Template Info</div>
           <label>Template name</label>
           <input className={FormMemberStyle} type="text" name="templateName" required />
           {renderErrorMessage("templateName")}
-          <label>Use active / start five rosters</label><br/>
+          <p className="text-center py-1">Player gained points per game for team win / loss</p>
+          <input className={FormMemberHalfStyle} type="number" step={1} defaultValue={3} name="teamWinPts" />
+          <input className={FormMemberHalfStyle} type="number" step={1} defaultValue={-3} name="teamLosePts" /><br/>
+        </div>
+        <div className="max-w-sm mx-auto bg-white shadow-md rounded px-4 py-4 mb-4">
+          <label className="pr-2">Use active / start five rosters</label>
           <input type="checkbox" name="startFiveMode" onChange={handleStartFive} /><br/>
           {startFiveMode && 
           <>
-            <label>Bench player points, 1-100% (active players are 100%)</label><br/>
-            <input type="number" min={0} max={100} step={1} defaultValue={30} name="benchMultiplier" /> %
+            <label>Bench player relative points (1-100%)</label><br/>
+            <input className={FormMemberStyle} type="number" min={0} max={100} step={1} defaultValue={30} name="benchMultiplier" />
           </>
           }
-          <label>Player gained points per game for team win / loss</label><br/>
-          <input type="number" step={1} defaultValue={3} name="teamWinPts" />
-          <input type="number" step={1} defaultValue={-3} name="teamLosePts" />
-          
-
         </div>
+        {startFiveMode &&
+          <div className="max-w-sm mx-auto bg-white shadow-md rounded px-4 py-4 mb-4">
+              <label className="max-w-lg text-center">Note: when using Start Five Mode, players in every odd role (1st, 3rd, etc.) are considered active, and players in every even role (2nd, 4th, etc.) are considered the previous roles' direct and only replacement.</label>
+          </div>
+        }
         <div className="input-container justify-center flex flex-col items-center">
           <label>League Player Roles</label>
-          {startFiveMode &&
-            <label className="max-w-lg text-center">Note: when using Start Five Mode, every odd role (1st, 3rd, etc.) is considered active, and every even role (2nd, 4th, etc.) is considered the previous roles' direct and only replacement.</label>
-          }
           <div className="flex flex-row flex-wrap justify-center">
           {leagueRoles.map((role, roleIndex) => (
             <div key={role} className={RoleMemberStyle} >
@@ -196,33 +199,10 @@ function FantasyTemplateCreate() {
           ))}
           </div>
         </div>
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-row max-w-sm mx-auto justify-between">
         <button className={FormHelperStyle} onClick={handleAdd}>Add player role</button>
         <button className={FormHelperStyle} onClick={handleRemove}>Remove Last Role</button>
       </div>
-        {/* {isExistingTeam ? (
-          <>
-            <div className="input-container">
-              <label>Team</label>
-              <select className={FormSelectStyle} name="team" defaultValue = {teams[0]}>
-                {teams.map((team) => (MakeItem(team.name, team.id)))}
-              </select>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="input-container">
-              <label>Team name</label>
-              <input className={FormMemberStyle} type="text" name="teamName" required />
-            </div>
-          </>
-        )}     
-        <div className="input-container">
-          <label>Role</label>
-          <select className={FormSelectStyle} name="role" defaultValue = {roles[0]}>
-            {roles.map((role, i) => (MakeItem(role, i)))}
-          </select>
-        </div> */}
         {renderErrorMessage("roles")}
         <input className={FormSumbitStyle} type="submit" />
       </form>

@@ -35,7 +35,6 @@ namespace BBallStatsV2.Controllers
         }
 
         [HttpGet("{userId}")]
-        [Authorize]
         public async Task<ActionResult<UserWithoutRolesDto>> GetUser(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -46,7 +45,6 @@ namespace BBallStatsV2.Controllers
         }
 
         [HttpGet("{userId}/balance")]
-        [Authorize]
         public async Task<ActionResult<int>> GetUserBalance(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);

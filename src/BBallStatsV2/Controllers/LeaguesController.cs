@@ -214,7 +214,7 @@ namespace BBallStatsV2.Controllers
                     participantIsUser = true;
             }
 
-            bool allowRosterChanges = league.IsActive;
+            bool allowRosterChanges = league.IsActive && DateTime.UtcNow.Hour < 12;
 
             return Ok(new ParticipantWithTeamDto(league.IsActive, allowRosterChanges, participant.Id, participantIsUser, participant.TeamName, participant.User.UserName, participant.Points, 
                 participant.Team.Select(t => new ParticipantPlayerInfoDto(t.Id, t.Points, t.PointsLastGame, t.LeagueAvailablePlayer.Player.Id, t.LeagueAvailablePlayer.Player.Name, 

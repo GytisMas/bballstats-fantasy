@@ -60,8 +60,8 @@ export function makePageRow(selectedPage, maxPage, pageSpan) {
   return newPageRow;
 }
 
-// export const APIEndpoint = 'https://whale-app-wxvqi.ondigitalocean.app/api';
-export const APIEndpoint = 'https://localhost:7140/api';
+export const APIEndpoint = 'https://urchin-app-97ttl.ondigitalocean.app/api';
+// export const APIEndpoint = 'https://localhost:7140/api';
 export const FormSelectStyle = "shadow border rounded w-full py-2 px-2 text-gray-700 leading-tight duration-75 hover:border-blue-400 focus:outline-none focus:shadow-outline";
 export const FormSelectNotFullStyle = "shadow border rounded py-2 px-2 text-gray-700 leading-tight duration-75 hover:border-blue-400 focus:outline-none focus:shadow-outline";
 export const FormMemberNotFullStyle = "shadow appearance-none border rounded py-2 px-2 text-gray-700 leading-tight duration-75 hover:border-blue-400 focus:outline-none focus:shadow-outline";

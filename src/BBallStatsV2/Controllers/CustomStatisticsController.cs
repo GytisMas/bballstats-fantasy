@@ -33,7 +33,6 @@ namespace BBallStatsV2.Controllers
             _userManager = userManager;
         }
 
-        [Authorize]
         [HttpGet("~/api/customStatistics")]
         public async Task<ActionResult<PagedListDto<CustomStatisticDto>>> GetCustomStatistics(int pageIndex = 1, int pageSize = 15)
         {
@@ -52,7 +51,6 @@ namespace BBallStatsV2.Controllers
             return Ok(new PagedListDto<CustomStatisticDto>(customStatistics, pageIndex, pageCount));
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CustomStatisticDto>>> GetUserCustomStatistics(string userId)
         {

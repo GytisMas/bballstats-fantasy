@@ -24,7 +24,6 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/Teams
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Team>>> GetTeams()
         {
@@ -32,7 +31,6 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/Teams
-        [Authorize]
         [HttpGet("ByDates")]
         public async Task<ActionResult<List<TeamDto>>> GetTeamsByUpcomingGames(DateTime startDate, DateTime endDate)
         {
@@ -54,7 +52,6 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/Teams/5
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Team>> GetTeam(string id)
         {

@@ -23,7 +23,6 @@ namespace BBallStatsV2.Controllers
             _context = context;
         }
 
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PlayerStatisticDto>>> GetPlayersStatistics(string teamId, string playerId)
         {
@@ -34,7 +33,6 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/PlayerStatistics/5
-        [Authorize]
         [HttpGet("{statId}")]
         public async Task<ActionResult<PlayerStatisticDto>> GetPlayerStatistic(int statId)
         {

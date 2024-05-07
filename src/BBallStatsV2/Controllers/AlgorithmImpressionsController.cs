@@ -28,7 +28,6 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/AlgorithmImpressions
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AlgorithmImpressionDto>>> GetAlgorithmImpressions(int customStatisticId)
         {
@@ -49,7 +48,6 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/AlgorithmImpressions/5
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<AlgorithmImpressionDto>> GetAlgorithmImpression(int impressionId)
         {

@@ -24,7 +24,6 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/Leagues
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<PagedListDto<ListedLeagueDto>>> GetPublicLeagues(string? nameFilter, bool activeOnly = false, 
             LeagueSortParameter sortBy = LeagueSortParameter.StartDateD, int pageIndex = 1, int pageSize = 10)
@@ -85,7 +84,6 @@ namespace BBallStatsV2.Controllers
                 .ToListAsync(), pageIndex, pageCount);
         }
                 
-        [Authorize]
         [HttpGet("{leagueId}")]
         public async Task<ActionResult<LeagueWithParticipantsDto>> GetLeague(int leagueId)
         {
@@ -116,7 +114,6 @@ namespace BBallStatsV2.Controllers
                 league.EndDate, league.Participants.Select(p => new ParticipantDto(p.Id, p.TeamName, p.User.UserName, p.Points)).ToArray());
         }
 
-        [Authorize]
         [HttpGet("{leagueId}/Players")]
         public async Task<ActionResult<LeaguePlayersDto>> GetLeagueWithPlayers(int leagueId)
         {
@@ -183,7 +180,6 @@ namespace BBallStatsV2.Controllers
             return Ok(participantId);
         }
 
-        [Authorize]
         [HttpGet("{leagueId}/participants/{participantId}")]
         public async Task<ActionResult<LeagueParticipant>> GetParticipant(int leagueId, int participantId)
         {
@@ -270,7 +266,6 @@ namespace BBallStatsV2.Controllers
             return NoContent();
         }
 
-        [Authorize]
         [HttpGet("{leagueId}/participants")]
         public async Task<ActionResult<LeagueParticipant>> GetParticipants(int leagueId)
         {
@@ -956,7 +951,6 @@ namespace BBallStatsV2.Controllers
             return NoContent();
         }
 
-        [Authorize]
         [HttpGet("~/api/participants/byUser/{userId}")]
         public async Task<IEnumerable<LeagueParticipationDto>> GetActiveUserParticipations(string userId)
         {

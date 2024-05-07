@@ -24,7 +24,6 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/LeagueTemplates
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<LeagueTemplate>>> GetLeagueTemplates()
         {
@@ -32,7 +31,6 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/LeagueTemplates/5
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<LeagueTemplateDto>> GetLeagueTemplate(int id)
         {

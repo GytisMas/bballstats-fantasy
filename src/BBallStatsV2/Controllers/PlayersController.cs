@@ -23,14 +23,12 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/Players
-        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Player>>> GetPlayers()
         {
             return await _context.Players.ToListAsync();
         }
 
-        [Authorize]
         [HttpGet("~/api/Teams/{teamId}/[controller]")]
         public async Task<ActionResult<IEnumerable<Player>>> GetPlayers(string teamId)
         {
@@ -38,7 +36,6 @@ namespace BBallStatsV2.Controllers
         }
 
         // GET: api/Players/5
-        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Player>> GetPlayer(string id)
         {

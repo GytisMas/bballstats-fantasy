@@ -65,7 +65,7 @@ function LeagueGet(props) {
                         <a href={'/fantasy/leagues/'+params.leagueId+'/participants/'+participant.id}>{participant.teamName}</a>
                       </td>
                       <td className='p-2 border-2 text-left'>{participant.userName}</td>
-                      <td className='p-2 border-2 text-left'>{participant.points}</td>
+                      <td className='p-2 border-2 text-left'>{participant.points.toFixed(1)}</td>
                     </tr>
                   ))}
                 </tbody>

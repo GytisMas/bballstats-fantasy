@@ -26,7 +26,7 @@ function LeagueParticipantGet(props) {
     const loadData = async () => {
       const participantResponse = (await axios.get(APIEndpoint + '/Fantasy/Leagues/' + params.leagueId +'/Participants/' + params.participantId));
       setParticipant(participantResponse.data);
-      setTeam(participantResponse.data.team);
+      setTeam(participantResponse.data.team.sort((a, b) => a.roleId > b.roleId ? 1 : -1));
       const matchesResponse = (await axios.get(APIEndpoint + '/Participants/' + params.participantId +'/Matches/'));
       console.log(participantResponse.data)
       setNextMatches(matchesResponse.data)
@@ -48,7 +48,7 @@ function LeagueParticipantGet(props) {
       <div className='mt-5 max-w-xl mx-auto px-2 flex flex-col items-center bg-white border-2 rounded-3xl'>
         <p className='py-2 font-bold text-xl text-center'>{participant.teamName}</p> 
         <p>Created by: {participant.userName}</p>
-        <p>Points in League: {participant.points}</p>
+        <p>Points in League: {participant.points.toFixed(1)}</p>
         {participant.participantIsUser &&
           <button className={ButtonStyle + " w-1/4 mb-2"} type="button" onClick={() => navigate('/fantasy/leagues/'+params.leagueId+'/participate/'+participant.id)}>Manage Team</button>
         }
@@ -64,7 +64,7 @@ function LeagueParticipantGet(props) {
             <div className='w-64 flex border-x-2 border-slate-400  flex-col p-1 py-5 items-center bg-slate-100'>
               <div className=" w-full flex flex-row justify-between">
                 <label className="px-1 text-left">Points earned</label>
-                <label className="px-1 text-right">{player.points} {player.pointsLastGame != 0 && "("+(player.pointsLastGame > 0 ? "+"+player.pointsLastGame : "-"+player.pointsLastGame)+")"}</label>
+                <label className="px-1 text-right">{player.points} {player.pointsLastGame != 0 && "("+(player.pointsLastGame > 0 ? "+"+player.pointsLastGame : player.pointsLastGame)+")"}</label>
               </div>
               <div className=" w-full flex flex-row justify-between">
                 <label className="px-1 text-left">Next game date</label>

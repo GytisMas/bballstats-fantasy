@@ -1,5 +1,5 @@
 import { useAuth } from "../../provider/Authentication";
-import {BearerAuth, FormMemberStyle, FormSelectStyle, FormSumbitStyleForbid, FormWiderContainerStyle, LinkStyle} from '../../components/Helpers';
+import {BearerAuth, FormMemberStyle, FormSelectStyle, FormSumbitStyleForbid, FormTableStyle, FormWiderContainerStyle, LinkStyle} from '../../components/Helpers';
 import {FormContainerStyle, FormSumbitStyle, FormHelperStyle} from '../../components/Helpers';
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
@@ -96,7 +96,7 @@ function LeagueCreate() {
           Authorization: BearerAuth(accessToken)
         }}
         );
-        navigate("/players");
+        navigate("/fantasy/leagues");
     } catch (error) {
         console.log(error);
         console.log(error.response.data);
@@ -135,56 +135,71 @@ function LeagueCreate() {
       
        
       <form onSubmit={handleSubmit}>
-        <div className="input-container">
-          <label>League name</label>
-          <input className={FormMemberStyle} type="text" name="leagueName" required />
-          <label>Entry fee</label>
-          <input className={FormMemberStyle} type="number" min={1} defaultValue={1} step="1" name={"entryFee"} required />
-
-          {renderErrorMessage("leagueName")}
-        </div>
-        {isTemplLoading ? <div>Loading templates...</div> :
+        <div className="bg-white shadow-md rounded px-4 py-4 mb-4">
+          <div className="text-xl text-center p-1 ">League Info</div>
           <div className="input-container">
-            <label>Used League Template</label>
-            <select className={FormSelectStyle} name="template" onChange={(event) => setTemplateId(event.target.value)}>
-              {templates.map((template) => (MakeOptionItem(template.name, template.id)))}
-            </select>
-            {document.forms[0].elements["template"] != null && 
-              <Link to={'/fantasy/templates/'+templateId} target="_blank" rel="noopener noreferrer" ><button type="button" className={LinkStyle}>View Template</button></Link>
-            }
-          </div>
-        }
-        <div className="input-container">
-          <label>Start Date</label>
-          <input className={FormMemberStyle} type="date" name="startDate" onChange={handleStartChange} min={startDate.toISOString().substring(0,10)} max={maxStartDate.toISOString().substring(0,10)} defaultValue={startDate.toISOString().substring(0,10)} required />
-          <label>End Date</label>
-          <input className={FormMemberStyle} type="date" name="endDate" onChange={handleEndChange} min={minEndDate().toISOString().substring(0,10)} max={maxEndDate().toISOString().substring(0,10)}  defaultValue={endDate.toISOString().substring(0,10)} required />
-        </div>
+            <label>League name</label>
+            <input className={FormMemberStyle} type="text" name="leagueName" required />
+            <label>Entry fee</label>
+            <input className={FormMemberStyle} type="number" min={1} defaultValue={1} step="1" name={"entryFee"} required />
 
-        <div className="input-container">
-          <label>Player Winnings (total prize pool: {prizeSum})</label><br/>
-            {prizes.map((it, index) => 
-            <div key={index}>
-              <label>#{index+1}  </label>
-              <input name={"prize-"+index} onChange={handlePrizeChange(index)} step={1} min={0} defaultValue={it} /><br/>
+            {renderErrorMessage("leagueName")}
+          </div>
+          {isTemplLoading ? <div>Loading templates...</div> :
+            <div className="input-container">
+              <label>Used League Template</label>
+              <select className={FormSelectStyle} name="template" onChange={(event) => setTemplateId(event.target.value)}>
+                {templates.map((template) => (MakeOptionItem(template.name, template.id)))}
+              </select>
+              {document.forms[0].elements["template"] != null && 
+                <Link to={'/fantasy/templates/'+templateId} target="_blank" rel="noopener noreferrer" ><button type="button" className={LinkStyle}>View Template</button></Link>
+              }
             </div>
-            )}
-        </div>
-        
-        <div className="input-container">
-          <label>League Available Teams</label>
-          {isLoading ? 
-            <div>Loading...</div> :
-            forbidCreation ? <div>No matches scheduled in selected time period. Select a time period with scheduled matches to create league.</div>
-            :
-            teams.map((team) => (
-              <div key={team.id} className="flex flex-row" >
-                <label>{team.id}</label>
-                <label>{team.name}</label>
-              </div>          
-            ))
           }
         </div>
+        
+        <div className="bg-white shadow-md rounded px-4 py-4 mb-4">
+          <div className="text-xl text-center p-1 ">League Dates</div>
+          <label>Start Date</label>
+          <input className={FormMemberStyle} type="date" name="startDate" onChange={handleStartChange} min={defaultStartDate.toISOString().substring(0,10)} max={maxStartDate.toISOString().substring(0,10)} defaultValue={startDate.toISOString().substring(0,10)} required />
+          <label>End Date</label>
+          <input className={FormMemberStyle} type="date" name="endDate" onChange={handleEndChange} min={minEndDate().toISOString().substring(0,10)} max={maxEndDate().toISOString().substring(0,10)}  defaultValue={endDate.toISOString().substring(0,10)} required />
+          <div className="text-xl text-center p-1 ">Teams with upcoming games</div>
+          <div className="input-container">
+            {isLoading ? 
+              <div>Loading teams based on upcoming matches...</div> :
+              forbidCreation ? <div>No matches scheduled in selected time period. Select a time period with scheduled matches to create league.</div>
+              :
+              teams.map((team) => (
+                <p key={team.id} className="text-md text-center">{team.name}</p>
+              ))
+            }
+          </div>
+        </div>
+
+        <div className="bg-white shadow-md rounded px-4 py-4 mb-4">
+          <div className="text-xl text-center p-1 ">Player Winnings</div>
+          <div className="text-md text-center pb-1 ">Total prize pool (subtracted from balance): {prizeSum}</div>
+          <table className={FormTableStyle}>
+            <thead>
+              <tr>
+                <th className='p-2 border-2 border-black text-left'>Placement</th>
+                <th className='p-2 border-2 border-black text-left'>Prize</th>
+              </tr>
+            </thead>
+            <tbody>
+
+            {prizes.map((it, index) => 
+            <tr key={index}>
+              <td className='p-2 border-2 border-black text-left'>#{index+1}</td>
+              <td className='border-2 border-black'><input className={FormMemberStyle} name={"prize-"+index} onChange={handlePrizeChange(index)} step={1} min={0} defaultValue={it} /></td>
+            </tr>
+            )}
+            </tbody>
+          </table>
+        </div>
+        
+        
         {renderErrorMessage("roles")}
         <input className={!forbidCreation ? FormSumbitStyle : FormSumbitStyleForbid} type="submit" disabled={forbidCreation} />
       </form>

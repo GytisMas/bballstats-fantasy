@@ -6,7 +6,9 @@ namespace BBallStatsV2.Data.Entities
     {
         LeagueEntry = 0,
         LeaguePrizePayment = 1,
-        Bonus = 2
+        Bonus = 2,
+        LeagueCreation = 3,
+        LeagueTemplateCreation = 4,
     }
     public class Transaction
     {
@@ -16,7 +18,7 @@ namespace BBallStatsV2.Data.Entities
         public int Amount { get; set; }
         public string? SenderId { get; set; }
         public ForumRestUser? Sender { get; set; }
-        public string RecipientId { get; set; } = null!;
-        public ForumRestUser Recipient { get; set; } = null!;
+        public string? RecipientId { get; set; } = null!;
+        public ForumRestUser? Recipient { get; set; } = null!;
     }
 }

@@ -42,8 +42,8 @@ function FantasyTemplateCreate() {
       ? x.displayname : x.name;
     return (
       <tr key={i}>
-        <td className='p-2 border-2 text-left'>{name}</td>
-        <td className='p-2 border-2 text-left'>
+        <td className='p-2 border-2 border-black text-left'>{name}</td>
+        <td className='p-2 border-2 border-black text-left'>
           <input type="checkbox" name={"useStat-"+ri+"-"+i} defaultChecked={x.defaultIsChecked}/>
         </td>
         <td>
@@ -115,7 +115,7 @@ function FantasyTemplateCreate() {
           Authorization: BearerAuth(accessToken)
         }}
         );
-        navigate("/players");
+        navigate("/fantasy/leagues");
     } catch (error) {
         console.log(error);
         console.log(error.response.data);
@@ -183,9 +183,9 @@ function FantasyTemplateCreate() {
                 <table className={FormMemberStyle}>
                   <thead>
                     <tr>
-                      <th className='p-2 border-2 text-left'>Statistic name</th>
-                      <th className='p-2 border-2 text-left'>Use statistic?</th>
-                      <th className='p-2 border-2 text-left'>League points per statistic point</th>
+                      <th className='p-2 border-2 border-black text-left'>Statistic name</th>
+                      <th className='p-2 border-2 border-black text-left'>Use statistic?</th>
+                      <th className='p-2 border-2 border-black text-left'>League points per statistic point</th>
                     </tr>
                   </thead>
                   <tbody>

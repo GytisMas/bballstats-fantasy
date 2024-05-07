@@ -313,16 +313,15 @@ namespace BBallStatsV2.Controllers
                 return UnprocessableEntity("InsufficientFunds");
             }
 
-            var participant = new LeagueParticipant()
+            var participant = new LeagueParticipant
             {
                 EntryDate = DateTime.UtcNow,
                 TeamName = createParticipantDto.TeamName,
                 League = league,
                 User = user,
-                Points = 0
+                Points = 0,
+                Team = new List<ParticipantsRosterPlayer>()
             };
-
-            participant.Team = new List<ParticipantsRosterPlayer>();
             // validation
             foreach (var player in createParticipantDto.Players)
             {
@@ -524,6 +523,25 @@ namespace BBallStatsV2.Controllers
         [HttpPost]
         public async Task<ActionResult<League>> CreateLeague(PostLeagueDto postLeagueDto)
         {
+            var userId = HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            var user = await _context.Users
+                .FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userBalance = await _context.Transactions
+                .Where(t => t.SenderId == userId || t.RecipientId == userId)
+                .SumAsync(t => t.RecipientId == userId ? t.Amount : -t.Amount);
+            
+            var leagueCreationPrice = postLeagueDto.LeaguePayments.Sum();
+
+            if (userBalance < leagueCreationPrice)
+            {
+                return UnprocessableEntity("InsufficientFunds");
+            }
+
             var dateDifference = (postLeagueDto.EndDate - postLeagueDto.StartDate).Days;
             if (dateDifference > 30 || dateDifference < 1)
             {
@@ -593,6 +611,16 @@ namespace BBallStatsV2.Controllers
                     Price = PlayerDefaultPrice(x.Id, statistics).Result
                 }).ToList();
 
+            var creationTransaction = new Transaction
+            {
+                TransactionType = TransactionType.LeagueCreation,
+                Amount = leagueCreationPrice,
+                Sender = user,
+                RecipientId = null,
+                Date = DateTime.UtcNow
+            };
+
+            _context.Transactions.Add(creationTransaction);
             _context.Leagues.Add(league);
             await _context.SaveChangesAsync();
 

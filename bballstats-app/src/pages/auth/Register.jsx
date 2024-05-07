@@ -18,7 +18,6 @@ function Register() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     var { username, pass, email, roles } = document.forms[0];
-
     const userData = {
       username: username.value,
       password: pass.value,
@@ -27,24 +26,28 @@ function Register() {
     };
 
     try {
-        const response = await axios.post(APIEndpoint + "/register/", userData);
-        navigate("/");
+      const response = await axios.post(APIEndpoint + "/register/", userData);
+      navigate("/login");
     } catch (error) {
-        console.log(error);
-        // setErrorMessages({ name: "uname", message: "Incorrect user name or password" });
+      let errors = "";
+      for (let err of Array.from(error.response.data.map(x => x.description))) {
+        errors += err + "\n"
+      }
+      setErrorMessages({ name: "password", message: errors });
     }
   };
 
   // Generate JSX code for error message
   const renderErrorMessage = (name) =>
     name === errorMessages.name && (
-      <div className="error">{errorMessages.message}</div>
+      <div className="error text-red-500">{errorMessages.message}</div>
     );
 
   // JSX code for login form
   const renderForm = (
     <div className={FormContainerStyle}>
-      <form onSubmit={handleSubmit}>
+      <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
+        <div className="text-xl text-center p-1 ">Register</div>
         <div className="input-container">
           <label>User name</label>
           <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="username" required />
@@ -52,6 +55,7 @@ function Register() {
         <div className="input-container">
           <label>Password</label>
           <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="password" name="pass" required />
+          {renderErrorMessage("password")}
         </div>
         <div className="input-container">
           <label>Email</label>

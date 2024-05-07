@@ -9,6 +9,8 @@ using BBallStats.Data;
 using BBallStatsV2.Data.Entities;
 using BBallStatsV2.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace BBallStatsV2.Controllers
 {
@@ -88,6 +90,25 @@ namespace BBallStatsV2.Controllers
         [HttpPost]
         public async Task<ActionResult<LeagueTemplate>> PostLeagueTemplate(LeagueTemplateDto leagueTemplateDto)
         {
+            var userId = HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
+            var user = await _context.Users
+                .FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userBalance = await _context.Transactions
+                .Where(t => t.SenderId == userId || t.RecipientId == userId)
+                .SumAsync(t => t.RecipientId == userId ? t.Amount : -t.Amount);
+
+            var templateCreationPrice = 500;
+
+            if (userBalance < templateCreationPrice)
+            {
+                return UnprocessableEntity("InsufficientFunds");
+            }
+
             var existingNameLeague = await _context.LeagueTemplates.FirstOrDefaultAsync(x => x.Name.Equals(leagueTemplateDto.Name));
             if (existingNameLeague != null)
                 return BadRequest("League template with name already exists");
@@ -127,6 +148,16 @@ namespace BBallStatsV2.Controllers
                 }).ToList();
             }
 
+            var creationTransaction = new Transaction
+            {
+                TransactionType = TransactionType.LeagueTemplateCreation,
+                Amount = templateCreationPrice,
+                Sender = user,
+                RecipientId = null,
+                Date = DateTime.UtcNow
+            };
+
+            _context.Transactions.Add(creationTransaction);
             _context.LeagueTemplates.Add(leagueTemplate);
             await _context.SaveChangesAsync();
 

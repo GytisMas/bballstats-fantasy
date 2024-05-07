@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-import { APIEndpoint, BearerAuth, FormContainerStyle, FormMemberStyle, FormSelectStyle, FormSumbitStyle } from "../../components/Helpers";
+import { APIEndpoint, BearerAuth, ButtonStyle, FormContainerStyle, FormMemberStyle, FormSelectStyle, FormSumbitStyle } from "../../components/Helpers";
 import NotFound from '../../components/NotFound';
 import { useAuth } from '../../provider/Authentication';
 import Modal from '../../components/Modal';
@@ -214,7 +214,7 @@ export default function Stats(props) {
 
   return (
     <div className='flex flex-col flex-wrap justify-evenly items-center mt-5 pb-5 max-w-3xl mx-auto px-2  bg-white border-2 rounded-3xl'>
-      <button type="button" onClick={() => showModalCreate()} className='btn p-1 w-48 bg-amber-300 border-2 text-center my-2 border-black'>Create Statistic Type</button>
+      <button type="button" onClick={() => showModalCreate()} className={ButtonStyle}>Create Statistic Type</button>
       <table>
         <thead>
         <tr>

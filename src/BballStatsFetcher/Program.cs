@@ -21,7 +21,6 @@ namespace BballStatsFetcher
             string seasonCode;
             int gameCode;
             bool ignoreExisting = false;
-                    Thread.Sleep(longIntervalInMs);
             while (true)
             {
                 // fetcherio reikalavimai:

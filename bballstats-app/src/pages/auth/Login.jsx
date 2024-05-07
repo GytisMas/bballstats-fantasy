@@ -51,6 +51,7 @@ function Login() {
   const renderForm = (
     <div>
       <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
+        <div className="text-xl text-center p-1 ">Login</div>
         <div className="input-container">
           <label>Username </label>
           <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="uname" required />
@@ -78,7 +79,6 @@ function Login() {
            onClick={() => navigate(-2)}>Go Back</button>
         </>
         }
-        <div className="text-xl text-center p-1 ">Login</div>
         {isSubmitted ? <div>User is successfully logged in</div> : renderForm}
       </div>
     </div>

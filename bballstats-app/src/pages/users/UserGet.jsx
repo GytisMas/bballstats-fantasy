@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from 'jwt-decode'
 import axios from 'axios';
-import { APIEndpoint } from "../../components/Helpers";
+import { APIEndpoint, ButtonStyle } from "../../components/Helpers";
 import AlgorithmGet from "./AlgorithmGet";
 import { BearerAuth } from "../../components/Helpers";
 export default function UserGet(props) {
@@ -77,8 +77,8 @@ export default function UserGet(props) {
             <p className="text-xl mb-5">{user.email}</p>
             <p className="text-xs">Current Balance</p>
             <p className="text-xl mb-5">{balance}</p>
-            <a href='/changePassword' className='btn p-1 mb-1 duration-200 bg-slate-300 hover:bg-blue-300 border-2 border-black'>Change password</a>
-            <a href='/algorithms/create' className='btn p-1 duration-200 bg-slate-300 hover:bg-green-300 border-2 border-black'>Create new algorithm</a>
+            <a href='/changePassword' className={ButtonStyle}>Change password</a>
+            <a href='/algorithms/create' className={ButtonStyle}>Create new algorithm</a>
           </div>}
         </div>
       </div>

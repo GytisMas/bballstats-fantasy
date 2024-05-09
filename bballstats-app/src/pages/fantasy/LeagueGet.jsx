@@ -21,6 +21,13 @@ function LeagueGet(props) {
 
   const navigate = useNavigate();
 
+  const leagueStatus = (l) => {
+    const utcNow = new Date().toISOString();
+    return l.endDate > utcNow && !league.notStarted ? 
+      "Active" : 
+      league.notStarted ? "Upcoming" : "Ended";
+  }
+
   useEffect(() => {
     const loadData = async () => {
       const response = (await axios.get(APIEndpoint + '/Fantasy/Leagues/' + params.leagueId));
@@ -40,6 +47,7 @@ function LeagueGet(props) {
           <p>Entry fee: {league.entryfee}</p>
           <p>Start date: {new Date(league.startDate+'z').toISOString().substring(0,10)}</p>
           <p>End date: {new Date(league.endDate+'z').toISOString().substring(0,10)}</p>
+          <p>Status: {leagueStatus(league)}</p>
           {league.userParticipantId != null ?
             <button className={ButtonStyle + " w-1/4 mb-2"} type="button" onClick={() => navigate('/fantasy/leagues/'+params.leagueId+'/participants/'+league.userParticipantId)}>View Current Team</button>
             : league.notStarted &&

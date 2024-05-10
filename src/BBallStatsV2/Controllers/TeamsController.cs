@@ -107,10 +107,6 @@ namespace BBallStatsV2.Controllers
                         continue;
                     }
                     VisitedPlayers.Add(player.Id);
-                    if (player.Id == "011941")
-                    {
-                        Console.WriteLine("+");
-                    }
 
                     var playerRole =
                         player.Role == "Guard" ? PlayerRole.Guard :

@@ -12,7 +12,7 @@ namespace BballStatsFetcher
     {
         const int pauseIntervalInMs = 2 * 1000;
         const int noConnectionIntervalInMs = 5 * 1000;
-        const int longIntervalInMs = 15 * 1000;
+        const int longIntervalInMs = 30 * 60 * 1000;
         const string baseUrl = "https://urchin-app-97ttl.ondigitalocean.app/api";
         //const string baseUrl = "https://localhost:7140/api";
         static HttpClient client = new HttpClient();
@@ -44,10 +44,10 @@ namespace BballStatsFetcher
                 gameCode = await GetOldestUnusedGame(seasonCode, ignoreExisting);
                 ignoreExisting = !ignoreExisting;
 
-                Console.WriteLine($"-");
-                Console.WriteLine($"-");
-                Console.WriteLine($"-");
-                Console.WriteLine($"\nPausing before fetching game stats (season {seasonCode} | game {gameCode})");
+                //Console.WriteLine($"-");
+                //Console.WriteLine($"-");
+                //Console.WriteLine($"-");
+                //Console.WriteLine($"\nPausing before fetching game stats (season {seasonCode} | game {gameCode})");
                 Thread.Sleep(pauseIntervalInMs);
 
                 Console.WriteLine($"Fetching game stats (season {seasonCode} | game {gameCode})");

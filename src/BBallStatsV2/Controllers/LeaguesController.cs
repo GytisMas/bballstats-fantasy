@@ -693,10 +693,6 @@ namespace BBallStatsV2.Controllers
             Dictionary<string, double> PlayerRolePoints = new Dictionary<string, double>();
             foreach (var usedPlayer in usedPlayers)
             {
-                if (usedPlayer.LeagueAvailablePlayer.PlayerId == "006436")
-                {
-                    Console.WriteLine("A");
-                }
                 double teamWinOrLosePoints =
                     PlayerGameStats[usedPlayer.LeagueAvailablePlayer.PlayerId].TeamId.Equals(playerStatData.WinnerClubId)
                     ? usedPlayer.LeagueParticipant.League.LeagueTemplate.TeamWinPoints

@@ -51,7 +51,7 @@ export default function TeamPlayersGet(props) {
           <div key={player.id} className='flex flex-col min-w-max'>
             <div className='px-2 flex flex-row flex-nowrap justify-between min-w-max items-center border-b-2'>
               <button onClick={() => handleInfoNoVal(player.id)} className='group inline-flex items-end h-3/4 w-4/5'>
-                <p className='text-md text-wrap w-32 wrap group-hover:underline'>{player.name}</p>
+                <p className='text-md text-wrap text-left w-32 wrap group-hover:underline'>{player.name}</p>
                 <p className='text-sm group-hover:underline ml-1 mr-3'>{roles[player.role]}</p>
               </button>
               {/* <PlayerStatsGet teamId={props.teamId} playerId={player.id}/> */}

@@ -117,6 +117,9 @@ namespace BBallStatsV2.Controllers
                     var existingPlayer = await _context.Players.FindAsync(player.Id);
                     if (existingPlayer != null)
                     {
+                        if (existingPlayer.ForbidAutoUpdate)
+                            continue;
+
                         existingPlayer.Role = playerRole;
                         existingPlayer.Name = player.Name;
                         _context.Players.Update(existingPlayer);

@@ -30,9 +30,12 @@ namespace BBallStatsV2.Controllers
         }
 
         [HttpGet("~/api/Teams/{teamId}/[controller]")]
-        public async Task<ActionResult<IEnumerable<Player>>> GetPlayers(string teamId)
+        public async Task<ActionResult<IEnumerable<PlayerIdAndNameDto>>> GetPlayers(string teamId)
         {
-            return await _context.Players.Where(p => p.CurrentTeamId.Equals(teamId)).ToListAsync();
+            return await _context.Players
+                .Where(p => p.CurrentTeamId.Equals(teamId))
+                .Select(p => new PlayerIdAndNameDto(p.Id, p.Name))
+                .ToListAsync();
         }
 
         // GET: api/Players/5

@@ -153,7 +153,7 @@ export default function AlgorithmFullPage(props) {
                     </table>
                     <div className="h-5 bg-slate-400"/>
                 </div>
-                : <p>Loading...</p>
+                : <p>Loading player ratings...</p>
             }
             
         </div>

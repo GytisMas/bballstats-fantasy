@@ -48,32 +48,35 @@ export default function AlgorithmsList() {
       <div className='mt-5 max-w-xl mx-auto px-2 bg-white border-2 rounded-3xl'>
         <p className='py-2 font-bold text-xl text-center'>User-created statistic types</p>
       </div>
-      <div className='flex flex-row flex-wrap justify-evenly mt-5 max-w-6xl mx-auto px-2 pb-10 bg-white border-2 rounded-3xl'>
-        {algorithms.map((algo) => (
-          <div key={algo.id} className='w-72 mt-10'>
-            <AlgorithmGet userId={algo.authorId} algoId={algo.id} sTypes={statTypes}/>
-          </div>
-        ))}
+      <div className="bg-white border-2 rounded-3xl max-w-6xl mx-auto ">
+        <div className='flex flex-row flex-wrap justify-evenly mt-5 px-2 pb-10'>
+          {algorithms.map((algo) => (
+            <div key={algo.id} className='w-72 mt-10'>
+              <AlgorithmGet userId={algo.authorId} algoId={algo.id} sTypes={statTypes}/>
+            </div>
+          ))}
+        </div>
+        <div className='mx-auto bg-red-200 max-w-max'>
+          <button type="button" className={"mx-2" + (1 == pageIndex ? " font-bold" : "")} onClick={() => onPageChange(1)}>{1}</button>
+          {pageNumbers.length > 1 && pageNumbers[1] - pageNumbers[0] > 2 ? <a >...</a> :
+            pageNumbers.length > 1 && pageNumbers[1] - pageNumbers[0] == 2 &&
+            <button type="button" className={"mx-2" + (2 == pageIndex ? " font-bold" : "")} onClick={() => onPageChange(2)}>{2}</button>
+          }
+          {pageNumbers.map((page, index) => (
+              index != pageNumbers.length - 1 && index != 0 &&
+              <button key={page} type="button" className={"mx-2" + (page==pageIndex ? " font-bold" : "")} onClick={() => onPageChange(page)}>{page}</button>
+          ))
+          }
+          {pageNumbers.length > 1 && pageNumbers[pageNumbers.length - 1] - pageNumbers[pageNumbers.length - 2] > 2 ? <a>...</a> : 
+            pageNumbers.length > 1 && pageNumbers[pageNumbers.length - 1] - pageNumbers[pageNumbers.length - 2] == 2
+            && <button type="button" className={"mx-2" + (pageNumbers[pageNumbers.length-1]-1 == pageIndex ? " font-bold" : "")} onClick={() => onPageChange(pageNumbers[pageNumbers.length-1]-1)}>{pageNumbers[pageNumbers.length-1]-1}</button>
+          }
+          {pageNumbers[pageNumbers.length - 1] > 1 && 
+            <button type="button" className={"mx-2" + (pageNumbers[pageNumbers.length-1] == pageIndex ? " font-bold" : "")} onClick={() => onPageChange(pageNumbers[pageNumbers.length-1])}>{pageNumbers[pageNumbers.length-1]}</button>
+          }  
+        </div>
       </div>
-      <div>
-        <button type="button" className={"mx-2" + (1 == pageIndex ? " font-bold" : "")} onClick={() => onPageChange(1)}>{1}</button>
-        {pageNumbers.length > 1 && pageNumbers[1] - pageNumbers[0] > 2 ? <a >...</a> :
-          pageNumbers.length > 1 && pageNumbers[1] - pageNumbers[0] == 2 &&
-          <button type="button" className={"mx-2" + (2 == pageIndex ? " font-bold" : "")} onClick={() => onPageChange(2)}>{2}</button>
-        }
-        {pageNumbers.map((page, index) => (
-            index != pageNumbers.length - 1 && index != 0 &&
-            <button key={page} type="button" className={"mx-2" + (page==pageIndex ? " font-bold" : "")} onClick={() => onPageChange(page)}>{page}</button>
-        ))
-        }
-        {pageNumbers.length > 1 && pageNumbers[pageNumbers.length - 1] - pageNumbers[pageNumbers.length - 2] > 2 ? <a>...</a> : 
-          pageNumbers.length > 1 && pageNumbers[pageNumbers.length - 1] - pageNumbers[pageNumbers.length - 2] == 2
-          && <button type="button" className={"mx-2" + (pageNumbers[pageNumbers.length-1]-1 == pageIndex ? " font-bold" : "")} onClick={() => onPageChange(pageNumbers[pageNumbers.length-1]-1)}>{pageNumbers[pageNumbers.length-1]-1}</button>
-        }
-        {pageNumbers[pageNumbers.length - 1] > 1 && 
-          <button type="button" className={"mx-2" + (pageNumbers[pageNumbers.length-1] == pageIndex ? " font-bold" : "")} onClick={() => onPageChange(pageNumbers[pageNumbers.length-1])}>{pageNumbers[pageNumbers.length-1]}</button>
-        }  
-      </div>
+      
     </>
   );
 }

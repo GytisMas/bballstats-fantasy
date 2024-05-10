@@ -97,7 +97,7 @@ function PlayerUpdate(props) {
           </select>
         </div>
         <div className="input-container mt-2">
-          <label>Forbid automatic statistic updates</label><br/>
+          <label>Forbid automatic info updating</label><br/>
           <input type="checkbox" name="forbidAutoUpdate" defaultChecked={player.forbidAutoUpdate} />
         </div>
         <input className={FormSumbitStyle} type="submit" />

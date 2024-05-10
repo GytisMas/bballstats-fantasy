@@ -157,6 +157,28 @@ namespace BBallStatsV2.Controllers
                 return Forbid();
             }
 
+            var transactions = await _context.Transactions
+                .Where(t => t.SenderId == userId || t.RecipientId == userId)
+                .ToListAsync();
+            foreach (var transaction in transactions)
+            {
+
+                if (transaction.SenderId == userId)
+                {
+                    transaction.SenderId = null;
+                }
+                if (transaction.RecipientId == userId)
+                {
+                    transaction.RecipientId = null;
+                }
+
+                if (transaction.SenderId == null && transaction.RecipientId == null)
+                {
+                    _context.Transactions.Remove(transaction);
+                }
+            }
+
+            await _context.SaveChangesAsync();
             await _userManager.DeleteAsync(user);
 
             return NoContent();

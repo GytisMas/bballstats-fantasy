@@ -522,7 +522,7 @@ namespace BBallStats.Shared
     [XmlRoot(ElementName = "game")]
     public class Game
     {
-        public bool ExistsInDB { get; set; }
+        public bool AlreadyExistedInDB { get; set; }
 
         [XmlAttribute(AttributeName = "year")]
         public int Year { get; set; }

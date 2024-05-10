@@ -67,19 +67,29 @@ namespace BBallStatsV2.Controllers
             _context.Update(playerStatistic);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(new PlayerStatisticDto(playerStatistic.Id, playerStatistic.Value, playerStatistic.AttemptValue,
+                playerStatistic.GameCount, playerStatistic.StatisticId, playerStatistic.PlayerId));
         }
 
         // POST: api/PlayerStatistics
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<PlayerStatistic>> PostPlayerStatistic(PlayerStatistic playerStatistic)
+        public async Task<ActionResult<PlayerStatistic>> PostPlayerStatistic(string teamId, string playerId, CreatePlayerStatisticDto dto)
         {
+            var playerStatistic = new PlayerStatistic();
+            playerStatistic.AttemptValue = dto.AttemptValue;
+            playerStatistic.Value = dto.Value;
+            playerStatistic.GameCount = dto.GameCount;
+            playerStatistic.PlayerId = playerId;
+            playerStatistic.StatisticId = dto.StatType;
+
             _context.PlayerStatistics.Add(playerStatistic);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPlayerStatistic", new { id = playerStatistic.Id }, playerStatistic);
+            return Created($"/api/Teams/{teamId}/Players/{playerId}/PlayerStatistics/{playerStatistic.Id}", 
+                new PlayerStatisticDto(playerStatistic.Id, playerStatistic.Value, playerStatistic.AttemptValue,
+                playerStatistic.GameCount, playerStatistic.StatisticId, playerStatistic.PlayerId));
         }
 
         // DELETE: api/PlayerStatistics/5

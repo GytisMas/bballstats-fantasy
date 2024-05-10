@@ -13,31 +13,38 @@ using BBallStats2.Auth.Model;
 using System.Net.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace BBallStatsV2.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/users/{userId}/customStatistics/{customStatisticId}/[controller]")]
     [ApiController]
     public class AlgorithmImpressionsController : ControllerBase
     {
         private readonly ForumDbContext _context;
+        private readonly UserManager<ForumRestUser> _userManager;
 
-        public AlgorithmImpressionsController(ForumDbContext context)
+        public AlgorithmImpressionsController(ForumDbContext context, UserManager<ForumRestUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        // GET: api/AlgorithmImpressions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AlgorithmImpressionDto>>> GetAlgorithmImpressions(int customStatisticId)
+        public async Task<ActionResult<IEnumerable<AlgorithmImpressionDto>>> GetCustomStatisticImpressions(string userId, int customStatisticId)
         {
-            var customStatistic = await _context.CustomStatistics.FirstOrDefaultAsync(r => r.Id == customStatisticId);
-            if (customStatistic == null)
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return NotFound();
+
+            var ratingAlgorithm = await _context.CustomStatistics.FirstOrDefaultAsync(r => r.Id == customStatisticId && r.User.Id == userId);
+            if (ratingAlgorithm == null)
                 return NotFound();
 
 
             var algorithmImpressions = (await _context.AlgorithmImpressions.ToListAsync())
-                .Where(o => o.CustomStatistic == customStatistic)
+                .Where(o => o.CustomStatistic == ratingAlgorithm)
                 .Select(o => new AlgorithmImpressionDto(
                     o.Id,
                     o.Positive,
@@ -47,83 +54,120 @@ namespace BBallStatsV2.Controllers
             return Ok(algorithmImpressions);
         }
 
-        // GET: api/AlgorithmImpressions/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<AlgorithmImpressionDto>> GetAlgorithmImpression(int impressionId)
+        [HttpGet("{impressionId}")]
+        public async Task<ActionResult<AlgorithmImpressionDto>> GetCustomStatisticImpression(string userId, int customStatisticId, int impressionId)
         {
-            var algorithmImpression = await _context.AlgorithmImpressions.FindAsync(impressionId);
-
-            if (algorithmImpression == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(new AlgorithmImpressionDto(algorithmImpression.Id, algorithmImpression.Positive, algorithmImpression.CustomStatisticId, algorithmImpression.UserId));
-        }
-
-        // PUT: api/AlgorithmImpressions/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [Authorize]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutAlgorithmImpression(string userId, int impressionId, UpdateAlgorithmImpressionDto updateImpressionDto)
-        {
-            var user = await _context.Users.FindAsync(userId);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 return NotFound();
 
-            var algorithmImpression = await _context.AlgorithmImpressions.FirstOrDefaultAsync(r => r.Id == impressionId);
+            var ratingAlgorithm = await _context.CustomStatistics.FirstOrDefaultAsync(r => r.Id == customStatisticId && r.User.Id == userId);
+            if (ratingAlgorithm == null)
+                return NotFound();
+
+            var algorithmImpression = await _context.AlgorithmImpressions.FirstOrDefaultAsync(r => r.Id == impressionId && r.CustomStatistic.Id == customStatisticId);
             if (algorithmImpression == null)
                 return NotFound();
 
-            //var impressionUser = await _context.Users.FirstOrDefaultAsync(r => r.Id == HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub));
-            //if (impressionUser == null)
-            //    return NotFound();
 
-            if (!HttpContext.User.IsInRole(ForumRoles.Regular)
-                /*|| impressionUser.Id != algorithmImpression.UserId*/)
+            return Ok(new AlgorithmImpressionDto(algorithmImpression.Id, algorithmImpression.Positive, customStatisticId, algorithmImpression.UserId));
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<ActionResult<AlgorithmImpressionDto>> CreateCustomStatisticImpression(string userId, int customStatisticId, CreateAlgorithmImpressionDto dto)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return NotFound();
+
+            var ratingAlgorithm = await _context.CustomStatistics.FirstOrDefaultAsync(r => r.Id == customStatisticId && r.User.Id == userId);
+            if (ratingAlgorithm == null)
+                return NotFound();
+
+            var impressionUser = await _context.Users.FirstOrDefaultAsync(r => r.Id == HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub));
+            if (impressionUser == null)
+                return NotFound();
+
+            if (!HttpContext.User.IsInRole(ForumRoles.Regular))
                 return Forbid();
 
-            algorithmImpression.Positive = updateImpressionDto.Positive;
+            var existingImpression = await _context.AlgorithmImpressions.FirstOrDefaultAsync(i => i.CustomStatistic.Id == ratingAlgorithm.Id && i.UserId == impressionUser.Id);
+            if (existingImpression != null)
+            {
+                return UnprocessableEntity("User has already rated this algorithm");
+            }
+
+            var algorithmImpression = new AlgorithmImpression()
+            {
+                Positive = dto.Positive,
+                CustomStatistic = ratingAlgorithm,
+                UserId = impressionUser.Id
+            };
+
+            _context.AlgorithmImpressions.Add(algorithmImpression);
+            await _context.SaveChangesAsync();
+
+            return Created($"/api/Users/{user.Id}/CustomStatistics/{ratingAlgorithm.Id}/AlgorithmImpressions/{algorithmImpression.Id}",
+                new AlgorithmImpressionDto(algorithmImpression.Id, algorithmImpression.Positive, customStatisticId, algorithmImpression.UserId));
+        }
+
+        [Authorize]
+        [HttpPut("{impressionId}")]
+        public async Task<ActionResult<AlgorithmImpressionDto>> UpdateCustomStatisticImpression(string userId, int customStatisticId, int impressionId, UpdateAlgorithmImpressionDto dto)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return NotFound();
+
+            var ratingAlgorithm = await _context.CustomStatistics.FirstOrDefaultAsync(r => r.Id == customStatisticId && r.User.Id == userId);
+            if (ratingAlgorithm == null)
+                return NotFound();
+
+            var algorithmImpression = await _context.AlgorithmImpressions.FirstOrDefaultAsync(r => r.Id == impressionId && r.CustomStatistic.Id == customStatisticId);
+            if (algorithmImpression == null)
+                return NotFound();
+
+            var impressionUser = await _context.Users.FirstOrDefaultAsync(r => r.Id == HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub));
+            if (impressionUser == null)
+                return NotFound();
+
+            if (!HttpContext.User.IsInRole(ForumRoles.Regular)
+                || impressionUser.Id != algorithmImpression.UserId)
+                return Forbid();
+
+            algorithmImpression.Positive = dto.Positive;
 
             _context.Update(algorithmImpression);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(new AlgorithmImpressionDto(algorithmImpression.Id, algorithmImpression.Positive, customStatisticId, algorithmImpression.UserId));
         }
 
-        // POST: api/AlgorithmImpressions
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        // TODO: update with dto
         [Authorize]
-        [HttpPost]
-        public async Task<ActionResult<AlgorithmImpression>> PostAlgorithmImpression(AlgorithmImpression algorithmImpression)
+        [HttpDelete("{impressionId}")]
+        public async Task<ActionResult<AlgorithmImpressionDto>> DeleteCustomStatisticImpression(string userId, int customStatisticId, int impressionId)
         {
-            _context.AlgorithmImpressions.Add(algorithmImpression);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetAlgorithmImpression", new { id = algorithmImpression.Id }, algorithmImpression);
-        }
-
-        // DELETE: api/AlgorithmImpressions/5
-        [Authorize]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAlgorithmImpression(int id)
-        {
-            var algorithmImpression = await _context.AlgorithmImpressions.FindAsync(id);
-            if (algorithmImpression == null)
-            {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
                 return NotFound();
-            }
 
-            _context.AlgorithmImpressions.Remove(algorithmImpression);
+            var ratingAlgorithm = await _context.CustomStatistics.FirstOrDefaultAsync(r => r.Id == customStatisticId && r.User.Id == userId);
+            if (ratingAlgorithm == null)
+                return NotFound();
+
+            var algorithmImpression = await _context.AlgorithmImpressions.FirstOrDefaultAsync(r => r.Id == impressionId && r.CustomStatistic.Id == customStatisticId);
+            if (algorithmImpression == null)
+                return NotFound();
+
+            if (!HttpContext.User.IsInRole(ForumRoles.Regular)
+                || HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub) != algorithmImpression.UserId)
+                return Forbid();
+
+            _context.Remove(algorithmImpression);
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        private bool AlgorithmImpressionExists(int id)
-        {
-            return _context.AlgorithmImpressions.Any(e => e.Id == id);
         }
     }
 }

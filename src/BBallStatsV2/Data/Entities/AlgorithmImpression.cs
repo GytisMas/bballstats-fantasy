@@ -13,6 +13,7 @@ namespace BBallStats.Data.Entities
         public ForumRestUser User { get; set; } = null!;
         public required string UserId { get; set; }
     }
+    public record AlgorithmImpressionShortDto(int Id, bool Positive, int Algorithm);
     public record AlgorithmImpressionDto(int Id, bool Positive, int Algorithm, string UserId);
     public record CreateAlgorithmImpressionDto(bool Positive, int Algorithm);
     public record UpdateAlgorithmImpressionDto(bool Positive);

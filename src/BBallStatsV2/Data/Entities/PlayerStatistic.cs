@@ -12,6 +12,7 @@ namespace BBallStats.Data.Entities
         public string PlayerId { get; set; } = null!;
 
         public record PlayerStatisticDto(int Id, float Value, float AttemptValue, int GameCount, int StatType, string Player);
+        public record CreatePlayerStatisticDto(float Value, float AttemptValue, int GameCount, int StatType);
         public record UpdatePlayerStatisticDto(float Value, float AttemptValue, int GameCount, int StatType);
 
     }

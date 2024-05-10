@@ -213,54 +213,6 @@ namespace BBallStatsV2.Controllers
                 {
                     Statistic = stats.Find(x => x.Name == s.StatName)
                 });
-            //player.PlayerStatistics.Add(new PlayerStatistic()
-            //{
-            //    Statistic = stats.Find(x => x.Name == nameof(stat.FieldGoals2))
-            //});
-            //player.PlayerStatistics.Add(new PlayerStatistic()
-            //{
-            //    Statistic = stats.Find(x => x.Name == nameof(stat.FieldGoals3))
-            //});
-            //player.PlayerStatistics.Add(new PlayerStatistic()
-            //{
-            //    Statistic = stats.Find(x => x.Name == nameof(stat.TimePlayedSeconds))
-            //});
-            //player.PlayerStatistics.Add(new PlayerStatistic()
-            //{
-            //    Statistic = stats.Find(x => x.Name == nameof(stat.StartFive))
-            //});
-            //player.PlayerStatistics.Add(new PlayerStatistic()
-            //{
-            //    Statistic = stats.Find(x => x.Name == nameof(stat.Score))
-            //});
-            //player.PlayerStatistics.Add(new PlayerStatistic()
-            //{
-            //    Statistic = stats.Find(x => x.Name == nameof(stat.FreeThrows))
-            //});
-            //player.PlayerStatistics.Add(new PlayerStatistic()
-            //{
-            //    Statistic = stats.Find(x => x.Name == nameof(stat.Rebounds))
-            //});
-            //player.PlayerStatistics.Add(new PlayerStatistic()
-            //{
-            //    Statistic = stats.Find(x => x.Name == nameof(stat.Assists))
-            //});
-            //player.PlayerStatistics.Add(new PlayerStatistic()
-            //{
-            //    Statistic = stats.Find(x => x.Name == nameof(stat.Steals))
-            //});
-            //player.PlayerStatistics.Add(new PlayerStatistic()
-            //{
-            //    Statistic = stats.Find(x => x.Name == nameof(stat.Blocks))
-            //});
-            //player.PlayerStatistics.Add(new PlayerStatistic()
-            //{
-            //    Statistic = stats.Find(x => x.Name == nameof(stat.Turnovers))
-            //});
-            //player.PlayerStatistics.Add(new PlayerStatistic()
-            //{
-            //    Statistic = stats.Find(x => x.Name == nameof(stat.PlusMinus))
-            //});
             return player;
         }
 
@@ -269,20 +221,6 @@ namespace BBallStatsV2.Controllers
             var statistics = new List<RegularStatistic>();
             foreach (var s in StatTypes)
                 statistics = CheckOrAddStat(statistics, existingStats, s);
-            //statistics = CheckOrAddStat(statistics, existingStats, nameof(stat.FieldGoals), "Field Goals Made");
-            //statistics = CheckOrAddStat(statistics, existingStats, nameof(stat.FieldGoals2), "Field Goals Made, 2pt");
-            //statistics = CheckOrAddStat(statistics, existingStats, nameof(stat.FieldGoals3), "Field Goals Made, 3pt");
-            //statistics = CheckOrAddStat(statistics, existingStats, nameof(stat.TimePlayedSeconds), "Time Played");
-            //statistics = CheckOrAddStat(statistics, existingStats, nameof(stat.StartFive), "Starting Five");
-            //statistics = CheckOrAddStat(statistics, existingStats, nameof(stat.Score), "Total score");
-            //statistics = CheckOrAddStat(statistics, existingStats, nameof(stat.FreeThrows), "Free Throws Made");
-            //statistics = CheckOrAddStat(statistics, existingStats, nameof(stat.Rebounds), "Rebounds");
-            //statistics = CheckOrAddStat(statistics, existingStats, nameof(stat.Assists), "Assists");
-            //statistics = CheckOrAddStat(statistics, existingStats, nameof(stat.Steals), "Steals");
-            //statistics = CheckOrAddStat(statistics, existingStats, nameof(stat.Blocks), "Blocks");
-            //statistics = CheckOrAddStat(statistics, existingStats, nameof(stat.Turnovers), "Turnovers");
-            //statistics = CheckOrAddStat(statistics, existingStats, nameof(stat.PlusMinus), "Plus Minus");
-
             return statistics;
         }
 

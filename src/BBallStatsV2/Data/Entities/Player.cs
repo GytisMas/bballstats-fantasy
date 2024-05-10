@@ -5,12 +5,11 @@ namespace BBallStats.Data.Entities
 {
 	public enum PlayerRole
 	{
-		PointGuard = 0,
-		ShootingGuard = 1,
-		SmallForward = 2,
-		PowerForward = 3,
-		Center = 4
-	}
+		Guard = 0,
+		Forward = 1,
+		Center = 2,
+		Other = 3,
+    }
 
 	public class Player
 	{

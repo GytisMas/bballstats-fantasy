@@ -23,14 +23,25 @@ namespace BBallStatsV2.Controllers
             _context = context;
         }
 
-        // GET: api/Teams
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Team>>> GetTeams()
+        public async Task<ActionResult<IEnumerable<TeamDto>>> GetTeams()
         {
-            return await _context.Teams.ToListAsync();
+            return await _context.Teams.Select(t => new TeamDto(t.Id, t.Name)).ToListAsync();
         }
 
-        // GET: api/Teams
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TeamDto>> GetTeam(string id)
+        {
+            var team = await _context.Teams.FindAsync(id);
+
+            if (team == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new TeamDto(team.Id, team.Name));
+        }
+
         [HttpGet("ByDates")]
         public async Task<ActionResult<List<TeamDto>>> GetTeamsByUpcomingGames(DateTime startDate, DateTime endDate)
         {
@@ -38,8 +49,8 @@ namespace BBallStatsV2.Controllers
                 .Where(m => m.MatchDate >= startDate && m.MatchDate <= endDate)
                 .Select(m => new { AwayTeamId = m.AwayTeamId, HomeTeamId = m.HomeTeamId })
                 .ToListAsync();
-            if (matches == null || !matches.Any()) 
-            { 
+            if (matches == null || !matches.Any())
+            {
                 return NotFound();
             }
 
@@ -51,22 +62,6 @@ namespace BBallStatsV2.Controllers
                 .Select(t => new TeamDto(t.Id, t.Name)).ToListAsync();
         }
 
-        // GET: api/Teams/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Team>> GetTeam(string id)
-        {
-            var team = await _context.Teams.FindAsync(id);
-
-            if (team == null)
-            {
-                return NotFound();
-            }
-
-            return team;
-        }
-
-        // PUT: api/Teams/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTeam(string id, TeamNameDto dto)
@@ -79,34 +74,75 @@ namespace BBallStatsV2.Controllers
 
             _context.Update(team);
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(new TeamDto(team.Id, team.Name));
         }
 
-        // POST: api/Teams
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Team>> CreateTeams(TeamDto[] newTeams)
+        [HttpPut]
+        public async Task<ActionResult<TeamWithPlayersDto[]>> CreateTeamsAndPlayers(TeamWithPlayersDto[] newTeams)
         {
-            var teams = await _context.Teams.ToListAsync();
-
-            foreach (var newTeam in newTeams)
+            var VisitedPlayers = new List<string>();
+            foreach (var newOrExistingTeam in newTeams)
             {
-                var existingTeam = teams.FirstOrDefault(t => t.Id == newTeam.Id);
+                var existingTeam = await _context.Teams.FindAsync(newOrExistingTeam.Id);
                 if (existingTeam == null)
+                {
                     _context.Teams.Add(
                         new Team()
                         {
-                            Id = newTeam.Id,
-                            Name = newTeam.Name,
+                            Id = newOrExistingTeam.Id,
+                            Name = newOrExistingTeam.Name,
                         }
                     );
+                }
+                else if (existingTeam.Name !=  newOrExistingTeam.Name)
+                {
+                    existingTeam.Name = newOrExistingTeam.Name;
+                    _context.Teams.Update(existingTeam);
+                }
+
+                foreach (var player in newOrExistingTeam.Players)
+                {
+                    if (VisitedPlayers.Contains(player.Id))
+                    {
+                        continue;
+                    }
+                    VisitedPlayers.Add(player.Id);
+                    if (player.Id == "011941")
+                    {
+                        Console.WriteLine("+");
+                    }
+
+                    var playerRole =
+                        player.Role == "Guard" ? PlayerRole.Guard :
+                        player.Role == "Forward" ? PlayerRole.Forward :
+                        player.Role == "Center" ? PlayerRole.Center :
+                        PlayerRole.Other;
+
+                    var existingPlayer = await _context.Players.FindAsync(player.Id);
+                    if (existingPlayer != null)
+                    {
+                        existingPlayer.Role = playerRole;
+                        existingPlayer.Name = player.Name;
+                        _context.Players.Update(existingPlayer);
+                        continue;
+                    }
+
+                    var newPlayer = new Player()
+                    {
+                        Id = player.Id,
+                        Name = player.Name,
+                        Role = playerRole,
+                        SkippedLastGame = false,
+                        CurrentTeamId = newOrExistingTeam.Id 
+                    };
+                    _context.Players.Add(newPlayer);
+                }
             }
 
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(newTeams);
         }
 
-        // DELETE: api/Teams/5
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTeam(string id)

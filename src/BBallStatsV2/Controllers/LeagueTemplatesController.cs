@@ -25,14 +25,12 @@ namespace BBallStatsV2.Controllers
             _context = context;
         }
 
-        // GET: api/LeagueTemplates
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<LeagueTemplate>>> GetLeagueTemplates()
+        public async Task<ActionResult<IEnumerable<LeagueTemplateNameIdDto>>> GetLeagueTemplates()
         {
-            return await _context.LeagueTemplates.ToListAsync();
+            return await _context.LeagueTemplates.Select(t => new LeagueTemplateNameIdDto(t.Id, t.Name)).ToListAsync();
         }
 
-        // GET: api/LeagueTemplates/5
         [HttpGet("{id}")]
         public async Task<ActionResult<LeagueTemplateDto>> GetLeagueTemplate(int id)
         {
@@ -46,49 +44,15 @@ namespace BBallStatsV2.Controllers
                 return NotFound();
             }
 
-            return new LeagueTemplateDto(leagueTemplate.Name, leagueTemplate.BenchMultiplier, leagueTemplate.TeamWinPoints, leagueTemplate.TeamLosePoints,
+            return new LeagueTemplateDto(leagueTemplate.Id, leagueTemplate.Name, leagueTemplate.BenchMultiplier, leagueTemplate.TeamWinPoints, leagueTemplate.TeamLosePoints,
                 leagueTemplate.Roles.Select(r => new LeagueRoleWithIdDto(r.Id, r.Name, r.RoleToReplaceId,
                     r.Statistics.Select(s => new LeagueStatDto(s.PointsPerStat, s.StatisticId)).ToArray()
                 )).ToArray());
         }
 
-        // PUT: api/LeagueTemplates/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [Authorize]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutLeagueTemplate(int id, LeagueTemplate leagueTemplate)
-        {
-            if (id != leagueTemplate.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(leagueTemplate).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!LeagueTemplateExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/LeagueTemplates
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<LeagueTemplate>> PostLeagueTemplate(LeagueTemplateDto leagueTemplateDto)
+        public async Task<ActionResult<LeagueTemplate>> PostLeagueTemplate(LeagueTemplateUpsertDto leagueTemplateDto)
         {
             var userId = HttpContext.User.FindFirstValue(JwtRegisteredClaimNames.Sub);
             var user = await _context.Users
@@ -161,7 +125,7 @@ namespace BBallStatsV2.Controllers
             _context.LeagueTemplates.Add(leagueTemplate);
             await _context.SaveChangesAsync();
 
-            return Ok(new LeagueTemplateDto(leagueTemplate.Name, leagueTemplate.BenchMultiplier, leagueTemplate.TeamWinPoints, leagueTemplate.TeamLosePoints,
+            return Ok(new LeagueTemplateDto(leagueTemplate.Id, leagueTemplate.Name, leagueTemplate.BenchMultiplier, leagueTemplate.TeamWinPoints, leagueTemplate.TeamLosePoints,
                 leagueTemplate.Roles.Select(role => new LeagueRoleWithIdDto(role.Id, role.Name, role.RoleToReplaceId,
                     role.Statistics.Select(stat => new LeagueStatDto(stat.PointsPerStat, stat.StatisticId)).ToArray()
                 )).ToArray()

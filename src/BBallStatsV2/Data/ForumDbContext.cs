@@ -65,7 +65,7 @@ namespace BBallStats.Data
                 .HasMany<AlgorithmImpression>()
                 .WithOne(e => e.CustomStatistic)
                 .HasForeignKey(e => e.CustomStatisticId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<CustomStatistic>()
                 .HasMany(e => e.Statistics)

@@ -10,17 +10,18 @@ namespace BballStatsFetcher
 {
     internal class Program
     {
-        const int shortIntervalInMs = 10;
-        const int longIntervalInMs = 15000;
+        const int pauseIntervalInMs = 2 * 1000;
+        const int noConnectionIntervalInMs = 5 * 1000;
+        const int longIntervalInMs = 15 * 1000;
         const string baseUrl = "https://urchin-app-97ttl.ondigitalocean.app/api";
         //const string baseUrl = "https://localhost:7140/api";
         static HttpClient client = new HttpClient();
         static async Task Main(string[] args)
         {
-            var stat = new Stat();
             string seasonCode;
             int gameCode;
             bool ignoreExisting = false;
+            bool checkTeamsAndPlayers = true;
             while (true)
             {
                 // fetcherio reikalavimai:
@@ -29,14 +30,27 @@ namespace BballStatsFetcher
                 // rasti nezaistus matchus
 
 
+                Console.WriteLine($"Checking Teams.");
                 seasonCode = "E" + (DateTime.UtcNow.Month < 8 ? DateTime.UtcNow.Year - 1 : DateTime.UtcNow.Year);
-                await CheckTeams(seasonCode);
-                
-                //Console.WriteLine($"\nGet oldest unused game (season {seasonCode})");
+                if (checkTeamsAndPlayers && !await CheckTeams(seasonCode))
+                {
+                    Console.WriteLine($"Error Checking Teams. Retrying in {noConnectionIntervalInMs}ms");
+                    Thread.Sleep(noConnectionIntervalInMs);
+                    continue;
+                }
+                checkTeamsAndPlayers = false;
+
+                Console.WriteLine($"Getting oldest unused game (season {seasonCode})");
                 gameCode = await GetOldestUnusedGame(seasonCode, ignoreExisting);
                 ignoreExisting = !ignoreExisting;
 
-                Console.WriteLine($"\nFetching game stats (season {seasonCode} | game {gameCode})");
+                Console.WriteLine($"-");
+                Console.WriteLine($"-");
+                Console.WriteLine($"-");
+                Console.WriteLine($"\nPausing before fetching game stats (season {seasonCode} | game {gameCode})");
+                Thread.Sleep(pauseIntervalInMs);
+
+                Console.WriteLine($"Fetching game stats (season {seasonCode} | game {gameCode})");
                 var game = await FetchGameData(seasonCode, gameCode);
 
                 if (game.Played)
@@ -44,9 +58,14 @@ namespace BballStatsFetcher
                     //Console.WriteLine($"\n Sending game stats (season {seasonCode} | game {gameCode})");
                     var sendResult = await SendGameData(game);
                 }
+                Console.WriteLine($"\nGame processed successfully (game already existed in database: {game.AlreadyExistedInDB} | game was played: {game.Played})");
 
-                if (game.ExistsInDB && !game.Played)
+
+                if (game.AlreadyExistedInDB && !game.Played)
+                {
                     Thread.Sleep(longIntervalInMs);
+                    checkTeamsAndPlayers = true;
+                }
             }
         }
 
@@ -60,7 +79,7 @@ namespace BballStatsFetcher
             return int.Parse(await getGameResponse.Content.ReadAsStringAsync());
         }
 
-        private static async Task CheckTeams(string seasonCode)
+        private static async Task<bool> CheckTeams(string seasonCode)
         {
             var url = $"https://api-live.euroleague.net/v1/teams?seasonCode={seasonCode}";
             var readResponse = await client.GetAsync(url);
@@ -82,11 +101,23 @@ namespace BballStatsFetcher
             }
 
             var teamsContent = JsonContent.Create(
-                teamData.ClubsList.Select(c => new TeamDto(c.Code, c.Clubname))
+                teamData.ClubsList
+                .Select(c => new TeamWithPlayersDto(
+                    c.Code, c.Clubname,
+                    c.Roster.Players.Select(p => new PlayerNoTeamDto(p.Code, MakePlayerName(p.Name), p.Position)).ToArray()
+                ))
                 );
-
-            var createTeamsResponse = await client.PostAsync($"{baseUrl}/Teams/", teamsContent);
-            createTeamsResponse.EnsureSuccessStatusCode();
+            try
+            {
+                var createTeamsResponse = await client.PutAsync($"{baseUrl}/Teams/", teamsContent);
+                createTeamsResponse.EnsureSuccessStatusCode();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+            return true;
         }
 
         private static async Task<Game?> FetchGameData(string seasonCode, int gameCode)
@@ -126,7 +157,7 @@ namespace BballStatsFetcher
 
                 var getGameResponse = await client.PostAsync($"{baseUrl}/Matches/", matchContent);
                 getGameResponse.EnsureSuccessStatusCode();
-                gameData.ExistsInDB = getGameResponse.StatusCode == System.Net.HttpStatusCode.OK;
+                gameData.AlreadyExistedInDB = getGameResponse.StatusCode == System.Net.HttpStatusCode.OK;
 
                 return gameData;
             }

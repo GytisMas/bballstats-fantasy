@@ -128,7 +128,7 @@ namespace BBallStatsV2.Controllers
             }
 
             var players = league.LeagueAvailablePlayers
-                .Select(p => new PlayerInLeagueDto(p.PlayerId, p.Id, p.Player.Name, (int)p.Player.Role, p.Player.CurrentTeamId, p.Price))
+                .Select(p => new PlayerInLeagueDto(p.PlayerId, p.Id, p.Player.Name, p.Player.Role, p.Player.CurrentTeamId, p.Price))
                 .ToList();
             
             return new LeaguePlayersDto(league.Name, league.IsActive, league.EntryFee, league.LeagueTemplateId, league.Password != null, players);

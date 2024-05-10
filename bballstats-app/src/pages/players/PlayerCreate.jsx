@@ -43,12 +43,14 @@ function PlayerCreate() {
         );
       team = teamResponse.data.id;
     }
-    var { name, role } = document.forms[0];
+    var { id, name, role } = document.forms[0];
     if (team == "")
       team = document.forms[0].elements.team.value;
     const playerData = {
+        id: id.value,
         name: name.value,
-        role: Number(role.value)
+        role: Number(role.value),
+        teamId: team
     };
     try {
         const response = await axios.post(APIEndpoint + "/teams/"+team+'/players/', playerData
@@ -77,13 +79,17 @@ function PlayerCreate() {
 
   // JSX code for login form
   const renderForm = (
-    <div className={FormContainerStyle}>
+    <div className={FormContainerStyle + " bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"}>
       <div className="flex flex-row justify-between">
         <button className={FormHelperStyle} onClick={() => handleTeamClick(true)}>Use existing team</button>
         <button className={FormHelperStyle} onClick={() => handleTeamClick(false)}>Create new team</button>
       </div>
        
       <form onSubmit={handleSubmit}>
+        <div className="input-container">
+          <label>Player Code</label>
+          <input className={FormMemberStyle} type="text" name="id" required />
+        </div>
         <div className="input-container">
           <label>Full name</label>
           <input className={FormMemberStyle} type="text" name="name" required />

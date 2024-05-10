@@ -8,10 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using BBallStats.Data;
 using BBallStats.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
+using static BBallStats.Shared.Utils.DTOs;
 
 namespace BBallStatsV2.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/teams/{teamId}/[controller]")]
     [ApiController]
     public class PlayersController : ControllerBase
     {
@@ -22,25 +23,17 @@ namespace BBallStatsV2.Controllers
             _context = context;
         }
 
-        // GET: api/Players
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Player>>> GetPlayers()
-        {
-            return await _context.Players.ToListAsync();
-        }
-
-        [HttpGet("~/api/Teams/{teamId}/[controller]")]
-        public async Task<ActionResult<IEnumerable<PlayerIdAndNameDto>>> GetPlayers(string teamId)
+        public async Task<ActionResult<IEnumerable<PlayerShortDto>>> GetPlayers(string teamId)
         {
             return await _context.Players
                 .Where(p => p.CurrentTeamId.Equals(teamId))
-                .Select(p => new PlayerIdAndNameDto(p.Id, p.Name))
+                .Select(p => new PlayerShortDto(p.Id, p.Name, p.Role))
                 .ToListAsync();
         }
 
-        // GET: api/Players/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Player>> GetPlayer(string id)
+        public async Task<ActionResult<PlayerDto>> GetPlayer(string id)
         {
             var player = await _context.Players.FindAsync(id);
 
@@ -49,68 +42,45 @@ namespace BBallStatsV2.Controllers
                 return NotFound();
             }
 
-            return player;
+            return Ok(new PlayerDto(player.Id, player.Name, player.Role, player.CurrentTeamId, player.ForbidAutoUpdate));
         }
 
-        // PUT: api/Players/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPlayer(string id, Player player)
+        public async Task<IActionResult> PutPlayer(string id, UpdatePlayerDto dto)
         {
-            if (id != player.Id)
-            {
-                return BadRequest();
-            }
+            var player = await _context.Players.FindAsync(id);
+            if (player == null)
+                return NotFound();
 
-            _context.Entry(player).State = EntityState.Modified;
+            player.Name = dto.Name;
+            player.Role = dto.Role;
+            player.CurrentTeamId = dto.TeamId;
+            player.ForbidAutoUpdate = dto.ForbidAutoUpdate;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PlayerExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _context.Players.Update(player);
+            await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(new PlayerDto(player.Id, player.Name, player.Role, player.CurrentTeamId, player.ForbidAutoUpdate));
         }
 
-        // POST: api/Players
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Player>> PostPlayer(Player player)
+        public async Task<ActionResult<Player>> PostPlayer(CreatePlayerDto dto)
         {
-            _context.Players.Add(player);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (PlayerExists(player.Id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var player = new Player() { Name = dto.Name };
+            player.Id = dto.Id;
+            player.Name = dto.Name;
+            player.Role = dto.Role;
+            player.CurrentTeamId = dto.TeamId;
+            player.ForbidAutoUpdate = dto.ForbidAutoUpdate;
 
-            return CreatedAtAction("GetPlayer", new { id = player.Id }, player);
+            _context.Players.Add(player);
+            await _context.SaveChangesAsync();
+
+            return Created($"/api/players/{player.Id}", new PlayerDto(player.Id, player.Name, player.Role, player.CurrentTeamId, player.ForbidAutoUpdate));
         }
 
-        // DELETE: api/Players/5
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePlayer(string id)

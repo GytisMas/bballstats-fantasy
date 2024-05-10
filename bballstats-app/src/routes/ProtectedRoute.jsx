@@ -57,7 +57,6 @@ export const ProtectedRoute = () => {
         getNewToken();
       }
     }
-    console.log("A")
     if (width > breakpoint) {
       return <div className='Container'>
         <Header roles={currentUserRoles}/>

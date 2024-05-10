@@ -13,10 +13,16 @@ function PlayerUpdate(props) {
   const { accessToken } = useAuth();
   const [errorMessages, setErrorMessages] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);  
+  const [isLoading, setIsLoading] = useState(true);  
+  const [teams, setTeams] = useState([]);
   const [player, setPlayer] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const loadTeams = async () => {
+      const response = (await axios.get(APIEndpoint + '/teams/'));
+      setTeams(response.data);
+    }
     const loadPlayer = async () => {
       try {
         const response = (await axios.get(APIEndpoint + '/teams/'+params.teamId+'/players/'+params.playerId));
@@ -26,7 +32,8 @@ function PlayerUpdate(props) {
       }
     }
     loadPlayer();
-  }, []);
+    loadTeams().then(() => setIsLoading(false));
+}, []);
 
   const errors = {
     uname: "invalid username",
@@ -37,12 +44,18 @@ function PlayerUpdate(props) {
     return <option key={i} value={i}>{x}</option>;
   }
 
+  const MakeTeamItem = function(team, i) {
+    return <option key={i} value={team.id}>{team.name}</option>;
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-    var { name, role, team } = document.forms[0];
+    var { name, role, team, forbidAutoUpdate } = document.forms[0];
     const playerData = {
         name: name.value,
-        role: Number(role.value)
+        role: Number(role.value),
+        teamId: team.value,
+        forbidAutoUpdate: forbidAutoUpdate.checked,
     };
     try {
         const response = await axios.put(APIEndpoint + "/teams/"+params.teamId+'/players/'+params.playerId, playerData
@@ -66,16 +79,26 @@ function PlayerUpdate(props) {
   // JSX code for login form
   const renderForm = (
     <div className={FormContainerStyle}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className=" bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div className="input-container">
           <label>Full name</label>
           <input className={FormMemberStyle} type="text" name="name" defaultValue={player.name} required />
         </div>
-        <div className="input-container">
+        <div className="input-container mt-2">
           <label>Role</label>
           <select className={FormSelectStyle} name="role" defaultValue={player.role}>
             {roles.map((role, i) => (MakeItem(role, i)))}
           </select>
+        </div>
+        <div className="input-container mt-2">
+          <label>Team</label>
+          <select className={FormSelectStyle} name="team" defaultValue={player.teamId}>
+            {teams.map((team, i) => (MakeTeamItem(team, i)))}
+          </select>
+        </div>
+        <div className="input-container mt-2">
+          <label>Forbid automatic statistic updates</label><br/>
+          <input type="checkbox" name="forbidAutoUpdate" defaultChecked={player.forbidAutoUpdate} />
         </div>
         <input className={FormSumbitStyle} type="submit" />
       </form>
@@ -85,7 +108,7 @@ function PlayerUpdate(props) {
   return (
     <div className="app">
       <div className="login-form">
-        {isSubmitted ? <div>Submitted</div> : renderForm}
+        {isLoading ? <div>Loading...</div> : renderForm}
       </div>
     </div>
   );

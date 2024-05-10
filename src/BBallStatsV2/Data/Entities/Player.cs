@@ -24,7 +24,9 @@ namespace BBallStats.Data.Entities
         public ICollection<PlayerStatistic> PlayerStatistics { get; set; } = new List<PlayerStatistic>();
 
     }
-    public record PlayerDto(string Id, string Name, int Role, string TeamId);
-    public record PlayerIdAndNameDto(string Id, string Name);
-    public record PlayerInLeagueDto(string Id, int leaguePlayerId, string Name, int Role, string TeamId, int Price);
+    public record CreatePlayerDto(string Id, string Name, PlayerRole Role, string TeamId, bool ForbidAutoUpdate);
+    public record UpdatePlayerDto(string Name, PlayerRole Role, string TeamId, bool ForbidAutoUpdate);
+    public record PlayerDto(string Id, string Name, PlayerRole Role, string TeamId, bool ForbidAutoUpdate);
+    public record PlayerShortDto(string Id, string Name, PlayerRole Role);
+    public record PlayerInLeagueDto(string Id, int leaguePlayerId, string Name, PlayerRole Role, string TeamId, int Price);
 }

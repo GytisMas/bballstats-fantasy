@@ -101,7 +101,10 @@ function LeagueCreate() {
         console.log(error);
         console.log(error.response.data);
         if (error.response.data.includes("exists"))
-          setErrorMessages({ name: "templateName", message: "League template with name already exists" });
+          setErrorMessages({ name: "name", message: "League with name already exists." });
+        else if (error.response.data.includes("funds"))
+          setErrorMessages({ name: "submit", message: "Insuffient funds to create league." });
+
     }
   };
 
@@ -139,6 +142,7 @@ function LeagueCreate() {
           <div className="text-xl text-center p-1 ">League Info</div>
           <div className="input-container">
             <label>League name</label>
+            {renderErrorMessage("name")}
             <input className={FormMemberStyle} type="text" name="leagueName" required />
             <label>Entry fee</label>
             <input className={FormMemberStyle} type="number" min={1} defaultValue={1} step="1" name={"entryFee"} required />
@@ -200,7 +204,7 @@ function LeagueCreate() {
         </div>
         
         
-        {renderErrorMessage("roles")}
+        {renderErrorMessage("funds")}
         <input className={!forbidCreation ? FormSumbitStyle : FormSumbitStyleForbid} type="submit" disabled={forbidCreation} />
       </form>
     </div>

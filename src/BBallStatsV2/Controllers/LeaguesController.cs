@@ -539,7 +539,13 @@ namespace BBallStatsV2.Controllers
 
             if (userBalance < leagueCreationPrice)
             {
-                return UnprocessableEntity("InsufficientFunds");
+                return UnprocessableEntity("Insufficient funds to create league.");
+            }
+
+            var leagueSameName = await _context.Leagues.SingleOrDefaultAsync(l => l.Name.Equals(postLeagueDto.Name));
+            if (leagueSameName != null)
+            {
+                return UnprocessableEntity("League with same name already exists.");
             }
 
             var dateDifference = (postLeagueDto.EndDate - postLeagueDto.StartDate).Days;

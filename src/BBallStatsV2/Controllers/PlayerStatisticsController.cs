@@ -23,11 +23,23 @@ namespace BBallStatsV2.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<PlayerStatisticDto>>> GetPlayersStatistics(string teamId, string playerId)
+        [HttpGet("~/api/playerStatistics")]
+        public async Task<ActionResult<IEnumerable<PlayerStatisticDto>>> GetAllPlayerStatistics(string? statisticIds)
         {
+            int[]? statisticIdsArr = statisticIds?.Split(',').Select(int.Parse).ToArray() ?? null;
+            return await _context.PlayerStatistics
+                .Where(p => statisticIdsArr == null || statisticIdsArr.Contains(p.StatisticId))
+                .Select(s => new PlayerStatisticDto(s.Id, s.Value, s.AttemptValue, s.GameCount, s.StatisticId, s.PlayerId))
+                .ToListAsync();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<PlayerStatisticDto>>> GetPlayersStatistics(string playerId, string? statisticIds)
+        {
+            int[]? statisticIdsArr = statisticIds?.Split(',').Select(int.Parse).ToArray() ?? null;
             return await _context.PlayerStatistics
                 .Where(p => p.PlayerId.Equals(playerId))
+                .Where(p => statisticIdsArr == null || statisticIdsArr.Contains(p.StatisticId))
                 .Select(s => new PlayerStatisticDto(s.Id, s.Value, s.AttemptValue, s.GameCount, s.StatisticId, s.PlayerId))
                 .ToListAsync();
         }

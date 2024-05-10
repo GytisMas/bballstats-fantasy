@@ -70,7 +70,7 @@ function LeagueGet(props) {
                   {participants.map((participant) => (
                     <tr key={participant.id} className='w-72 mt-10'>
                       <td className='p-2 border-2 text-left font-semibold hover:font-bold'>
-                        <a href={'/fantasy/leagues/'+params.leagueId+'/participants/'+participant.id}>{participant.teamName}</a>
+                        <button type="button" onClick={() => navigate('/fantasy/leagues/'+params.leagueId+'/participants/'+participant.id)}>{participant.teamName}</button>
                       </td>
                       <td className='p-2 border-2 text-left'>{participant.userName}</td>
                       <td className='p-2 border-2 text-left'>{participant.points.toFixed(1)}</td>

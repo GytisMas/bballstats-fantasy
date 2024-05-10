@@ -30,7 +30,6 @@ export default function AlgorithmFullPage(props) {
         setUser(userResponse.data);
         
         const statIds = response.data.statIds;
-        console.log(statIds)
         const statResponse = 
             (await axios.get(APIEndpoint + '/statistics/'))
                 .data
@@ -46,16 +45,24 @@ export default function AlgorithmFullPage(props) {
         const formulaLoc = FormulaSecondHalf(response.data.formula)
         setFormula(formulaLoc)
 
-        console.log(statResponse)
         setAlgoStats(statResponse);
         let playerList = []
+        setIsLoading(false)
         const teams = (await axios.get(APIEndpoint + "/teams")).data;
         let hasInvalidValues = false;
+        const allPlayerStats = (await axios.get(APIEndpoint + '/playerStatistics/', { params: {"statisticIds": statIds.toString()} }))
+            .data
         for (let i = 0; i < teams.length; i++) {
             const players = (await axios.get(APIEndpoint + '/teams/'+teams[i].id+'/players')).data
+            
             for (let j = 0; j < players.length; j++) {
-                const playerStats = (await axios.get(APIEndpoint + '/teams/'+teams[i].id+'/players/'+players[j].id+'/playerStatistics/'))
-                    .data
+                // const playerStats = (await axios.get(APIEndpoint + '/teams/'+teams[i].id+'/players/'+players[j].id+'/playerStatistics/', { params: {"statisticIds": statIds.toString()} }))
+                //     .data
+                const playerStats = allPlayerStats.filter(ps => ps.player == players[j].id)
+                if (i == 0 && j == 0) {
+                    console.log(allPlayerStats.filter(ps => ps.player == players[j].id))
+                    console.log(playerStats)
+                }
                 const playerStatIds = playerStats.map((elem) => elem.statType);
                 let hasAllStats = true
                 let statIndexes = []
@@ -98,7 +105,7 @@ export default function AlgorithmFullPage(props) {
 
       }
 
-      loadAlgoStats().then(() => setIsLoading(false));
+      loadAlgoStats();
     }, []);
 
     return (

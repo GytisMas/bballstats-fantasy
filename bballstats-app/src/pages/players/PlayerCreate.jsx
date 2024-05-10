@@ -49,8 +49,7 @@ function PlayerCreate() {
     const playerData = {
         id: id.value,
         name: name.value,
-        role: Number(role.value),
-        teamId: team
+        role: Number(role.value)
     };
     try {
         const response = await axios.post(APIEndpoint + "/teams/"+team+'/players/', playerData

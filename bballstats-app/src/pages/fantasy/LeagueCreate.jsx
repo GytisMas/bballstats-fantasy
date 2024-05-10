@@ -101,7 +101,7 @@ function LeagueCreate() {
         console.log(error);
         console.log(error.response.data);
         if (error.response.data.includes("exists"))
-          setErrorMessages({ name: "name", message: "League with name already exists." });
+          setErrorMessages({ name: "name", message: "League with same name already exists." });
         else if (error.response.data.includes("funds"))
           setErrorMessages({ name: "submit", message: "Insuffient funds to create league." });
 
@@ -142,7 +142,6 @@ function LeagueCreate() {
           <div className="text-xl text-center p-1 ">League Info</div>
           <div className="input-container">
             <label>League name</label>
-            {renderErrorMessage("name")}
             <input className={FormMemberStyle} type="text" name="leagueName" required />
             <label>Entry fee</label>
             <input className={FormMemberStyle} type="number" min={1} defaultValue={1} step="1" name={"entryFee"} required />
@@ -183,7 +182,7 @@ function LeagueCreate() {
 
         <div className="bg-white shadow-md rounded px-4 py-4 mb-4">
           <div className="text-xl text-center p-1 ">Player Winnings</div>
-          <div className="text-md text-center pb-1 ">Total prize pool (subtracted from balance): {prizeSum}</div>
+          <div className="text-md text-center pb-1 ">Total prize pool (and price of creating league): {prizeSum}</div>
           <table className={FormTableStyle}>
             <thead>
               <tr>
@@ -205,6 +204,7 @@ function LeagueCreate() {
         
         
         {renderErrorMessage("funds")}
+        {renderErrorMessage("name")}
         <input className={!forbidCreation ? FormSumbitStyle : FormSumbitStyleForbid} type="submit" disabled={forbidCreation} />
       </form>
     </div>

@@ -66,13 +66,13 @@ namespace BBallStatsV2.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Player>> PostPlayer(CreatePlayerDto dto)
+        public async Task<ActionResult<Player>> PostPlayer(string teamId, CreatePlayerDto dto)
         {
             var player = new Player() { Name = dto.Name };
             player.Id = dto.Id;
             player.Name = dto.Name;
             player.Role = dto.Role;
-            player.CurrentTeamId = dto.TeamId;
+            player.CurrentTeamId = teamId;
             player.ForbidAutoUpdate = dto.ForbidAutoUpdate;
 
             _context.Players.Add(player);

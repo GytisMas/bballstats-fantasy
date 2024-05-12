@@ -19,7 +19,7 @@ export default function HeaderFields(props) {
         }
         
         
-        {props.roles && props.roles.includes('Curator') &&
+        {props.roles && props.roles.includes('Moderator') &&
             <a href='/stats' className={(props.footer ? "mx-2 text-md " : "text-xl font-bold ") + "duration-75 brightness-95 hover:brightness-100 text-white inline"} >
                 Stats
             </a>

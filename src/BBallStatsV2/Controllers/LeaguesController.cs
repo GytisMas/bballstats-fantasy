@@ -88,6 +88,7 @@ namespace BBallStatsV2.Controllers
         public async Task<ActionResult<LeagueWithParticipantsDto>> GetLeague(int leagueId)
         {
             var league = await _context.Leagues
+                .Include(l => l.LeagueHost)
                 .Include(l => l.Participants)
                 .ThenInclude(p => p.User)
                 .FirstOrDefaultAsync(l => l.Id == leagueId);
@@ -754,8 +755,6 @@ namespace BBallStatsV2.Controllers
 
             await _context.SaveChangesAsync();
 
-            // league baigima cia gal kviest
-
             return NoContent();
 
             #region old method
@@ -888,8 +887,7 @@ namespace BBallStatsV2.Controllers
             return InactivePlayers.Contains(potentialReplacementPlayerId);
         }
 
-        [Authorize]
-        [HttpPost("endleague")]
+        [HttpPatch("endLeagues")]
         public async Task<IActionResult> EndInactiveLeagues()
         {
             var activeLeagueIds = await _context.Leagues
@@ -899,7 +897,7 @@ namespace BBallStatsV2.Controllers
 
             if (activeLeagueIds == null || activeLeagueIds.Count == 0)
             {
-                return NotFound();
+                return Ok();
             }
 
             var endLeagueTasks = new List<Task>();

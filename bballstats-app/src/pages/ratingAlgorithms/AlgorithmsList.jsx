@@ -56,7 +56,7 @@ export default function AlgorithmsList() {
             </div>
           ))}
         </div>
-        <div className='mx-auto bg-red-200 max-w-max'>
+        <div className='mx-auto max-w-max'>
           <button type="button" className={"mx-2" + (1 == pageIndex ? " font-bold" : "")} onClick={() => onPageChange(1)}>{1}</button>
           {pageNumbers.length > 1 && pageNumbers[1] - pageNumbers[0] > 2 ? <a >...</a> :
             pageNumbers.length > 1 && pageNumbers[1] - pageNumbers[0] == 2 &&

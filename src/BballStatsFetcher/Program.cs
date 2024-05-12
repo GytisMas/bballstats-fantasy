@@ -24,14 +24,24 @@ namespace BballStatsFetcher
             bool checkTeamsAndPlayers = true;
             while (true)
             {
-                // fetcherio reikalavimai:
-                // rasti API neapdorotus matchus
-                // siusti pasibaigusius matchus i API
-                // rasti nezaistus matchus
+                seasonCode = "E" + (DateTime.UtcNow.Month < 8 ? DateTime.UtcNow.Year - 1 : DateTime.UtcNow.Year);
 
+                Console.WriteLine($"Current date and time (UTC): {DateTime.UtcNow}");
+                Console.WriteLine($"Ending active leagues that are over.");
+
+                var url = $"{baseUrl}/fantasy/leagues/endleagues";
+                try
+                {
+                    var readResponse = await client.PatchAsync(url, null);
+                    Console.WriteLine(url);
+                    Console.WriteLine(readResponse);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
 
                 Console.WriteLine($"Checking Teams.");
-                seasonCode = "E" + (DateTime.UtcNow.Month < 8 ? DateTime.UtcNow.Year - 1 : DateTime.UtcNow.Year);
                 if (checkTeamsAndPlayers && !await CheckTeams(seasonCode))
                 {
                     Console.WriteLine($"Error Checking Teams. Retrying in {noConnectionIntervalInMs}ms");
@@ -52,6 +62,9 @@ namespace BballStatsFetcher
 
                 Console.WriteLine($"Fetching game stats (season {seasonCode} | game {gameCode})");
                 var game = await FetchGameData(seasonCode, gameCode);
+
+                if (game == null)
+                    continue;
 
                 if (game.Played)
                 {

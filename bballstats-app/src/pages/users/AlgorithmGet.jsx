@@ -50,9 +50,9 @@ export default function AlgorithmGet(props) {
         setImpressionsPos(impressionsPos + numToAddPos);
         setImpressionsNeg(impressionsNeg + numToAddNeg);
         handleImpression(false, true)
-        setIsLoading(false)
+        
     }
-    loadAlgoStats();
+    loadAlgoStats().then(() => setIsLoading(false));
   }, []);
 
   const handleImpression = async (thumbsUp, onlyCheck) => {

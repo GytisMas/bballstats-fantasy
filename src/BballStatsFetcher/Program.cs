@@ -33,8 +33,7 @@ namespace BballStatsFetcher
                 try
                 {
                     var readResponse = await client.PatchAsync(url, null);
-                    Console.WriteLine(url);
-                    Console.WriteLine(readResponse);
+                    Console.WriteLine(readResponse.StatusCode);
                 }
                 catch (Exception e)
                 {

@@ -205,7 +205,9 @@ function LeagueCreate() {
         
         {renderErrorMessage("funds")}
         {renderErrorMessage("name")}
-        <input className={!forbidCreation ? FormSumbitStyle : FormSumbitStyleForbid} type="submit" disabled={forbidCreation} />
+        <div className="w-36 mx-auto px-4 py-4 my-4 flex flex-col items-center">
+          <button className={!forbidCreation ? FormSumbitStyle : FormSumbitStyleForbid} type="submit" disabled={forbidCreation} >Create League ({prizeSum})</button>
+        </div>
       </form>
     </div>
   );

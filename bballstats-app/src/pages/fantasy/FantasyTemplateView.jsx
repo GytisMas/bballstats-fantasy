@@ -46,16 +46,18 @@ function FantasyTemplateView() {
   }
 
   const MakeItem = function(x, i, role) {
-    const name = x.displayname != null && x.displayname != "" 
-      ? x.displayname : x.name;
+    const name = x.displayName != null && x.displayName != "" 
+      ? x.displayName : x.name;
     const statEntry = role.leagueStats.find(x => x.statisticId == i);
     if (statEntry == null) {
       return null;
     }
+    console.log(x);
+    console.log(name);
     return (
       <tr key={i}>
         <td className='p-2 border-2 text-left'>{name}</td>
-        <td>
+        <td className='p-2 border-2'>
           <input className={DisabledFormMemberStyle} type="number" defaultValue={statEntry.pointsPerStat} disabled step="0.01" name={"statvalue-"+role.id+"-"+i} required />
         </td>
       </tr>

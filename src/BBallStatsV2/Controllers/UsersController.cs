@@ -1,15 +1,12 @@
 ﻿using BBallStats.Data;
-using BBallStats.Data.Entities;
 using BBallStats2.Auth.Model;
+using BBallStatsV2.Data.Entities;
 using BBallStatsV2.DTOs;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using O9d.AspNet.FluentValidation;
 using System.Data;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BBallStatsV2.Controllers
 {
@@ -95,6 +92,16 @@ namespace BBallStatsV2.Controllers
             if ((createUserDto.Role & 8) != 0)
                 roles.Add(ForumRoles.Regular);
             await _userManager.AddToRolesAsync(newUser, roles);
+
+            var registrationBonus = new Transaction()
+            {
+                TransactionType = TransactionType.Bonus,
+                Amount = 100000,
+                Recipient = newUser,
+                Date = DateTime.UtcNow
+            };
+            _context.Transactions.Add(registrationBonus);
+            await _context.SaveChangesAsync();
 
             return Created($"/api/Users/{newUser.Id}", new UserDto(newUser.Id, newUser.UserName, newUser.Email, roles));
         }

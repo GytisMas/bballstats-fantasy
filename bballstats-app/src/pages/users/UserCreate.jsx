@@ -52,7 +52,7 @@ function UserCreate() {
   // JSX code for login form
   const renderForm = (
     <div className={FormContainerStyle}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div className="input-container">
           <label>User name</label>
           <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="username" required />
@@ -69,8 +69,8 @@ function UserCreate() {
           <label>Roles (1-15)</label>
           <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number" min='1' max='15' name="roles" defaultValue={1} required />
         </div>
-        <div className={FormSumbitStyle}>
-          <input className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" />
+        <div>
+          <input className="bg-blue-500 mt-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" />
         </div>
         {renderErrorMessage("any")}
       </form>

@@ -38,15 +38,15 @@ function FantasyTemplateCreate() {
   }
 
   const MakeItem = function(x, i, ri) {
-    const name = x.displayname != null && x.displayname != "" 
-      ? x.displayname : x.name;
+    const name = x.displayName != null && x.displayName != "" 
+      ? x.displayName : x.name;
     return (
       <tr key={i}>
         <td className='p-2 border-2 border-black text-left'>{name}</td>
         <td className='p-2 border-2 border-black text-left'>
           <input type="checkbox" name={"useStat-"+ri+"-"+i} defaultChecked={x.defaultIsChecked}/>
         </td>
-        <td>
+        <td className='p-2 border-2 border-black'>
           <input className={FormMemberStyle} type="number" defaultValue={x.defaultLeaguePointsPerStat} step="0.01" name={"statvalue-"+ri+"-"+i} required />
         </td>
       </tr>
@@ -203,8 +203,10 @@ function FantasyTemplateCreate() {
         <button className={FormHelperStyle} onClick={handleAdd}>Add player role</button>
         <button className={FormHelperStyle} onClick={handleRemove}>Remove Last Role</button>
       </div>
-        {renderErrorMessage("roles")}
-        <input className={FormSumbitStyle} type="submit" />
+      {renderErrorMessage("roles")}
+      <div className="w-36 mx-auto px-4 py-4 my-4 flex flex-col items-center">
+        <button className={FormSumbitStyle} type="submit" >Create Template (500)</button>
+      </div>
       </form>
     </div>
   );

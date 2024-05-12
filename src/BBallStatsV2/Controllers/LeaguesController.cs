@@ -111,7 +111,7 @@ namespace BBallStatsV2.Controllers
             league.Participants = league.Participants.OrderByDescending(p => p.Points).ThenBy(p => p.EntryDate).ToList();
 
 
-            return new LeagueWithParticipantsDto(league.Id, league.Name, !league.HasStarted, participantId, league.EntryFee, league.CreationDate, league.StartDate, 
+            return new LeagueWithParticipantsDto(league.Id, league.Name, league.LeagueTemplateId, !league.HasStarted, participantId, league.EntryFee, league.CreationDate, league.StartDate, 
                 league.EndDate, league.Participants.Select(p => new ParticipantDto(p.Id, p.TeamName, p.User.UserName, p.Points)).ToArray());
         }
 
@@ -1000,7 +1000,7 @@ namespace BBallStatsV2.Controllers
 
         private async Task<int> PlayerDefaultPrice(string playerId, List<Statistic> StatList)
         {
-            double price = 0;
+            double price = 1000;
             var StatListIds = StatList.Select(x => x.Id).ToList();
             var playerStatistics = await _context.PlayerStatistics.Where(playerS => playerS.PlayerId.Equals(playerId) && StatListIds.Contains(playerS.StatisticId)).ToListAsync();
             foreach (var stat in StatList) 

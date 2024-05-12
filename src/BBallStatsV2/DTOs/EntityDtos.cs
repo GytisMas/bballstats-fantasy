@@ -25,7 +25,7 @@ namespace BBallStatsV2.DTOs
     public record ParticipantPlayerInfoDto(int Id, double Points, double PointsLastGame, string PlayerId, string PlayerName, string TeamName, int Price, int RoleId, string RoleName, int? RoleToReplaceId);
     public record ParticipantRoleChangeDto(string TeamName, ParticipantPlayerRoleDto[] PlayerRolePairs);
     public record ParticipantPlayerRoleDto(int Id, int RoleId);
-    public record LeagueWithParticipantsDto(int Id, string Name, bool NotStarted, int? UserParticipantId, int Entryfee, DateTime CreationDate, DateTime StartDate,
+    public record LeagueWithParticipantsDto(int Id, string Name, int TemplateId, bool NotStarted, int? UserParticipantId, int Entryfee, DateTime CreationDate, DateTime StartDate,
         DateTime EndDate, ParticipantDto[] Participants);
     public record PagedListDto<T>(List<T> Items, int PageIndex, int PageCount);
 

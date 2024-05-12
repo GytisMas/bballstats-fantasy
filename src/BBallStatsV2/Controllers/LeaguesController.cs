@@ -1000,6 +1000,8 @@ namespace BBallStatsV2.Controllers
 
         private async Task<int> PlayerDefaultPrice(string playerId, List<Statistic> StatList)
         {
+            return 1000;
+
             double price = 1000;
             var StatListIds = StatList.Select(x => x.Id).ToList();
             var playerStatistics = await _context.PlayerStatistics.Where(playerS => playerS.PlayerId.Equals(playerId) && StatListIds.Contains(playerS.StatisticId)).ToListAsync();

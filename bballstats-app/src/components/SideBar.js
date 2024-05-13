@@ -18,6 +18,11 @@ export default props => {
             Players
         </a>
         {currentUserRoles &&
+        <a href='/fantasy/leagues' className="duration-75 brightness-95 hover:brightness-100 text-xl font-bold py-5 text-white inline" >
+            Fantasy Leagues
+        </a>
+        }
+        {currentUserRoles &&
         <a href='/profile' className="duration-75 brightness-95 hover:brightness-100 text-xl font-bold py-5 text-white inline" >
             Profile
         </a>

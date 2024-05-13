@@ -1,5 +1,5 @@
 import { useAuth } from "../../provider/Authentication";
-import {BearerAuth, ButtonStyle, Form2XLContainerStyle, Form4XLContainerStyle, FormMemberStyle, FormSelectStyle, FormSumbitStyleCancel, FormSumbitStyleCancel2, FormWiderContainerStyle} from '../../components/Helpers';
+import {BearerAuth, ButtonStyle, DisabledFormMemberStyle, Form2XLContainerStyle, Form4XLContainerStyle, FormMemberStyle, FormSelectStyle, FormSumbitStyleCancel, FormSumbitStyleCancel2, FormWiderContainerStyle} from '../../components/Helpers';
 import {FormContainerStyle, FormSumbitStyle, FormHelperStyle} from '../../components/Helpers';
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
@@ -58,6 +58,7 @@ function LeagueParticipate(props) {
         setPlayers(response2.data.players
           .sort((a, b) => a.teamId > b.teamId ? 1 : -1));
         const templResponse = (await axios.get(APIEndpoint + '/LeagueTemplates/' + response2.data.leagueTemplateId));
+        console.log(templResponse.data);
         setTemplate(templResponse.data);
         setLeagueRoles(templResponse.data.leagueRoles)
       } else {
@@ -121,6 +122,7 @@ function LeagueParticipate(props) {
 
   const changeAvailableRoles = (playerId, playerPrice) => (event) => {
     let currPlayerPrice = playersPrice;
+    console.log(currPlayerPrice)
     if (event.target.value != -1) {
       let newUnavailableRoles = leagueRolesUnavailable;
       let existingElement = leagueRolesUnavailable.find((e) => e.playerId == playerId)
@@ -137,16 +139,18 @@ function LeagueParticipate(props) {
       // console.log(newElement)
       setLeagueRolesUnavailable(newUnavailableRoles);
     } else {
-      // console.log(playerId)
+      console.log(playerId)
       // console.log(leagueRolesUnavailable)
       // console.log(leagueRolesUnavailable.filter(item => item.playerId != playerId))
       // console.log("--")
       let existingElement = leagueRolesUnavailable.find((e) => e.playerId == playerId)
       if (existingElement != null) {
-        currPlayerPrice -= existingElement.playerPrice;
+        console.log(existingElement)
+        currPlayerPrice -= playerPrice;
       }
       setLeagueRolesUnavailable((leagueRolesUnavailable) => (leagueRolesUnavailable.filter(item => item.playerId != playerId)))
     }
+    console.log(currPlayerPrice)
     setPlayersPrice(currPlayerPrice);
   } 
 
@@ -256,7 +260,7 @@ function LeagueParticipate(props) {
         }
 
         if (selectedStats.length !== leagueRoles.length) {
-          console.log("Not enough stats selected")
+          setErrorMessages({ name: "submit", message: "Not enough roles selected" });
           return;
           // TODO: normal validation
         }
@@ -274,7 +278,7 @@ function LeagueParticipate(props) {
               Authorization: BearerAuth(accessToken)
             }}
             );
-            navigate("/players");
+            navigate('/fantasy/leagues/' + params.leagueId + '/participants/' + params.participantId, {replace: true});
         } catch (error) {
             console.log(error);
             if (error.response.data && error.response.data.includes("exists"))
@@ -293,9 +297,8 @@ function LeagueParticipate(props) {
     }
 
     if (selectedStats.length !== leagueRoles.length) {
-      console.log("Not enough stats selected")
+      setErrorMessages({ name: "submit", message: "Not enough roles selected" });
       return;
-      // TODO: normal validation
     }
 
     const formData = {
@@ -406,7 +409,7 @@ function LeagueParticipate(props) {
       <form id="mainForm" onSubmit={handleSubmit}>
         <div className="input-container">
           <label>Team name</label>
-          <input className={FormMemberStyle} type="text" name="teamName" required defaultValue={participant.teamName ?? ""} />
+          <input className={DisabledFormMemberStyle} type="text" disabled name="teamName" required defaultValue={participant.teamName ?? ""} />
           {renderErrorMessage("teamName")}
         </div>
         <div className="input-container">
@@ -485,12 +488,14 @@ function LeagueParticipate(props) {
             <button onClick={() => showModal()}type="button" className={FormSumbitStyleCancel2 + " h-16"}>Cancel participation</button>
           }
         </div>
+        
       </form>
       {modalIsShowing &&
         <Modal show={modalIsShowing} handleClose={() => hideModal()} formContent={cancelParticipationForm(submitCancel)}>
           <p>Modal</p>
         </Modal>
       }
+      {renderErrorMessage("submit")}
     </div>
   );
 

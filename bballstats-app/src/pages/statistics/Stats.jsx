@@ -214,7 +214,7 @@ export default function Stats(props) {
 
   return (
     <div className='flex flex-col flex-wrap justify-evenly items-center mt-5 pb-5 max-w-3xl mx-auto px-2  bg-white border-2 rounded-3xl'>
-      <button type="button" onClick={() => showModalCreate()} className={ButtonStyle}>Create Statistic Type</button>
+      <button type="button" onClick={() => showModalCreate()} className={ButtonStyle + " my-2"}>Create Statistic Type</button>
       <table>
         <thead>
         <tr>

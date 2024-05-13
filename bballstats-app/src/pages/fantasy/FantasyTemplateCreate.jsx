@@ -118,8 +118,8 @@ function FantasyTemplateCreate() {
         navigate("/fantasy/leagues");
     } catch (error) {
         console.log(error);
-        console.log(error.response.data);
-        if (error.response.data.includes("exists"))
+        console.log(error.response && error.response.data ? error.response.data : "");
+        if (error.response.data && error.response.data.includes("exists"))
           setErrorMessages({ name: "templateName", message: "League template with name already exists" });
     }
   };
@@ -138,7 +138,7 @@ function FantasyTemplateCreate() {
 
   const handleAdd = (event) => {
     event.preventDefault();
-    setLeagueRoles(leagueRoles => [...leagueRoles, "role"+leagueRoles.length]);
+    setLeagueRoles(leagueRoles => [...leagueRoles, "Player #"+(leagueRoles.length+1)]);
     setLeagueRoleStats(leagueRoleStats => [...leagueRoleStats, []]);
   }
 

@@ -96,12 +96,13 @@ function Leagues(props) {
     return (
       <>
         <div className='mt-5 max-w-xl flex flex-col items-center mx-auto px-2 bg-white border-2 rounded-3xl'>
-          <p className='py-2 font-bold text-xl text-center'>Fantasy Leagues</p>
+          <p className='py-2 font-bold text-lg text-center'>Fantasy League Creation</p>
           <button className={ButtonStyle + " w-1/4 mb-2"} type="button" onClick={() => navigate('/fantasy/leagues/create')}>Create League</button>
           <button className={ButtonStyle + " w-1/4 mb-2"} type="button" onClick={() => navigate('/fantasy/templates/create')}>Create Template</button>
         </div>
         {isLoading ? <div className='my-5 max-w-xl flex flex-col justify-center items-center mx-auto px-2 bg-white border-2 rounded-3xl'><p>Loading...</p></div> :
           <div className='my-5 max-w-xl flex flex-col justify-center items-center mx-auto px-2 bg-white border-2 rounded-3xl'>
+            <p className='py-2 font-bold text-xl text-center'>Browse Fantasy Leagues</p>
             <form className='py-5 flex flex-col items-center justify-center'>
               <label>Search by Name</label>
               <input className={FormMemberNotFullStyle} type="text" id="leagueName" defaultValue={nameFilter} name="leagueName" />
@@ -120,20 +121,20 @@ function Leagues(props) {
               <thead>
                 <tr>
                   <th className='p-2 border-2 text-left'><button type="button" onClick={() => onSortByChange(4)}>League Name {chevron(4)}</button></th>
-                  <th className='p-2 border-2 text-left'><button type="button" onClick={() => onSortByChange(0)}>Start Date {chevron(0)}</button></th>
-                  <th className='p-2 border-2 text-left'><button type="button" onClick={() => onSortByChange(2)}>End Date {chevron(2)}</button></th>
+                  <th className='p-2 border-2 text-left'><button className='w-24' type="button" onClick={() => onSortByChange(0)}>Start Date {chevron(0)}</button></th>
+                  <th className='p-2 border-2 text-left'><button className='w-24' type="button" onClick={() => onSortByChange(2)}>End Date {chevron(2)}</button></th>
                   <th className='p-2 border-2 text-left'>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {leagues.map((league) => (
                   <tr key={league.id} className='w-72 mt-10'>
-                    <td className='p-2 border-2 text-left'>
+                    <td className='p-2 border-2 mx-1 text-left'>
                       {league.name}
                     </td>
-                    <td className='p-2 border-2 text-left'>{new Date(league.startDate+'z').toISOString().substring(0,10)}</td>
-                    <td className='p-2 border-2 text-left'>{new Date(league.endDate+'z').toISOString().substring(0,10)}</td>
-                    <td className='p-2 border-2 text-left'>{JoinViewButton(league.id)}</td>
+                    <td className='p-2 border-2 text-left text-nowrap'>{new Date(league.startDate+'z').toISOString().substring(0,10)}</td>
+                    <td className='p-2 border-2 text-left text-nowrap'>{new Date(league.endDate+'z').toISOString().substring(0,10)}</td>
+                    <td className='p-2 border-2 mx-1 text-left'>{JoinViewButton(league.id)}</td>
                   </tr>
                 ))}
               </tbody>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode'
 import axios from 'axios';
-import { APIEndpoint } from "../../components/Helpers";
+import { APIEndpoint, ButtonStyle } from "../../components/Helpers";
 import { useAuth } from "../../provider/Authentication";
 import {BearerAuth} from '../../components/Helpers';
 import { useNavigate } from "react-router-dom";
@@ -43,7 +43,7 @@ export default function UsersList(props) {
 
       return (
         <div className='flex flex-col flex-wrap justify-evenly items-center mt-5 pb-5 max-w-xl mx-auto px-2  bg-white border-2 rounded-3xl'>
-          <a href='/users/create' className='bth p-1 duration-200 bg-slate-300 hover:bg-green-300 border-2 my-2 border-black'>Create New User</a>
+          <a href='/users/create' className={ButtonStyle + " my-2"}>Create New User</a>
           <table>
             <thead>
               <tr>

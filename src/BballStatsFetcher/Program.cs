@@ -1,6 +1,5 @@
 ﻿using BBallStats.Shared;
 using BBallStats.Shared.Entities;
-using System.Diagnostics;
 using System.Net.Http.Json;
 using System.Xml;
 using System.Xml.Serialization;
@@ -12,18 +11,19 @@ namespace BballStatsFetcher
     {
         const int pauseIntervalInMs = 2 * 1000;
         const int noConnectionIntervalInMs = 5 * 1000;
-        const int longIntervalInMs = 30 * 60 * 1000;
+        const int longIntervalInMs = 10 * 1000;
         const string baseUrl = "https://urchin-app-97ttl.ondigitalocean.app/api";
         //const string baseUrl = "https://localhost:7140/api";
         static HttpClient client = new HttpClient();
         static async Task Main(string[] args)
         {
             string seasonCode;
-            int gameCode;
+            List<int> GameCodes;
             bool ignoreExisting = false;
             bool checkTeamsAndPlayers = true;
             while (true)
             {
+                bool oneGameProcessed = false;
                 seasonCode = "E" + (DateTime.UtcNow.Month < 8 ? DateTime.UtcNow.Year - 1 : DateTime.UtcNow.Year);
 
                 Console.WriteLine($"Current date and time (UTC): {DateTime.UtcNow}");
@@ -49,31 +49,52 @@ namespace BballStatsFetcher
                 }
                 checkTeamsAndPlayers = false;
 
-                Console.WriteLine($"Getting oldest unused game (season {seasonCode})");
-                gameCode = await GetOldestUnusedGame(seasonCode, ignoreExisting);
+                Console.WriteLine($"Getting unused games (season: {seasonCode} | listed games only: {!ignoreExisting})");
+                GameCodes = await GetUnusedGames(seasonCode, ignoreExisting);
+
+                if (ignoreExisting)
+                {
+                    Console.WriteLine($"Got game codes: {string.Join(", ", GameCodes)}");
+                    int oldMaxGameCode = GameCodes.Max();
+                    for (int i = oldMaxGameCode + 1; i <= oldMaxGameCode + 20; i++)
+                    {
+                        GameCodes.Add(i);
+                    }
+                }
+                Console.WriteLine($"Processing game codes: {string.Join(", ", GameCodes)}");
+                //Thread.Sleep(pauseIntervalInMs);
+
                 ignoreExisting = !ignoreExisting;
 
-                //Console.WriteLine($"-");
-                //Console.WriteLine($"-");
-                //Console.WriteLine($"-");
-                //Console.WriteLine($"\nPausing before fetching game stats (season {seasonCode} | game {gameCode})");
-                Thread.Sleep(pauseIntervalInMs);
-
-                Console.WriteLine($"Fetching game stats (season {seasonCode} | game {gameCode})");
-                var game = await FetchGameData(seasonCode, gameCode);
-
-                if (game == null)
-                    continue;
-
-                if (game.Played)
+                foreach (int gameCode in GameCodes)
                 {
-                    //Console.WriteLine($"\n Sending game stats (season {seasonCode} | game {gameCode})");
-                    var sendResult = await SendGameData(game);
+                    //Console.WriteLine($"-");
+                    //Console.WriteLine($"-");
+                    //Console.WriteLine($"-");
+                    //Console.WriteLine($"\nPausing before fetching game stats (season {seasonCode} | game {gameCode})");
+                    //Thread.Sleep(pauseIntervalInMs);
+
+                    Console.WriteLine($"Fetching game stats (season: {seasonCode} | game: {gameCode})");
+                    var game = await FetchGameData(seasonCode, gameCode);
+
+                    if (game == null)
+                        continue;
+
+                    if (game.Played)
+                    {
+                        if (!oneGameProcessed)
+                            oneGameProcessed = !game.AlreadyExistedInDB || game.Played;
+
+                        //Console.WriteLine($"\n Sending game stats (season {seasonCode} | game {gameCode})");
+                        var sendResult = await SendGameData(game);
+                    }
+                    Console.WriteLine($"\nGame {gameCode} processed successfully (game was played: {game.Played} | game was already listed: {game.AlreadyExistedInDB})");
                 }
-                Console.WriteLine($"\nGame processed successfully (game already existed in database: {game.AlreadyExistedInDB} | game was played: {game.Played})");
+
+                
 
 
-                if (game.AlreadyExistedInDB && !game.Played)
+                if (!oneGameProcessed && ignoreExisting)
                 {
                     Thread.Sleep(longIntervalInMs);
                     checkTeamsAndPlayers = true;
@@ -81,14 +102,14 @@ namespace BballStatsFetcher
             }
         }
 
-        private static async Task<int> GetOldestUnusedGame(string seasonCode, bool ignoreExisting)
+        private static async Task<List<int>> GetUnusedGames(string seasonCode, bool ignoreExisting)
         {
             var getGameResponse = await client.GetAsync($"{baseUrl}/Matches/unused/{seasonCode.Substring(1)}?ignoreExisting={ignoreExisting}");
             if (!getGameResponse.IsSuccessStatusCode)
             {
                 throw new Exception($"{getGameResponse.StatusCode} - failed to fetch game");
             }
-            return int.Parse(await getGameResponse.Content.ReadAsStringAsync());
+            return (await getGameResponse.Content.ReadFromJsonAsync<List<int>>()) ?? new List<int>();
         }
 
         private static async Task<bool> CheckTeams(string seasonCode)
@@ -175,7 +196,6 @@ namespace BballStatsFetcher
             }
             catch (Exception ex)
             {
-                await Console.Out.WriteLineAsync(ex.ToString());
                 return null;
             }
         }

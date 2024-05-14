@@ -38,31 +38,59 @@ namespace BBallStatsV2.Controllers
         }
 
         [HttpGet("unused/{seasonCode}")]
-        public async Task<ActionResult<int>> GetOldestUnusedMatchId(int seasonCode, bool ignoreExisting)
+        public async Task<ActionResult<List<int>>> GetUnusedMatchIds(int seasonCode, bool ignoreExisting)
         {
-            var matches = await _context.Matches
+            var matchIds = await _context.Matches
                 .Where(m => m.SeasonId == seasonCode)
-                .Where(m => ignoreExisting || m.UsedInFantasy)
+                .Where(m => ignoreExisting || !m.UsedInFantasy)
                 .OrderBy(m => m.GameId)
+                .Select(m => m.GameId)
                 .ToListAsync();
 
-            if (matches == null || matches.Count == 0)
+            if (matchIds == null || matchIds.Count == 0)
             {
-                return Ok(1);
+                return Ok(new List<int>());
             }
 
-            int maxId = matches.Last().GameId;
-            int unusedGameId = maxId + 1;
+            if (!ignoreExisting)
+                return Ok(matchIds);
 
-            for (int i = 1; i <= matches.Count(); i++)
+            var matchIdGaps = new List<int>
             {
-                if (matches[i-1].GameId != i) {
-                    unusedGameId = i;
+                matchIds.Last() + 1
+            };
+
+            int offset = 0;
+            for (int i = 1; i <= matchIds.Count();)
+            {
+                Console.WriteLine($"{matchIds[i - 1]} {i} {offset}");
+                // old logika
+                //if (matches[i - 1].GameId != i)
+                //{
+                //    unusedGameId = i;
+                //    break;
+                //}
+
+                if (matchIds[i - 1] == i + offset)
+                {
+                    i++;
+                    continue;
+                }
+
+                matchIdGaps.Add(i + offset);
+                Console.WriteLine($"{i + offset}");
+                var anyLaterGameIds = await _context.Matches.AnyAsync(m => m.GameId > matchIds[i - 1]);
+                Console.WriteLine("+");
+                if (!anyLaterGameIds)
+                {
                     break;
                 }
-            }
 
-            return Ok(unusedGameId);
+                offset++;
+            }
+            Console.WriteLine($"Returning {string.Join(", ", matchIdGaps)}");
+
+            return Ok(matchIdGaps);
         }
 
         [HttpPost]

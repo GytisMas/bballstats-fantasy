@@ -60,7 +60,7 @@ export const ProtectedRoute = () => {
     if (width > breakpoint) {
       return <div className='Container'>
         <Header roles={currentUserRoles}/>
-        <div className="Content" style={{ backgroundImage:`url(${process.env.PUBLIC_URL + '/background/sky-wallpaper.jpg'})` }}>
+        <div className="Content" /*style={{ backgroundImage:`url(${process.env.PUBLIC_URL + '/background/sky-wallpaper.jpg'})` }}*/>
           <Outlet />
         </div>
         <Footer roles={currentUserRoles}/>
@@ -68,7 +68,7 @@ export const ProtectedRoute = () => {
     } else {
       return <div className='Container'>
         <SideBar roles={currentUserRoles} pageWrapId={'page-wrap'} outerContainerId={'Container'} />
-        <div className="Content" style={{ backgroundImage:`url(${process.env.PUBLIC_URL + '/background/sky-wallpaper.jpg'})` }}>
+        <div className="Content" /*style={{ backgroundImage:`url(${process.env.PUBLIC_URL + '/background/sky-wallpaper.jpg'})` }}*/>
           <Outlet />
         </div>
         <Footer roles={currentUserRoles}/>

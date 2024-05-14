@@ -90,21 +90,21 @@ export default function UserGet(props) {
           <table className="my-2">
             <thead>
               <tr>
-                <th className='p-2 border-2 text-left'>Team Name</th>
-                <th className='p-2 border-2 text-left'>League</th>
-                <th className='p-2 border-2 text-left'>Placing</th>
+                <th className='p-2 border-b text-left'>Team Name</th>
+                <th className='p-2 border-b text-center'>League</th>
+                <th className='p-2 border-b text-center'>Placing</th>
               </tr>
             </thead>
             <tbody>
               {teams.map((team) => (
                 <tr key={team.id} className='w-72 mt-10'>
-                  <td className='p-2 border-2 text-left'>
-                    <a href={'/fantasy/leagues/'+team.leagueId+'/participants/'+team.id}>{team.teamName}</a>
+                  <td className='p-1 border-b text-left'>
+                    <a className=" p-1 hover:rounded-lg hover:bg-slate-100" href={'/fantasy/leagues/'+team.leagueId+'/participants/'+team.id}>{team.teamName}</a>
                   </td>
-                  <td className='p-2 border-2 text-left'>
-                    <a href={'/fantasy/leagues/'+team.leagueId}>{team.leagueName}</a>
+                  <td className='p-2 border-b text-center'>
+                    <a className=" p-1 hover:rounded-lg hover:bg-slate-100" href={'/fantasy/leagues/'+team.leagueId}>{team.leagueName}</a>
                   </td>
-                  <td className='p-2 border-2 text-left'>
+                  <td className='p-2 border-b text-center'>
                     {team.placement != -1 ? "#" + team.placement : "-"}
                   </td>
                 </tr>

@@ -638,7 +638,9 @@ namespace BBallStatsV2.Controllers
         public async Task<IActionResult> UpdateLeaguePoints(StatSheet playerStatData)
         {
             List<string> InactivePlayers = new List<string>();
+
             var Players = await _context.Players.ToListAsync();
+            List<string> PlayerIds = playerStatData.PlayerInfo.Select(x => x.PlayerCode).Distinct().ToList();
 
             foreach (var player in Players)
             {
@@ -692,9 +694,11 @@ namespace BBallStatsV2.Controllers
                     !prp.LeagueParticipant.League.IsOver 
                     && DateTime.UtcNow >= prp.LeagueParticipant.League.StartDate 
                     && DateTime.UtcNow <= prp.LeagueParticipant.League.EndDate
-                    && 
-                    (prp.LeagueAvailablePlayer.Player.CurrentTeamId.Equals(playerStatData.LocalClubId)
-                    || prp.LeagueAvailablePlayer.Player.CurrentTeamId.Equals(playerStatData.RoadClubId)))
+                    && PlayerIds.Contains(prp.LeagueAvailablePlayer.PlayerId)
+                //&& 
+                //(prp.LeagueAvailablePlayer.Player.CurrentTeamId.Equals(playerStatData.LocalClubId)
+                //|| prp.LeagueAvailablePlayer.Player.CurrentTeamId.Equals(playerStatData.RoadClubId))
+                    )
                 .ToListAsync();
 
             Dictionary<string, double> PlayerRolePoints = new Dictionary<string, double>();
@@ -891,7 +895,7 @@ namespace BBallStatsV2.Controllers
         public async Task<IActionResult> EndInactiveLeagues()
         {
             var activeLeagueIds = await _context.Leagues
-                .Where(l => !l.IsOver && DateTime.UtcNow >= l.EndDate)
+                .Where(l => !l.IsOver && DateTime.UtcNow > l.EndDate)
                 .Select(l => l.Id)
                 .ToListAsync();
 

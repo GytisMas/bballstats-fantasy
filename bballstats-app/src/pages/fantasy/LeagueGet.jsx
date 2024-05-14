@@ -57,25 +57,26 @@ function LeagueGet(props) {
           }
           <Link to={'/fantasy/templates/'+templateId} target="_blank" rel="noopener noreferrer" ><button type="button" className={ButtonStyle + ' mb-2'}>View Template</button></Link>
         </div>
-        <div className='flex flex-col flex-wrap justify-center items-center mt-5 max-w-6xl mx-auto px-2 py-10 bg-white border-2 rounded-3xl'>
+        <div className='flex flex-col flex-wrap justify-center items-center mt-5 max-w-xl mx-auto px-2 py-10 bg-white border-2 rounded-3xl'>
           {participants == null || participants.length == 0 ? <div>There are no participants in this league</div>
           :  <>
+              <p className='py-2 font-bold text-md text-center'>League Standings</p>
               <table className="my-2">
                 <thead>
                   <tr>
-                    <th className='p-2 border-2 text-left'>Team</th>
-                    <th className='p-2 border-2 text-left'>User</th>
-                    <th className='p-2 border-2 text-left'>Points</th>
+                    <th className='p-2 border-b text-left'>Team</th>
+                    <th className='p-2 border-b text-center'>User</th>
+                    <th className='p-2 border-b text-center'>Points</th>
                   </tr>
                 </thead>
                 <tbody>
                   {participants.map((participant) => (
                     <tr key={participant.id} className='w-72 mt-10'>
-                      <td className='p-2 border-2 text-left font-semibold hover:font-bold'>
-                        <button type="button" onClick={() => navigate('/fantasy/leagues/'+params.leagueId+'/participants/'+participant.id)}>{participant.teamName}</button>
+                      <td className='p-1 border-b text-left'>
+                        <button type="button" className=" p-1 hover:rounded-lg hover:bg-slate-100" onClick={() => navigate('/fantasy/leagues/'+params.leagueId+'/participants/'+participant.id)}>{participant.teamName}</button>
                       </td>
-                      <td className='p-2 border-2 text-left'>{participant.userName}</td>
-                      <td className='p-2 border-2 text-left'>{participant.points.toFixed(1)}</td>
+                      <td className='p-2 border-b text-center'>{participant.userName}</td>
+                      <td className='p-2 border-b text-center'>{participant.points.toFixed(1)}</td>
                     </tr>
                   ))}
                 </tbody>

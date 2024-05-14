@@ -409,7 +409,10 @@ function LeagueParticipate(props) {
       <form id="mainForm" onSubmit={handleSubmit}>
         <div className="input-container">
           <label>Team name</label>
-          <input className={DisabledFormMemberStyle} type="text" disabled name="teamName" required defaultValue={participant.teamName ?? ""} />
+          {isEditMode ?<input className={DisabledFormMemberStyle} type="text" disabled name="teamName" required defaultValue={participant.teamName ?? ""} /> :
+          <input className={DisabledFormMemberStyle} type="text" name="teamName" required defaultValue={participant.teamName ?? ""} />
+          
+          }
           {renderErrorMessage("teamName")}
         </div>
         <div className="input-container">

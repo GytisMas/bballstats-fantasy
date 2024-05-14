@@ -147,6 +147,7 @@ namespace BBallStatsV2.Controllers
 
             await _userManager.RemoveFromRolesAsync(user, ForumRoles.All);
             await _userManager.AddToRolesAsync(user, roles);
+            await _userManager.UpdateAsync(user);
 
             return Ok(new UserWithoutRolesDto(user.Id, user.UserName, user.Email));
         }

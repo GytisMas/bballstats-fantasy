@@ -63,14 +63,6 @@ namespace BBallStatsV2.Controllers
             int offset = 0;
             for (int i = 1; i <= matchIds.Count();)
             {
-                Console.WriteLine($"{matchIds[i - 1]} {i} {offset}");
-                // old logika
-                //if (matches[i - 1].GameId != i)
-                //{
-                //    unusedGameId = i;
-                //    break;
-                //}
-
                 if (matchIds[i - 1] == i + offset)
                 {
                     i++;
@@ -78,9 +70,7 @@ namespace BBallStatsV2.Controllers
                 }
 
                 matchIdGaps.Add(i + offset);
-                Console.WriteLine($"{i + offset}");
                 var anyLaterGameIds = await _context.Matches.AnyAsync(m => m.GameId > matchIds[i - 1]);
-                Console.WriteLine("+");
                 if (!anyLaterGameIds)
                 {
                     break;
@@ -88,7 +78,6 @@ namespace BBallStatsV2.Controllers
 
                 offset++;
             }
-            Console.WriteLine($"Returning {string.Join(", ", matchIdGaps)}");
 
             return Ok(matchIdGaps);
         }

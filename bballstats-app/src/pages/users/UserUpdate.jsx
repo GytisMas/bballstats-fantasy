@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../provider/Authentication";
-import {BearerAuth, UserRoles} from '../../components/Helpers';
+import {BearerAuth, ButtonStyle, UserRoles} from '../../components/Helpers';
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { roles } from "../../components/PlayerRoles";
@@ -61,7 +61,6 @@ function UserUpdate() {
       email: email.value,
       role: Number(roles.value)
     };
-    console.log(document.forms[0])
     console.log(userData)
 
     try {
@@ -86,7 +85,7 @@ function UserUpdate() {
   // JSX code for login form
   const renderForm = (
     <div className={FormContainerStyle}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <div className="input-container">
           <label>Username</label>
           <input disabled className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="username" defaultValue={user.username} />
@@ -104,11 +103,11 @@ function UserUpdate() {
           <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="email" name="email" defaultValue={user.email} required />
         </div>
         <div className="input-container">
-          <label>Roles (1-15)</label>
+          <label>Roles (1-11)</label>
           <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number" min='1' max='15' name="roles" defaultValue={userRoles} required />
         </div>
         <div >
-          <input className="bg-blue-500 hover:bg-blue-700 text-white font-bold mt-2 py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" />
+          <input className={ButtonStyle} type="submit" />
           {renderErrorMessage("password")}
           {renderErrorMessage("any")}
         </div>

@@ -134,13 +134,9 @@ namespace BBallStatsV2.Controllers
             if (NewStats.Count < newFormulaStatIds.Count)
                 return NotFound();
 
-            //var customStatisticIndexes = _context.CustomStatisticRegularStatistic
-            //    .Where(s => s.CustomStatisticId == customStatisticId);
             customStatistic.Statistics = new List<RegularStatistic>();
             _context.CustomStatistics.Update(customStatistic);
             await _context.SaveChangesAsync();
-
-            //_context.CustomStatisticRegularStatistic.RemoveRange(customStatisticIndexes);
 
             customStatistic.Statistics = NewStats;
             customStatistic.Name = dto.Name;

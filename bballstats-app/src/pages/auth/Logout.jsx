@@ -21,12 +21,8 @@ const Logout = () => {
       setTokens();
     };
 
-    handleLogout().then(() => navigate("/home"));
+    handleLogout().then(() => navigate("/login"));
   })
-
-  // setTimeout(() => {
-  //   handleLogout();
-  // }, 500);
 
   return <>Logout Page</>;
 };

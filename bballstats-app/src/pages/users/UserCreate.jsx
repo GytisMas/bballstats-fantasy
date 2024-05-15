@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../provider/Authentication";
-import {BearerAuth} from '../../components/Helpers';
+import {BearerAuth, ButtonStyle} from '../../components/Helpers';
 import {FormContainerStyle, FormMemberStyle, FormSumbitStyle} from '../../components/Helpers';
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
@@ -38,7 +38,6 @@ function UserCreate() {
         );
         navigate("/users");
     } catch (error) {
-        // console.log(error);
         setErrorMessages({ name: "any", message: error.response.data });
     }
   };
@@ -66,11 +65,11 @@ function UserCreate() {
           <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="email" name="email" required />
         </div>
         <div className="input-container">
-          <label>Roles (1-15)</label>
+          <label>Roles (1-11)</label>
           <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="number" min='1' max='15' name="roles" defaultValue={1} required />
         </div>
         <div>
-          <input className="bg-blue-500 mt-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" />
+          <input className={ButtonStyle} type="submit" />
         </div>
         {renderErrorMessage("any")}
       </form>

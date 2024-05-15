@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../provider/Authentication";
-import {FormContainerStyle, FormMemberStyle, FormSelectStyle, FormSumbitStyle} from '../../components/Helpers';
+import {ButtonStyle, FormContainerStyle, FormMemberStyle, FormSelectStyle, FormSumbitStyle} from '../../components/Helpers';
 import {BearerAuth} from '../../components/Helpers';
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
@@ -68,7 +68,6 @@ function PlayerStatsUpdate(props) {
         navigate("/players");
     } catch (error) {
         console.log(error);
-        // setErrorMessages({ name: "uname", message: "Incorrect user name or password" });
     }
   };
 
@@ -81,7 +80,7 @@ function PlayerStatsUpdate(props) {
   // JSX code for login form
   const renderForm = (
     <div className={FormContainerStyle}>       
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" >
         <div className="input-container">
           <label>Statistic type</label>
           <select className={FormSelectStyle} name="statType" defaultValue = {selectedStatType}>
@@ -100,7 +99,7 @@ function PlayerStatsUpdate(props) {
           <label>Game Count</label>
           <input className={FormMemberStyle} type="number" step="1" name="gameCount" defaultValue={playerStat.gameCount} required />
         </div>
-        <input className={FormSumbitStyle} type="submit" />
+        <input className={ButtonStyle} type="submit" />
       </form>
     </div>
   );

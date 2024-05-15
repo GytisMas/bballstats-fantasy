@@ -39,7 +39,6 @@ const AuthProvider = ({ children }) => {
     }
   }, [accessToken, refreshToken, currentUserRoles]);
 
-  // Memoized value of the authentication context
   const contextValue = useMemo(
     () => ({
       accessToken: accessToken,

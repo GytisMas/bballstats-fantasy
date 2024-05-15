@@ -1,5 +1,5 @@
 import { useAuth } from "../../provider/Authentication";
-import {BearerAuth, FormMemberStyle, FormSelectStyle} from '../../components/Helpers';
+import {BearerAuth, ButtonStyle, FormMemberStyle, FormSelectStyle} from '../../components/Helpers';
 import {FormContainerStyle, FormSumbitStyle} from '../../components/Helpers';
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from 'jwt-decode'
@@ -20,7 +20,6 @@ function AlgorithmCreate() {
     const loadStatTypes = async () => {
         const response = (await axios.get(APIEndpoint + '/Statistics'));
         setStatTypes(response.data);
-        // console.log(response.data);
     }
     loadStatTypes();
   }, []);
@@ -40,7 +39,6 @@ function AlgorithmCreate() {
       <select className={FormSelectStyle} name={"s"+i} defaultValue = {statTypes[0]}>
         {statTypes.map(
           (stat, i) => {
-            // console.log(stat)
             return (MakeItem(stat.name, stat.id))
           }
         
@@ -100,10 +98,10 @@ function AlgorithmCreate() {
   const renderForm = (
     <div className={FormContainerStyle}>
       <div className='flex flex-row w-full pb-1 justify-evenly'>
-        <div className={FormSumbitStyle + ' min-h-max min-w-max max-w-max flex items-center justify-center w-1/3'}>
+        <div className={ButtonStyle}>
           <button onClick={handleAdd}>Add stat</button>
         </div>
-        <div className={FormSumbitStyle + ' min-h-max flex items-center justify-center w-1/3'}>
+        <div className={ButtonStyle}>
           <button onClick={handleRemove}>Remove last stat</button>
         </div>
       </div>
@@ -125,7 +123,7 @@ function AlgorithmCreate() {
           <label>Name</label><br/>
           <input className={FormMemberStyle} type="text" name="name" required />
         </div>
-        <input className={FormSumbitStyle} type="submit" />
+        <input className={ButtonStyle} type="submit" />
       </form>
     </div>
   );

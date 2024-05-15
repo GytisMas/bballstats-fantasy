@@ -36,17 +36,11 @@ namespace BBallStats.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            //builder.Entity<League>()
-            //    .Ignore(e => e.League);
             builder.Entity<League>()
                 .HasMany(e => e.Participants)
                 .WithOne(e => e.League)
                 .HasForeignKey(e => e.LeagueId)
                 .OnDelete(DeleteBehavior.Restrict);
-            //builder.Entity<League>()
-            //    .HasOne(e => e.Winner)
-            //    .WithOne()
-            //    .HasForeignKey<League>(e => e.WinnerId);
             builder.Entity<League>()
                 .HasOne(e => e.LeagueHost)
                 .WithMany()

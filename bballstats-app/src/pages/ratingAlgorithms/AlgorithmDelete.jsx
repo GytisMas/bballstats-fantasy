@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useAuth } from "../../provider/Authentication";
-import {FormContainerStyle, FormMemberStyle, FormSumbitStyle} from '../../components/Helpers';
+import {ButtonStyle, FormContainerStyle, FormMemberStyle, FormSumbitStyle} from '../../components/Helpers';
 import {BearerAuth} from '../../components/Helpers';
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
@@ -39,7 +39,7 @@ function AlgorithmDelete(props) {
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col justify-center items-center">
             <label>Confirm deletion?</label>
-            <input className={FormSumbitStyle} type="submit" />
+            <input className={ButtonStyle} type="submit" />
           </div>
         </form>
       </div>

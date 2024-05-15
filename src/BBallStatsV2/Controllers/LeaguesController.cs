@@ -695,9 +695,6 @@ namespace BBallStatsV2.Controllers
                     && DateTime.UtcNow >= prp.LeagueParticipant.League.StartDate 
                     && DateTime.UtcNow <= prp.LeagueParticipant.League.EndDate
                     && PlayerIds.Contains(prp.LeagueAvailablePlayer.PlayerId)
-                //&& 
-                //(prp.LeagueAvailablePlayer.Player.CurrentTeamId.Equals(playerStatData.LocalClubId)
-                //|| prp.LeagueAvailablePlayer.Player.CurrentTeamId.Equals(playerStatData.RoadClubId))
                     )
                 .ToListAsync();
 
@@ -746,7 +743,6 @@ namespace BBallStatsV2.Controllers
                 usedPlayer.LeagueParticipant.Points += pointsToGive;
             }
             _context.ParticipantsRosterPlayers.UpdateRange(usedPlayers);
-            // ^^ for scaling tiesiog wrapping for'e ir pridet skip / take
 
             var match = await _context.Matches
                 .FirstOrDefaultAsync(m => m.GameId == playerStatData.GameId && m.SeasonId == playerStatData.SeasonId);
@@ -760,123 +756,6 @@ namespace BBallStatsV2.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-
-            #region old method
-            //List<string> PlayerIds = playerStatData.PlayerInfo.Select(x => x.PlayerCode).Distinct().ToList();
-
-            //PlayerIds.Sort();
-            //var Players = await _context.Players.Where(x => PlayerIds.Contains(x.Id))
-            //    .Include(player => player.LeagueAvailablePlayers)
-            //        .ThenInclude(leaguePlayer => leaguePlayer.UsedPlayers)
-            //            .ThenInclude(participantsPlayer => participantsPlayer.LeagueParticipant)
-            //    .Include(player => player.LeagueAvailablePlayers) // galimai null error
-            //        .ThenInclude(leaguePlayer => leaguePlayer.League)
-            //            .ThenInclude(league => league.LeagueTemplate)
-            //    //.Where(player => player.LeagueAvailablePlayers != null 
-            //    //    && player.LeagueAvailablePlayers.All(leaguePlayer => leaguePlayer.League.IsActive))
-            //    .Include(player => player.LeagueAvailablePlayers)
-            //        .ThenInclude(leaguePlayer => leaguePlayer.UsedPlayers)
-            //            .ThenInclude(participantsPlayer => participantsPlayer.LeaguePlayerRole)
-            //                .ThenInclude(role => role.Statistics)
-            //    .ToListAsync();
-
-
-            //// 1. check for active leagues
-            //// foreach (var player in Players)
-            //// {
-            ////     player.LeagueAvailablePlayers = player.LeagueAvailablePlayers.Where(x => x.League.IsActive).ToList();
-            //// }
-
-            // 2. no check
-            //Players = Players.Where(player => player.LeagueAvailablePlayers.Count > 0).ToList();
-
-            //Players.Sort((a, b) => a.Id.CompareTo(b.Id));
-
-            //var statistics = await _context.RegularStatistics
-            //    .ToListAsync();
-
-            //var PlayerGameStats = new Dictionary<string, List<PlayerGameStatDto>>();
-            //foreach (var leagueId in Players.Select(x => x.Id))
-            //{
-            //    PlayerGameStats.Add(leagueId,
-            //        playerStatData.GameStats
-            //            .Where(x => x.PlayerCode.Equals(leagueId))
-            //            .Select(x => new PlayerGameStatDto(
-            //                statistics.First(y => y.Name.Equals(x.StatName)).Id,
-            //                x.IntVal != null ? (int)x.IntVal :
-            //                    x.IntArrVal != null ? x.IntArrVal[0] :
-            //                    x.Boolval != null ? 1 : WarnVal()
-            //            )).ToList()
-            //    );
-            //}
-
-
-            //for (int i = 0; i < Players.Count; i++)
-            //{
-            //    var player = Players[i];
-            //    var PlayerStats = PlayerGameStats[player.Id];
-            //    Dictionary<string, double> PlayerRolePoints = new Dictionary<string, double>();
-            //    var usedPlayers = await _context.ParticipantsRosterPlayers
-
-            //        .Where(prp => prp.LeagueParticipant.League.IsActive
-            //            && prp.LeagueAvailablePlayer.PlayerId.Equals(player.Id))
-            //        // for scaling tiesiog wrapping for'e ir pridet skip / take
-            //        .ToListAsync();
-            //    foreach (var participantPlayer in usedPlayers)
-            //    {
-            //        int? benchMultiplier = participantPlayer.LeagueParticipant.League.LeagueTemplate.BenchMultitplier;
-            //        string currentDictKey = $"{player.Id}_{participantPlayer.LeaguePlayerRoleId}";
-            //        LeaguePlayerRole currentRole = participantPlayer.LeaguePlayerRole;
-            //        bool isStartFive = benchMultiplier != null && (bool)currentRole.StartFive;
-
-
-
-            //        if (!PlayerRolePoints.ContainsKey(currentDictKey))
-            //        {
-            //            double currentDictValue = 0;
-            //            foreach (var stat in PlayerStats.Stats)
-            //            {
-            //                // pakeist stat leagueId i name, pridet metoda custom stat evaluation
-            //                var statToCount = currentRole.Statistics.FirstOrDefault(x => x.StatisticId == stat.StatisticId);
-            //                if (statToCount == null)
-            //                    continue;
-            //                currentDictValue += stat.value * statToCount.PointsPerStat;
-            //            }
-
-            //            PlayerRolePoints.Add(currentDictKey, currentDictValue);
-            //        }
-            //        //foreach (var availablePlayer in player.LeagueAvailablePlayers)
-            //        //{
-            //        //    int? benchMultiplier = availablePlayer.League.LeagueTemplate.BenchMultitplier;
-            //        //    foreach (var participantPlayer in availablePlayer.UsedPlayers)
-            //        //    {
-            //        //        string currentDictKey = $"{player.Id}_{participantPlayer.LeaguePlayerRoleId}";
-            //        //        LeaguePlayerRole currentRole = participantPlayer.LeaguePlayerRole;
-            //        //        bool isStartFive = benchMultiplier != null && (bool)currentRole.StartFive;
-
-
-
-            //        //        if (!PlayerRolePoints.ContainsKey(currentDictKey))
-            //        //        {
-            //        //            double currentDictValue = 0;
-            //        //            foreach (var stat in PlayerStats.Stats)
-            //        //            {
-            //        //                // pakeist stat leagueId i name, pridet metoda custom stat evaluation
-            //        //                var statToCount = currentRole.Statistics.FirstOrDefault(x => x.StatisticId == stat.StatisticId);
-            //        //                if (statToCount == null)
-            //        //                    continue;
-            //        //                currentDictValue += stat.value * statToCount.PointsPerStat;
-            //        //            }
-
-            //        //            PlayerRolePoints.Add(currentDictKey, currentDictValue);
-            //        //        }
-
-            //        //        participantPlayer.LeagueParticipant.Points += PlayerRolePoints[currentDictKey];
-            //        //    }
-            //        //}
-            //        _context.Players.Update(player);
-            //}
-            #endregion
         }
 
         private bool IsPlayerReplacement(ParticipantsRosterPlayer usedPlayer, List<string> InactivePlayers)

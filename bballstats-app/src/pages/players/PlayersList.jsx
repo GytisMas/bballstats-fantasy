@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
-import { APIEndpoint } from "../../components/Helpers";
+import { APIEndpoint, ButtonStyle } from "../../components/Helpers";
 import { useAuth } from "../../provider/Authentication";
 import BearerAuth from '../../components/Helpers';
 import {FormContainerStyle, FormMemberStyle, FormSumbitStyle} from '../../components/Helpers';
@@ -61,7 +61,7 @@ export default function PlayersList(props) {
           <label>Team name</label>
           <input className={FormMemberStyle} type="text" name="name" defaultValue={targetTeam.name} required />
         </div>
-        <input className={FormSumbitStyle} type="submit" />
+        <input className={ButtonStyle} type="submit" />
       </form>
     </div>;
   }
@@ -117,7 +117,7 @@ export default function PlayersList(props) {
         <p className='text-2xl pb-5'>Player statistics</p>
         {props.isModerator && props.isModerator == true &&
           <>
-            <a href='/players/create' className='bth p-1 mx-auto w-48 text-center border-2 border-b-0  duration-200 bg-slate-100 hover:bg-blue-100'>Create new player</a>
+            <a href='/players/create' className={ButtonStyle}>Create new player</a>
             <a href="https://www.flaticon.com/free-icons/modify" title="modify icons"></a>
           </>
         }

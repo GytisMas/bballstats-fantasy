@@ -8,16 +8,24 @@ export default props => {
 
   return (
     <Menu>
-        <a href='/home' className="duration-75 brightness-95 hover:brightness-100 text-xl font-bold py-5 text-white inline" >
-            <img className="h-10" src={process.env.PUBLIC_URL + '/icons/home.svg'}/>
-        </a>
-        <a href='/algorithms' className="duration-75 brightness-95 hover:brightness-100 text-xl font-bold py-5 text-white inline" >
-            Algorithms
-        </a>
-        <a href='/players' className="duration-75 brightness-95 hover:brightness-100 text-xl font-bold py-5 text-white inline" >
-            Players
-        </a>
-        {currentUserRoles &&
+        {currentUserRoles && currentUserRoles.includes('Regular') &&
+            <a href='/home' className="duration-75 brightness-95 hover:brightness-100 text-xl font-bold py-5 text-white inline" >
+                <img className="h-10" src={process.env.PUBLIC_URL + '/icons/home.svg'}/>
+            </a>
+        }
+
+        {currentUserRoles && currentUserRoles.includes('Regular') &&
+            <a href='/algorithms' className="duration-75 brightness-95 hover:brightness-100 text-xl font-bold py-5 text-white inline" >
+                Algorithms
+            </a>
+        }
+
+        {currentUserRoles && currentUserRoles.includes('Regular') &&
+            <a href='/players' className="duration-75 brightness-95 hover:brightness-100 text-xl font-bold py-5 text-white inline" >
+                Players
+            </a>
+        }
+        {currentUserRoles && currentUserRoles.includes('Regular') &&
         <a href='/fantasy/leagues' className="duration-75 brightness-95 hover:brightness-100 text-xl font-bold py-5 text-white inline" >
             Fantasy Leagues
         </a>
@@ -29,7 +37,13 @@ export default props => {
         }
         
         
-        {currentUserRoles && currentUserRoles.includes('Curator') &&
+        {currentUserRoles && currentUserRoles.includes('Moderator') &&
+            <a href='/players' className="duration-75 brightness-95 hover:brightness-100 text-xl font-bold py-5 text-white inline" >
+                Players
+            </a>
+        }
+
+        {currentUserRoles && currentUserRoles.includes('Moderator') &&
             <a href='/stats' className="duration-75 brightness-95 hover:brightness-100 text-xl font-bold py-5 text-white inline" >
                 Stats
             </a>

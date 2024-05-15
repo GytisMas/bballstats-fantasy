@@ -1,5 +1,5 @@
 import { useAuth } from "../../provider/Authentication";
-import {BearerAuth, FormMemberStyle, FormSelectStyle, FormSumbitStyleForbid, FormTableStyle, FormWiderContainerStyle, LinkStyle} from '../../components/Helpers';
+import {BearerAuth, ButtonStyle, ButtonStyleForbid, FormMemberStyle, FormSelectStyle, FormSumbitStyleForbid, FormTableStyle, FormWiderContainerStyle, LinkStyle} from '../../components/Helpers';
 import {FormContainerStyle, FormSumbitStyle, FormHelperStyle} from '../../components/Helpers';
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
@@ -72,8 +72,6 @@ function LeagueCreate() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // TODO: validation (league name negali sutapti)
-    // console.log("--")
     const formData = { 
       name: document.forms[0].elements["leagueName"].value,
       entryFee: document.forms[0].elements["entryFee"].value,
@@ -87,8 +85,6 @@ function LeagueCreate() {
           document.querySelectorAll('[name^=prize-')
           ).map(p => (Number)(p.value))
     };
-    // console.log(formData)
-    // console.log("-")
 
     try {
         const response = await axios.post(APIEndpoint + "/fantasy/leagues", formData
@@ -206,7 +202,7 @@ function LeagueCreate() {
         {renderErrorMessage("funds")}
         {renderErrorMessage("name")}
         <div className="w-36 mx-auto px-4 py-4 my-4 flex flex-col items-center">
-          <button className={!forbidCreation ? FormSumbitStyle : FormSumbitStyleForbid} type="submit" disabled={forbidCreation} >Create League ({prizeSum})</button>
+          <button className={!forbidCreation ? ButtonStyle : ButtonStyleForbid} type="submit" disabled={forbidCreation} >Create League ({prizeSum})</button>
         </div>
       </form>
     </div>

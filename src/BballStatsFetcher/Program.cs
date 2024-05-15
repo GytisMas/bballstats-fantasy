@@ -64,15 +64,9 @@ namespace BballStatsFetcher
                 Console.WriteLine($"Processing game codes: {string.Join(", ", GameCodes)}");
                 //Thread.Sleep(pauseIntervalInMs);
 
-                ignoreExisting = !ignoreExisting;
 
                 foreach (int gameCode in GameCodes)
                 {
-                    //Console.WriteLine($"-");
-                    //Console.WriteLine($"-");
-                    //Console.WriteLine($"-");
-                    //Console.WriteLine($"\nPausing before fetching game stats (season {seasonCode} | game {gameCode})");
-                    //Thread.Sleep(pauseIntervalInMs);
 
                     Console.WriteLine($"Fetching game stats (season: {seasonCode} | game: {gameCode})");
                     var game = await FetchGameData(seasonCode, gameCode);
@@ -91,7 +85,9 @@ namespace BballStatsFetcher
                     Console.WriteLine($"\nGame {gameCode} processed successfully (game was played: {game.Played} | game was already listed: {game.AlreadyExistedInDB})");
                 }
 
-                
+
+                if (!oneGameProcessed)
+                    ignoreExisting = !ignoreExisting;
 
 
                 if (!oneGameProcessed && ignoreExisting)

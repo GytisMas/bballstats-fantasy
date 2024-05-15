@@ -73,22 +73,6 @@ namespace BBallStats.Shared
         public string RoadClubName { get; set; } = null!;
         public int SeasonId { get; set; }
         public int GameId { get; set; }
-        //public string PlayerCode { get; set; }
-        //public string PlayerName { get; set; }
-        //public string JerseyNumber { get; set; }
-        //public int TimePlayedSeconds { get; set; }
-        //public bool StartFive { get; set; }
-        //public int[] Score { get; set; }
-        //public int[] FieldGoals { get; set; }
-        //public int[] FieldGoals2 { get; set; }
-        //public int[] FieldGoals3 { get; set; }
-        //public int[] FreeThrows { get; set; }
-        //public int[] Rebounds { get; set; }
-        //public int Assists { get; set; }
-        //public int Steals { get; set; }
-        //public int Blocks { get; set; }
-        //public int Turnovers { get; set; }
-        //public int PlusMinus { get; set; }
     }
 
     public class PlayerStat

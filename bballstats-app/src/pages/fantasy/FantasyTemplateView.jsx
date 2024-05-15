@@ -86,7 +86,7 @@ function FantasyTemplateView() {
           <input type="checkbox" name="startFiveMode" checked={template.benchMultiplier != null} disabled /><br/>
           {template.benchMultiplier != null && 
           <>
-            <label>Bench player points, 1-100% (active players are 100%)</label><br/>
+            <label>Bench player points, 0-100% (active players are 100%)</label><br/>
             <input type="number" min={0} max={100} step={1} disabled value={template.benchMultiplier * 100} name="benchMultiplier" /> %
           </>
         }

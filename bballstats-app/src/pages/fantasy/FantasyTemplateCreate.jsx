@@ -1,5 +1,5 @@
 import { useAuth } from "../../provider/Authentication";
-import {BearerAuth, Form2XLContainerStyle, FormMaxWidthContainerStyle, FormMemberHalfStyle, FormMemberStyle, FormWiderContainerStyle, RoleMemberStyle} from '../../components/Helpers';
+import {BearerAuth, ButtonNoMtStyle, ButtonStyle, Form2XLContainerStyle, FormMaxWidthContainerStyle, FormMemberHalfStyle, FormMemberStyle, FormWiderContainerStyle, RoleMemberStyle} from '../../components/Helpers';
 import {FormContainerStyle, FormSumbitStyle, FormHelperStyle} from '../../components/Helpers';
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
@@ -23,7 +23,7 @@ function FantasyTemplateCreate() {
   useEffect(() => {
     const loadStatTypes = async () => {
         const response = (await axios.get(APIEndpoint + '/Statistics'));
-        setStatTypes(response.data);
+        setStatTypes(response.data.sort((a, b) => a.id > b.id ? 1 : -1));
     }
     loadStatTypes();
   }, []);
@@ -54,7 +54,6 @@ function FantasyTemplateCreate() {
   }
 
   const handleStartFive = (event) => {
-    // event.preventDefault();
     setStartFiveMode(event.target.checked)
   }
 
@@ -166,7 +165,7 @@ function FantasyTemplateCreate() {
           <input type="checkbox" name="startFiveMode" onChange={handleStartFive} /><br/>
           {startFiveMode && 
           <>
-            <label>Bench player relative points (1-100%)</label><br/>
+            <label>Bench player relative points (0-100%)</label><br/>
             <input className={FormMemberStyle} type="number" min={0} max={100} step={1} defaultValue={30} name="benchMultiplier" />
           </>
           }
@@ -176,8 +175,11 @@ function FantasyTemplateCreate() {
               <label className="max-w-lg text-center">Note: when using Start Five Mode, players in every odd role (1st, 3rd, etc.) are considered active, and players in every even role (2nd, 4th, etc.) are considered the previous roles' direct and only replacement.</label>
           </div>
         }
+        <div className="flex flex-row max-w-sm mx-auto py-2 justify-between">
+          <button className={ButtonStyle} onClick={handleAdd}>Add player role</button>
+          <button className={ButtonStyle} onClick={handleRemove}>Remove Last Role</button>
+        </div>
         <div className="input-container justify-center flex flex-col items-center">
-          <label>League Player Roles</label>
           <div className="flex flex-row flex-wrap justify-center">
           {leagueRoles.map((role, roleIndex) => (
             <div key={role} className={RoleMemberStyle} >
@@ -199,13 +201,15 @@ function FantasyTemplateCreate() {
           ))}
           </div>
         </div>
-      <div className="flex flex-row max-w-sm mx-auto justify-between">
-        <button className={FormHelperStyle} onClick={handleAdd}>Add player role</button>
-        <button className={FormHelperStyle} onClick={handleRemove}>Remove Last Role</button>
-      </div>
+        {leagueRoles && leagueRoles.length && leagueRoles.length > 0 &&
+          <div className="flex flex-row max-w-sm mx-auto py-2 justify-between">
+            <button className={ButtonStyle} onClick={handleAdd}>Add player role</button>
+            <button className={ButtonStyle} onClick={handleRemove}>Remove Last Role</button>
+          </div>
+        }
       {renderErrorMessage("roles")}
-      <div className="w-36 mx-auto px-4 py-4 my-4 flex flex-col items-center">
-        <button className={FormSumbitStyle} type="submit" >Create Template (500)</button>
+      <div className="mx-auto max-w-md px-4 py-4 my-4 flex flex-col items-center">
+        <button className={ButtonStyle + " w-24 mr-auto"} type="submit" >Create Template (500)</button>
       </div>
       </form>
     </div>

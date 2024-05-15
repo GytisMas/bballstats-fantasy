@@ -57,7 +57,6 @@ function PlayerStatsCreate() {
         navigate("/players");
     } catch (error) {
         console.log(error);
-        // setErrorMessages({ name: "uname", message: "Incorrect user name or password" });
     }
   };
 

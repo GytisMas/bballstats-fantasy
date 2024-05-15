@@ -54,7 +54,6 @@ export default function Stats(props) {
           hideModal();
       } catch (error) {
           console.log(error);
-          // setErrorMessages({ name: "uname", message: "Incorrect user name or password" });
       }
     };
 
@@ -79,7 +78,6 @@ export default function Stats(props) {
         hideModal();
     } catch (error) {
         console.log(error);
-        // setErrorMessages({ name: "uname", message: "Incorrect user name or password" });
     }
   };
 
@@ -125,7 +123,7 @@ export default function Stats(props) {
           <label>Used in FL by default</label>
           <br/><input type="checkbox" name="leagueChecked" defaultChecked={false} />
         </div>
-        <input className={FormSumbitStyle} type="submit" />
+        <input className={ButtonStyle} type="submit" />
       </form>
     </div>
     );
@@ -158,7 +156,7 @@ export default function Stats(props) {
           <label>Used in FL by default</label>
           <br/><input type="checkbox" name="leagueChecked" defaultChecked={targetStat.defaultIsChecked} />
         </div>
-        <input className={FormSumbitStyle} type="submit" />
+        <input className={ButtonStyle} type="submit" />
       </form>
     </div>
     );
@@ -169,7 +167,7 @@ export default function Stats(props) {
       <form onSubmit={submitFunc}>
           <div className="flex flex-col justify-center items-center">
             <label>Confirm deletion?</label>
-            <input className={FormSumbitStyle} type="submit" />
+            <input className={ButtonStyle} type="submit" />
           </div>
         </form>
     </div>;

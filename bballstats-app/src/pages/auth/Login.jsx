@@ -30,7 +30,6 @@ function Login() {
         setTokens(response.data.accessToken, response.data.refreshToken);
         setIsSubmitted(true)
         let nextPage = '/profile';
-        // let nextPage = params.get('redirected') ? -1 : '/profile';
         navigate(nextPage);
     } catch (error) {
         console.log(error);
@@ -44,7 +43,7 @@ function Login() {
   // Generate JSX code for error message
   const renderErrorMessage = (name) =>
     name === errorMessages.name && (
-      <div className="error">{errorMessages.message}</div>
+      <div className="error text-red-500">{errorMessages.message}</div>
     );
 
   // JSX code for login form

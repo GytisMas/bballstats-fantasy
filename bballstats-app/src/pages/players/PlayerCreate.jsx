@@ -1,5 +1,5 @@
 import { useAuth } from "../../provider/Authentication";
-import {BearerAuth, FormMemberStyle, FormSelectStyle} from '../../components/Helpers';
+import {BearerAuth, ButtonStyle, FormMemberStyle, FormSelectStyle} from '../../components/Helpers';
 import {FormContainerStyle, FormSumbitStyle, FormHelperStyle} from '../../components/Helpers';
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
@@ -60,7 +60,6 @@ function PlayerCreate() {
         navigate("/players");
     } catch (error) {
         console.log(error);
-        // setErrorMessages({ name: "uname", message: "Incorrect user name or password" });
     }
   };
 
@@ -80,8 +79,8 @@ function PlayerCreate() {
   const renderForm = (
     <div className={FormContainerStyle + " bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"}>
       <div className="flex flex-row justify-between">
-        <button className={FormHelperStyle} onClick={() => handleTeamClick(true)}>Use existing team</button>
-        <button className={FormHelperStyle} onClick={() => handleTeamClick(false)}>Create new team</button>
+        <button className={ButtonStyle} onClick={() => handleTeamClick(true)}>Use existing team</button>
+        <button className={ButtonStyle} onClick={() => handleTeamClick(false)}>Create new team</button>
       </div>
        
       <form onSubmit={handleSubmit}>
@@ -116,7 +115,7 @@ function PlayerCreate() {
             {roles.map((role, i) => (MakeItem(role, i)))}
           </select>
         </div>
-        <input className={FormSumbitStyle} type="submit" />
+        <input className={ButtonStyle} type="submit" />
       </form>
     </div>
   );

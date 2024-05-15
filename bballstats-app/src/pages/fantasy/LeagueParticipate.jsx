@@ -1,5 +1,5 @@
 import { useAuth } from "../../provider/Authentication";
-import {BearerAuth, ButtonStyle, DisabledFormMemberStyle, Form2XLContainerStyle, Form4XLContainerStyle, FormMemberStyle, FormSelectStyle, FormSumbitStyleCancel, FormSumbitStyleCancel2, FormWiderContainerStyle} from '../../components/Helpers';
+import {BearerAuth, ButtonStyle, DisabledFormMemberStyle, DisabledFormMemberStyleNotFull, Form2XLContainerStyle, Form4XLContainerStyle, FormMemberNotFullStyle, FormMemberStyle, FormSelectStyle, FormSumbitStyleCancel, FormSumbitStyleCancel2, FormWiderContainerStyle} from '../../components/Helpers';
 import {FormContainerStyle, FormSumbitStyle, FormHelperStyle} from '../../components/Helpers';
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
@@ -93,11 +93,9 @@ function LeagueParticipate(props) {
     for (let i = 0; i < _team.length; i++) {
       const player = _team[i]
       let newElement = _roles.find((e) => e.id == player.roleId)
-      // console.log(newElement)
       if (newElement == null) {
         continue;
       }
-      // console.log("--")
       const leaguePlayerId = _players.find((e) => e.id == player.playerId).leaguePlayerId
       newElement.playerId = leaguePlayerId
       newUnavailableRoles = [...newUnavailableRoles, newElement]
@@ -122,12 +120,11 @@ function LeagueParticipate(props) {
 
   const changeAvailableRoles = (playerId, playerPrice) => (event) => {
     let currPlayerPrice = playersPrice;
-    console.log(currPlayerPrice)
     if (event.target.value != -1) {
       let newUnavailableRoles = leagueRolesUnavailable;
       let existingElement = leagueRolesUnavailable.find((e) => e.playerId == playerId)
       if (existingElement != null) {
-        currPlayerPrice -= existingElement.playerPrice;
+        currPlayerPrice -= existingElement.playerPrice ?? playerPrice;
         newUnavailableRoles = (leagueRolesUnavailable.filter(item => item.playerId != playerId))
       }
       
@@ -136,26 +133,19 @@ function LeagueParticipate(props) {
       newElement.playerPrice = playerPrice
       currPlayerPrice += newElement.playerPrice;
       newUnavailableRoles = [...newUnavailableRoles, newElement]
-      // console.log(newElement)
       setLeagueRolesUnavailable(newUnavailableRoles);
     } else {
-      console.log(playerId)
-      // console.log(leagueRolesUnavailable)
-      // console.log(leagueRolesUnavailable.filter(item => item.playerId != playerId))
-      // console.log("--")
       let existingElement = leagueRolesUnavailable.find((e) => e.playerId == playerId)
       if (existingElement != null) {
         console.log(existingElement)
-        currPlayerPrice -= playerPrice;
+        currPlayerPrice -= existingElement.playerPrice ?? playerPrice;
       }
       setLeagueRolesUnavailable((leagueRolesUnavailable) => (leagueRolesUnavailable.filter(item => item.playerId != playerId)))
     }
-    console.log(currPlayerPrice)
     setPlayersPrice(currPlayerPrice);
   } 
 
   const MakePlayerItem = function(x) {
-    // console.log(leagueRoles[0])
     return (
       <td key={x.leaguePlayerId} className='p-2 border-2 text-left'>
         <div>
@@ -212,7 +202,7 @@ function LeagueParticipate(props) {
           <p>{x.teamName}</p>
           <p>Price: {x.price}</p>
           {x.roleToReplaceId != null &&
-            <button type="button" className={FormSumbitStyle} onClick={() => handleRoleChange(x)}>Replace Active Role ({team.find((plr) => plr.roleId == x.roleToReplaceId).roleName})</button>
+            <button type="button" className={ButtonStyle} onClick={() => handleRoleChange(x)}>Replace Active Role ({team.find((plr) => plr.roleId == x.roleToReplaceId).roleName})</button>
 
           }
         </div>
@@ -227,7 +217,6 @@ function LeagueParticipate(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // console.log(document.forms[0].elements);
     if (isEditMode) {
       if (isActiveLeague) {
         const playerRolePairs = team.map((plr) => {
@@ -262,7 +251,6 @@ function LeagueParticipate(props) {
         if (selectedStats.length !== leagueRoles.length) {
           setErrorMessages({ name: "submit", message: "Not enough roles selected" });
           return;
-          // TODO: normal validation
         }
 
         const formData = {
@@ -305,9 +293,6 @@ function LeagueParticipate(props) {
       teamName: document.forms[0].elements["teamName"].value, 
       players: formPlayers
     }
-    // console.log("--")
-    // console.log(formData)
-    // console.log("-")
     try {
         const response = await axios.post(APIEndpoint + "/fantasy/leagues/" + params.leagueId + '/participants/', formData
         , {headers: {
@@ -408,9 +393,9 @@ function LeagueParticipate(props) {
     <div className={Form4XLContainerStyle}>
       <form id="mainForm" onSubmit={handleSubmit}>
         <div className="input-container">
-          <label>Team name</label>
-          {isEditMode ?<input className={DisabledFormMemberStyle} type="text" disabled name="teamName" required defaultValue={participant.teamName ?? ""} /> :
-          <input className={DisabledFormMemberStyle} type="text" name="teamName" required defaultValue={participant.teamName ?? ""} />
+          <label>Team name</label><br/>
+          {isEditMode ?<input className={DisabledFormMemberStyleNotFull + " w-72"} type="text" disabled name="teamName" required defaultValue={participant.teamName ?? ""} /> :
+          <input className={FormMemberNotFullStyle + " w-72"} type="text" name="teamName" required defaultValue={participant.teamName ?? ""} />
           
           }
           {renderErrorMessage("teamName")}
@@ -457,7 +442,7 @@ function LeagueParticipate(props) {
                         <p className="px-1 text-slate-600 w-full text-sm text-left">Fantasy role</p>
                         <p className="px-1 text-lg w-full text-left ">{player.roleName}</p>
                         {player.roleToReplaceId != null &&
-                          <button type="button" className={ButtonStyle + " w-48"} onClick={() => handleRoleChange(player)}>Replace Active Role ({team.find((plr) => plr.roleId == player.roleToReplaceId).roleName})</button>
+                          <button type="button" className={ButtonStyle + " w-32 text-sm"} onClick={() => handleRoleChange(player)}>Replace Active Role ({team.find((plr) => plr.roleId == player.roleToReplaceId).roleName})</button>
                         }
                       </div>
                       <div className='w-64 flex border-2 border-slate-400  flex-col rounded-b-xl p-1 items-center bg-slate-200 bg-gradient-to-b from-slate-100 to-slate-300'>
@@ -486,7 +471,9 @@ function LeagueParticipate(props) {
           }
         </div>
         <div className="flex flex-row items-center">
-          <input className={FormSumbitStyle + " h-16"} type="submit" />
+          {!isActiveLeague || rosterChangesAllowed &&
+            <input className={ButtonStyle + " h-16 mb-2"} type="submit" />
+          }
           {!isActiveLeague && isEditMode &&
             <button onClick={() => showModal()}type="button" className={FormSumbitStyleCancel2 + " h-16"}>Cancel participation</button>
           }

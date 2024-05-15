@@ -42,7 +42,6 @@ function Leagues(props) {
     }
 
     loadData().then(() => setIsLoading(false));
-    // console.log("not loading")
     }, [isLoading]);
 
     const onPageChange = (pageIndex) => {
@@ -51,7 +50,6 @@ function Leagues(props) {
     }
 
     const onActivityChange = (event) => {
-      // document.getElementById("activeOnly").value = event.target.value
       setActiveOnly(event.target.value)
       setPageIndex(1)
       setIsLoading(true)
@@ -102,14 +100,14 @@ function Leagues(props) {
         </div>
         <div className='my-5 max-w-3xl flex flex-col justify-center items-center mx-auto px-2 bg-white border-2 rounded-3xl'>
           <p className='py-2 font-bold text-lg text-center'>Browse Fantasy Leagues</p>
-          <form className='py-5 flex flex-col ml-auto items-end justify-center'>
+          <form className='py-5 flex flex-col mx-auto items-center justify-center'>
             <label>Search by Name</label>
-            <input className={FormMemberNotFullStyle + ' w-40'} type="text" id="leagueName" defaultValue={nameFilter} name="leagueName" />
-            <select id="activeOnly" className={FormSelectNotFullStyle + ' w-40'} onChange={onActivityChange} defaultValue={activeOnly}>
+            <input className={FormMemberNotFullStyle + ' w-64 mt-2'} type="text" id="leagueName" defaultValue={nameFilter} name="leagueName" />
+            <select id="activeOnly" className={FormSelectNotFullStyle + ' w-40 mt-2'} onChange={onActivityChange} defaultValue={activeOnly}>
               <option value={false} >All leagues</option>
               <option value={true} >Active leagues</option>
             </select>
-            <button className={ButtonNoMtStyle + " w-20"} type="button" onClick={handleFilter(false)}>Search</button>
+            <button className={ButtonNoMtStyle + " w-20 mt-2"} type="button" onClick={handleFilter(false)}>Search</button>
             {/* <button className={ButtonNoMtStyle + " w-40"} type="button" onClick={handleFilter(true)}>Back to full list</button> */}
           </form>
           { isLoading ? <div>Loading...</div> :

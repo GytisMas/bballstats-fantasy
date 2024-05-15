@@ -55,7 +55,6 @@ function StatisticUpdate() {
         navigate("/stats");
     } catch (error) {
         console.log(error);
-        // setErrorMessages({ name: "uname", message: "Incorrect user name or password" });
     }
   };
 

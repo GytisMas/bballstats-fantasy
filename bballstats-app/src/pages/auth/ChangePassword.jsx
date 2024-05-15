@@ -1,5 +1,5 @@
 import { useAuth } from "../../provider/Authentication";
-import {BearerAuth, UserRoles} from '../../components/Helpers';
+import {BearerAuth, ButtonStyle, UserRoles} from '../../components/Helpers';
 import { useNavigate } from "react-router-dom";
 import {FormContainerStyle, FormMemberStyle, FormSumbitStyle} from '../../components/Helpers';
 import { useState, useEffect } from 'react';
@@ -28,7 +28,6 @@ function ChangePassword() {
         );
         navigate("/profile");
     } catch (error) {
-        // console.log(error);
         setErrorMessages({ name: "any", message: error.response.data });
     }
   };
@@ -41,8 +40,9 @@ function ChangePassword() {
 
   const renderForm = (
     <div className={FormContainerStyle}>
-      <form onSubmit={handleSubmit}>
-        <div className="input-container">
+      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" >
+        <div className="text-xl text-center p-1 ">Change Password</div>
+        <div className="input-container mt-2">
           <label>Old Password</label>
           <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="password" name="oldpass" required />
         </div>
@@ -51,7 +51,7 @@ function ChangePassword() {
           <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="password" name="newpass" required />
         </div>
         <div>
-          <input className="bg-blue-500 hover:bg-blue-700 text-white mt-2 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" />
+          <input className={ButtonStyle} type="submit" />
           {renderErrorMessage("any")}
         </div>
       </form>

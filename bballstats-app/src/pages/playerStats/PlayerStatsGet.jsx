@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { APIEndpoint } from "../../components/Helpers";
+import { APIEndpoint, ButtonStyle } from "../../components/Helpers";
 import { statTypes } from '../players/PlayersList';
 import { useNavigate } from "react-router-dom";
 import {FormContainerStyle, FormMemberStyle, FormSumbitStyle} from '../../components/Helpers';
@@ -43,7 +43,7 @@ export default function PlayerStatsGet(props) {
     <>
         {props.isModerator && props.isModerator == true &&
           <div className='border-t-4 border-b-2 p-2 w-full'>
-            <a href={'/players/statCreate/'+props.teamId+'/'+props.playerId} className='bth p-1 my-1 duration-200 bg-slate-100 hover:bg-blue-100 border-2 '>Create player statistic</a>
+            <a href={'/players/statCreate/'+props.teamId+'/'+props.playerId} className={ButtonStyle}>Create player statistic</a>
           </div>
         }
         {playerStats.map((playerStat) => (

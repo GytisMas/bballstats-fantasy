@@ -1,4 +1,4 @@
-import { FormSumbitStyleCancel } from './Helpers';
+import { ButtonRedStyle, FormSumbitStyleCancel } from './Helpers';
 import './modal.css';
 
 const Modal = ({ show, formContent, handleClose }) => {
@@ -7,7 +7,7 @@ const Modal = ({ show, formContent, handleClose }) => {
   return (
     <div className={showHideClassName}>
       <section className="modal-main">
-          <button type="button" className={FormSumbitStyleCancel + 'float-right'} onClick={handleClose}>
+          <button type="button" className={ButtonRedStyle + 'float-right'} onClick={handleClose}>
             Close
           </button>
           {formContent}

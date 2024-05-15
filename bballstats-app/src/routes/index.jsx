@@ -46,12 +46,16 @@ const Routes = () => {
   const { refreshToken } = useAuth();
   const { currentUserRoles } = useAuth();
 
-  // Define public routes accessible to all users
-  const routesForPublic = [
+  // Define routes accessible only to authenticated users
+  const routesForAuthenticatedOnly = [
     {
       path: "/",
-      element: <RegularRoute />,
+      element: <ProtectedRoute />,
       children: [
+        {
+          path: "/",
+          element: <AlgorithmsList/>,
+        },
         {
           path: "/user/:userId",
           element: <UserGet personal={false} />,
@@ -76,27 +80,13 @@ const Routes = () => {
           path: "/fantasy/leagues/:leagueId/participants/:participantId",
           element: <LeagueParticipantGet/>,
         },
-      ],
-    },    
-  ];
-
-  // Define routes accessible only to authenticated users
-  const routesForAuthenticatedOnly = [
-    {
-      path: "/",
-      element: <ProtectedRoute />, // Wrap the component in ProtectedRoute
-      children: [
-        {
-          path: "/",
-          element: <AlgorithmsList/>,
-        },
         {
           path: "/home",
-          element: <AlgorithmsList/>,
+          element: <Leagues/>,
         },
         {
           path: "/stats",
-          element: <Stats isCurator={currentUserRoles ? currentUserRoles.includes('Curator') : false}/>,
+          element: <Stats isCurator={currentUserRoles ? currentUserRoles.includes('Moderator') : false}/>,
         },
         {
           path: "/profile",
@@ -214,11 +204,7 @@ const Routes = () => {
       children: [
         {
           path: "/",
-          element: <AlgorithmsList/>,
-        },
-        {
-          path: "/home",
-          element: <AlgorithmsList/>,
+          element: <Login/>,
         },
         {
           path: "/login",
@@ -234,7 +220,6 @@ const Routes = () => {
 
   // Combine and conditionally include routes based on authentication status
   const router = createBrowserRouter([
-    ...routesForPublic,
     ...(isTokenInvalid(refreshToken) ? routesForNotAuthenticatedOnly : []),
     ...routesForAuthenticatedOnly,
     {

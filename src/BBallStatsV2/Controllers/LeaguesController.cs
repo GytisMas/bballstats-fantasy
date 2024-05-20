@@ -783,13 +783,10 @@ namespace BBallStatsV2.Controllers
                 return Ok();
             }
 
-            var endLeagueTasks = new List<Task>();
             foreach (var leagueId in activeLeagueIds)
             {
-                endLeagueTasks.Add(EndLeague(leagueId));
+                await EndLeague(leagueId);
             }
-
-            await Task.WhenAll(endLeagueTasks);
 
             return Ok();
         }
@@ -825,7 +822,7 @@ namespace BBallStatsV2.Controllers
                 });
             }
 
-            if (league.Payments.Count > league.Participants.Count)
+            if (league.Participants.Count > 0 && league.Payments.Count > league.Participants.Count)
             {
                 int remainingPayments = league.Payments
                     .Skip(league.Participants.Count)

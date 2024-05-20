@@ -26,7 +26,7 @@ namespace BBallStatsV2
                     policy =>
                     {
                         policy
-            .WithOrigins("http://localhost:3000;https://coral-app-6z8fk.ondigitalocean.app/".Split(';'))
+            .WithOrigins("http://localhost:3000;https://coral-app-6z8fk.ondigitalocean.app".Split(';'))
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();

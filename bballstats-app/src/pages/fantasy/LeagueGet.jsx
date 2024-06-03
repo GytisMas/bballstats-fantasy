@@ -1,5 +1,5 @@
 import { useAuth } from "../../provider/Authentication";
-import {BearerAuth, ButtonStyle, FormMdContainerStyle, FormMemberStyle, FormWiderContainerStyle, LinkStyle} from '../../components/Helpers';
+import {BearerAuth, ButtonStyle, FormMdContainerStyle, FormMemberStyle, FormTableStyle, FormWiderContainerStyle, LinkStyle} from '../../components/Helpers';
 import {FormContainerStyle, FormSumbitStyle, FormHelperStyle} from '../../components/Helpers';
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from 'react';
@@ -18,6 +18,7 @@ function LeagueGet(props) {
   const [leagueRoles, setLeagueRoles] = useState([]);
   const [leagueRolesUnavailable, setLeagueRolesUnavailable] = useState([]);
   const [league, setLeague] = useState([]);
+  const [leaguePayments, setLeaguePayments] = useState([]);
   const [participants, setParticipants] = useState([]);
 
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ function LeagueGet(props) {
       const response = (await axios.get(APIEndpoint + '/Fantasy/Leagues/' + params.leagueId));
       console.log(response.data);
       setLeague(response.data);
+      setLeaguePayments(response.data.payments);
       setTemplateId(response.data.templateId);
       setParticipants(response.data.participants);
     }
@@ -83,6 +85,28 @@ function LeagueGet(props) {
               </table>
             </>
           }
+        </div>
+        <div className='mt-5 max-w-xl mx-auto px-2 flex flex-col items-center bg-white border-2 rounded-3xl'>
+          <div className="bg-white rounded px-4 py-2 my-4">
+            <div className="text-xl text-center p-1 ">Prizes</div>
+            <table className={FormTableStyle}>
+              <thead>
+                <tr>
+                  <th className='p-2 border-2 border-black text-left'>Placement</th>
+                  <th className='p-2 border-2 border-black text-left'>Prize</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              {leaguePayments.map((it) => 
+              <tr key={it.placing}>
+                <td className='p-2 border-2 border-black text-left'>#{it.placing}</td>
+                <td className='p-2 border-2 border-black text-right'>{it.amount}</td>
+              </tr>
+              )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </>
     );

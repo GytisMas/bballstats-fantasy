@@ -89,6 +89,7 @@ namespace BBallStatsV2.Controllers
         {
             var league = await _context.Leagues
                 .Include(l => l.LeagueHost)
+                .Include(l => l.Payments)
                 .Include(l => l.Participants)
                 .ThenInclude(p => p.User)
                 .FirstOrDefaultAsync(l => l.Id == leagueId);
@@ -109,10 +110,11 @@ namespace BBallStatsV2.Controllers
             }
 
             league.Participants = league.Participants.OrderByDescending(p => p.Points).ThenBy(p => p.EntryDate).ToList();
-
+            league.Payments = league.Payments.OrderBy(p => p.Placing).ToList();
 
             return new LeagueWithParticipantsDto(league.Id, league.Name, league.LeagueTemplateId, !league.HasStarted, participantId, league.EntryFee, league.CreationDate, league.StartDate, 
-                league.EndDate, league.Participants.Select(p => new ParticipantDto(p.Id, p.TeamName, p.User.UserName, p.Points)).ToArray());
+                league.EndDate, league.Participants.Select(p => new ParticipantDto(p.Id, p.TeamName, p.User.UserName, p.Points)).ToArray()
+                , league.Payments.ToList());
         }
 
         [HttpGet("{leagueId}/Players")]
@@ -131,8 +133,9 @@ namespace BBallStatsV2.Controllers
             var players = league.LeagueAvailablePlayers
                 .Select(p => new PlayerInLeagueDto(p.PlayerId, p.Id, p.Player.Name, p.Player.Role, p.Player.CurrentTeamId, p.Price))
                 .ToList();
-            
-            return new LeaguePlayersDto(league.Name, league.IsActive, league.EntryFee, league.LeagueTemplateId, league.Password != null, players);
+            bool leagueEndedByDate = DateTime.UtcNow > league.EndDate;
+
+            return new LeaguePlayersDto(league.Name, league.IsActive, leagueEndedByDate, league.EntryFee, league.LeagueTemplateId, league.Password != null, players);
         }
 
         [Authorize]
@@ -216,8 +219,9 @@ namespace BBallStatsV2.Controllers
             }
 
             bool allowRosterChanges = league.IsActive && DateTime.UtcNow.Hour < 12;
+            bool leagueEndedByDate = DateTime.UtcNow > league.EndDate;
 
-            return Ok(new ParticipantWithTeamDto(league.IsActive, allowRosterChanges, participant.Id, participantIsUser, participant.TeamName, participant.User.UserName, participant.Points, 
+            return Ok(new ParticipantWithTeamDto(league.IsActive, leagueEndedByDate, allowRosterChanges, participant.Id, participantIsUser, participant.TeamName, participant.User.UserName, participant.Points, 
                 participant.Team.Select(t => new ParticipantPlayerInfoDto(t.Id, t.Points, t.PointsLastGame, t.LeagueAvailablePlayer.Player.Id, t.LeagueAvailablePlayer.Player.Name, 
                 t.LeagueAvailablePlayer.Player.CurrentTeam.Name, t.LeagueAvailablePlayer.Price, t.LeaguePlayerRoleId, t.LeaguePlayerRole.Name, t.LeaguePlayerRole.RoleToReplaceId)).ToArray()
                 ));

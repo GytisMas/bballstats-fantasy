@@ -49,7 +49,7 @@ namespace BBallStatsV2.Controllers
 
             if (matchIds == null || matchIds.Count == 0)
             {
-                return Ok(new List<int>());
+                return Ok(new List<int>() { 1 });
             }
 
             if (!ignoreExisting)

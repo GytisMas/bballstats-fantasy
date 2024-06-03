@@ -16,17 +16,17 @@ namespace BBallStatsV2.DTOs
     public record LeagueTemplateNameIdDto(int Id, string Name);
     public record LeagueTemplateDto(int Id, string Name, double? BenchMultiplier, double TeamWinPoints, double TeamLosePoints, LeagueRoleWithIdDto[] LeagueRoles);
     public record LeagueTemplateUpsertDto(string Name, double? BenchMultiplier, double TeamWinPoints, double TeamLosePoints, LeagueRoleWithIdDto[] LeagueRoles);
-    public record LeaguePlayersDto(string Name, bool IsActive, int EntryFee, int LeagueTemplateId, bool IsPrivate, List<PlayerInLeagueDto> Players);
+    public record LeaguePlayersDto(string Name, bool IsActive, bool LeagueIsEnded, int EntryFee, int LeagueTemplateId, bool IsPrivate, List<PlayerInLeagueDto> Players);
     public record PlayerGameStatsDto(string TeamId, List<PlayerGameStatDto> Stats);
     public record PlayerGameStatDto(int StatisticId, double value);
     public record ParticipantDto(int Id, string TeamName, string UserName, double Points);
     public record LeagueParticipationDto(int Id, int LeagueId, string TeamName, string LeagueName, int Placement);
-    public record ParticipantWithTeamDto(bool LeagueIsActive, bool AllowRosterChanges, int Id, bool ParticipantIsUser, string TeamName, string UserName, double Points, ParticipantPlayerInfoDto[] Team);
+    public record ParticipantWithTeamDto(bool LeagueIsActive, bool LeagueIsEnded, bool AllowRosterChanges, int Id, bool ParticipantIsUser, string TeamName, string UserName, double Points, ParticipantPlayerInfoDto[] Team);
     public record ParticipantPlayerInfoDto(int Id, double Points, double PointsLastGame, string PlayerId, string PlayerName, string TeamName, int Price, int RoleId, string RoleName, int? RoleToReplaceId);
     public record ParticipantRoleChangeDto(string TeamName, ParticipantPlayerRoleDto[] PlayerRolePairs);
     public record ParticipantPlayerRoleDto(int Id, int RoleId);
     public record LeagueWithParticipantsDto(int Id, string Name, int TemplateId, bool NotStarted, int? UserParticipantId, int Entryfee, DateTime CreationDate, DateTime StartDate,
-        DateTime EndDate, ParticipantDto[] Participants);
+        DateTime EndDate, ParticipantDto[] Participants, List<LeaguePayment> Payments);
     public record PagedListDto<T>(List<T> Items, int PageIndex, int PageCount);
 
     public record UserDto(string Id, string Username, string Email, IList<string> roles);

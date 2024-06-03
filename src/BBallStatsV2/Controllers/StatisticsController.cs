@@ -197,7 +197,9 @@ namespace BBallStatsV2.Controllers
                             playerStat.AttemptValue += (int)s.IntArrVal[1];
                             break;
                         case "bool":
-                            playerStat.Value++;
+                            if (s.Boolval != null && s.Boolval == true)
+                                playerStat.Value++;
+                            playerStat.AttemptValue++;
                             break;
                     }
                     playerStat.GameCount++;

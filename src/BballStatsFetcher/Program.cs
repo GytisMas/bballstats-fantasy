@@ -29,7 +29,7 @@ namespace BballStatsFetcher
                 Console.WriteLine($"Current date and time (UTC): {DateTime.UtcNow}");
                 Console.WriteLine($"Ending active leagues that are over.");
 
-                var url = $"{baseUrl}/fantasy/leagues/endleagues";
+                var url = $"{baseUrl}/fantasy/leagues/endLeagues";
                 try
                 {
                     var readResponse = await client.PatchAsync(url, null);

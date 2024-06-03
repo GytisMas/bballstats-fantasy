@@ -23,6 +23,7 @@ function LeagueParticipate(props) {
   const [players, setPlayers] = useState([]);
   const [isEditMode, setIsEditMode] = useState(false)
   const [isActiveLeague, setIsActiveLeague] = useState(false)
+  const [isEndedLeague, setIsEndedLeague] = useState(false)
   const [rosterChangesAllowed, setRosterChangesAllowed] = useState(false)
   const [modalIsShowing, setModalIsShowing] = useState(false);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
@@ -53,6 +54,8 @@ function LeagueParticipate(props) {
         setStatTypes(response.data);
         const response2 = (await axios.get(APIEndpoint + '/Fantasy/Leagues/' + params.leagueId + '/Players'));
         setIsActiveLeague(response2.data.isActive)
+        setIsEndedLeague(response2.data.leagueIsEnded)
+        console.log(response2.data.leagueIsEnded)
         setShowPasswordForm(response2.data.isPrivate);
         setLeagueEntryFee(response2.data.entryFee);
         setPlayers(response2.data.players
@@ -66,6 +69,8 @@ function LeagueParticipate(props) {
         setParticipant(response.data);
         setRosterChangesAllowed(response.data.allowRosterChanges);
         setIsActiveLeague(response.data.leagueIsActive)
+        setIsEndedLeague(response.data.leagueIsEnded)
+        console.log(response.data.leagueIsEnded)
         const nextMatchesResponse = (await axios.get(APIEndpoint + '/Participants/' + params.participantId +'/matches'))
         if (response.data.allowRosterChanges) {
           setTeam(response.data.team
@@ -401,8 +406,8 @@ function LeagueParticipate(props) {
           {renderErrorMessage("teamName")}
         </div>
         <div className="input-container">
-          {!isActiveLeague ?
-            isLoading ? <div>Loading...</div> :
+          {isEndedLeague ? <div>Cannot join league or edit team when league is over.</div> : !isActiveLeague ?
+            isLoading ? <div>Loading...</div> : 
               <div className='flex flex-row flex-wrap justify-center items-stretch mt-5 max-w-6xl mx-auto px-2 pb-10 bg-white border-2 rounded-3xl'>
                 {players.map((player, index) => (
                   <div key={index} className='w-64 mt-10 mx-1 pt-1 pb-2 rounded-xl flex flex-col justify-start items-center bg-gradient-to-b bg-white'>
@@ -459,7 +464,7 @@ function LeagueParticipate(props) {
           
         </div> */}
         <div>
-          {!isActiveLeague && !isEditMode ? <>
+          {isEndedLeague ? <></> : !isActiveLeague && !isEditMode ? <>
             <p>Cost to enter league:</p> 
             <p>{playersPrice} (cost for players)</p> 
             <p>{leagueEntryFee} (league entry fee)</p> 
@@ -474,7 +479,7 @@ function LeagueParticipate(props) {
           {!isActiveLeague || rosterChangesAllowed &&
             <input className={ButtonStyle + " h-16 mb-2"} type="submit" />
           }
-          {!isActiveLeague && isEditMode &&
+          {!isActiveLeague && !isEndedLeague && isEditMode &&
             <button onClick={() => showModal()}type="button" className={FormSumbitStyleCancel2 + " h-16"}>Cancel participation</button>
           }
         </div>
@@ -494,7 +499,7 @@ function LeagueParticipate(props) {
     <div className="app">
       {isLoading ? <div>Loading...</div>
       :
-      !isEditMode && isActiveLeague ? <div>Joining league not allowed when league is active.</div> :
+      !isEditMode && isActiveLeague ? <div>Joining league not allowed when league is active or ended.</div> :
       <div className="login-form">
         {showPasswordForm ? passwordForm :
           isSubmitted ? <div>Submitted</div> : renderForm

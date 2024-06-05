@@ -476,7 +476,7 @@ function LeagueParticipate(props) {
           }
         </div>
         <div className="flex flex-row items-center">
-          {!isActiveLeague || rosterChangesAllowed &&
+          {(!isActiveLeague || rosterChangesAllowed) &&
             <input className={ButtonStyle + " h-16 mb-2"} type="submit" />
           }
           {!isActiveLeague && !isEndedLeague && isEditMode &&

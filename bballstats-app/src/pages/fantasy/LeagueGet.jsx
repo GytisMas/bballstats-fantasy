@@ -99,6 +99,7 @@ function LeagueGet(props) {
               <tbody>
 
               {leaguePayments.map((it) => 
+              it.amount > 0 &&
               <tr key={it.placing}>
                 <td className='p-2 border-2 border-black text-left'>#{it.placing}</td>
                 <td className='p-2 border-2 border-black text-right'>{it.amount}</td>

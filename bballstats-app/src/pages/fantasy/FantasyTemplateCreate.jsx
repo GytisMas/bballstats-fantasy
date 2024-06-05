@@ -201,7 +201,7 @@ function FantasyTemplateCreate() {
           ))}
           </div>
         </div>
-        {leagueRoles && leagueRoles.length && leagueRoles.length > 0 &&
+        {(leagueRoles && leagueRoles.length > 0) &&
           <div className="flex flex-row max-w-sm mx-auto py-2 justify-between">
             <button className={ButtonStyle} onClick={handleAdd}>Add player role</button>
             <button className={ButtonStyle} onClick={handleRemove}>Remove Last Role</button>

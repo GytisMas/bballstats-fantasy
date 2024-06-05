@@ -62,7 +62,7 @@ export default function UserGet(props) {
   if (props.noAlgorithms)
     return user.username;
   else
-  return isLoading ? <div>Loading...</div> : (
+  return isLoading ? <div className='mt-5 max-w-xl mx-auto px-2 bg-white border-2 rounded-3xl'><p>Loading...</p></div> : (
     <div>
       <div className="flex flex-row mt-5 max-w-xl mx-auto px-2 py-2 items-center justify-evenly bg-white border-2 rounded-3xl">
         <div className="p-5 my-auto">

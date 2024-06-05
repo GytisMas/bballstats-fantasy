@@ -59,10 +59,10 @@ function LeagueGet(props) {
           }
           <Link to={'/fantasy/templates/'+templateId} target="_blank" rel="noopener noreferrer" ><button type="button" className={ButtonStyle + ' mb-2'}>View Template</button></Link>
         </div>
-        <div className='flex flex-col flex-wrap justify-center items-center mt-5 max-w-xl mx-auto px-2 py-10 bg-white border-2 rounded-3xl'>
+        <div className='flex flex-col flex-wrap justify-center items-center mt-5 max-w-xl mx-auto px-2 py-5 bg-white border-2 rounded-3xl'>
           {participants == null || participants.length == 0 ? <div>There are no participants in this league</div>
           :  <>
-              <p className='py-2 font-bold text-md text-center'>League Standings</p>
+              <p className='py-2 font-bold text-xl text-center'>League Standings</p>
               <table className="my-2">
                 <thead>
                   <tr>
@@ -87,8 +87,8 @@ function LeagueGet(props) {
           }
         </div>
         <div className='mt-5 max-w-xl mx-auto px-2 flex flex-col items-center bg-white border-2 rounded-3xl'>
-          <div className="bg-white rounded px-4 py-2 my-4">
-            <div className="text-xl text-center p-1 ">Prizes</div>
+          <div className="bg-white rounded px-4 pt-2 pb-4 my-4">
+            <div className="text-xl font-bold text-center pb-4">Prizes</div>
             <table className={FormTableStyle}>
               <thead>
                 <tr>

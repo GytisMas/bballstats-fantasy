@@ -480,7 +480,7 @@ function LeagueParticipate(props) {
             <input className={ButtonStyle + " h-16 mb-2"} type="submit" />
           }
           {!isActiveLeague && !isEndedLeague && isEditMode &&
-            <button onClick={() => showModal()}type="button" className={FormSumbitStyleCancel2 + " h-16"}>Cancel participation</button>
+            <button onClick={() => showModal()}type="button" className={FormSumbitStyleCancel2 + " h-16 mb-2"}>Cancel participation</button>
           }
         </div>
         
